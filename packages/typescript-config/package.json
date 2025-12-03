@@ -1,0 +1,9 @@
+{
+  "name": "@cyan/typescript-config",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "files": [
+    "*.json"
+  ]
+}

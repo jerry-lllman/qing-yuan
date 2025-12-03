@@ -1,0 +1,10 @@
+{
+  "extends": "@cyan/typescript-config/base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@cyan/*": ["packages/*/src"]
+    }
+  },
+  "exclude": ["node_modules", "dist", "build", ".turbo"]
+}
