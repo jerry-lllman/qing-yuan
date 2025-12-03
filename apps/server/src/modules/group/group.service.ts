@@ -333,7 +333,6 @@ export class GroupService {
       where: {
         id: groupId,
         type: 'GROUP',
-        ownerId: userId, // 只有群主才能转让
       },
       include: {
         members: true,
@@ -341,7 +340,18 @@ export class GroupService {
     });
 
     if (!group) {
-      throw new NotFoundException('群组不存在或您不是群主');
+      throw new NotFoundException('群组不存在');
+    }
+
+    // 检查当前用户是否是群成员
+    const currentMember = group.members.find((m) => m.userId === userId);
+    if (!currentMember) {
+      throw new NotFoundException('群组不存在或您不是群成员');
+    }
+
+    // 只有群主才能转让
+    if (group.ownerId !== userId) {
+      throw new ForbiddenException('只有群主可以转让群组');
     }
 
     const newOwnerMember = group.members.find(
@@ -350,8 +360,6 @@ export class GroupService {
     if (!newOwnerMember) {
       throw new BadRequestException('新群主必须是群成员');
     }
-
-    const currentOwnerMember = group.members.find((m) => m.userId === userId);
 
     // 使用事务更新
     await this.prisma.$transaction([
@@ -370,7 +378,7 @@ export class GroupService {
       }),
       // 将原群主降为管理员
       this.prisma.conversationMember.update({
-        where: { id: currentOwnerMember!.id },
+        where: { id: currentMember.id },
         data: { role: 'ADMIN' },
       }),
     ]);
@@ -386,12 +394,25 @@ export class GroupService {
       where: {
         id: groupId,
         type: 'GROUP',
-        ownerId: userId, // 只有群主才能解散
+      },
+      include: {
+        members: true,
       },
     });
 
     if (!group) {
-      throw new NotFoundException('群组不存在或您不是群主');
+      throw new NotFoundException('群组不存在');
+    }
+
+    // 检查当前用户是否是群成员
+    const currentMember = group.members.find((m) => m.userId === userId);
+    if (!currentMember) {
+      throw new NotFoundException('群组不存在或您不是群成员');
+    }
+
+    // 只有群主才能解散
+    if (group.ownerId !== userId) {
+      throw new ForbiddenException('只有群主可以解散群组');
     }
 
     // 使用事务删除群组相关数据
@@ -477,7 +498,6 @@ export class GroupService {
       where: {
         id: groupId,
         type: 'GROUP',
-        ownerId: userId, // 只有群主可以设置管理员
       },
       include: {
         members: true,
@@ -485,7 +505,18 @@ export class GroupService {
     });
 
     if (!group) {
-      throw new NotFoundException('群组不存在或您不是群主');
+      throw new NotFoundException('群组不存在');
+    }
+
+    // 检查当前用户是否是群成员
+    const currentMember = group.members.find((m) => m.userId === userId);
+    if (!currentMember) {
+      throw new NotFoundException('群组不存在或您不是群成员');
+    }
+
+    // 只有群主可以设置管理员
+    if (group.ownerId !== userId) {
+      throw new ForbiddenException('只有群主可以设置管理员');
     }
 
     const targetMember = group.members.find((m) => m.userId === targetUserId);
