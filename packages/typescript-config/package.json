@@ -1,9 +1,16 @@
 {
-  "name": "@cyan/typescript-config",
+  "name": "@qing-yuan/typescript-config",
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
   "files": [
     "*.json"
-  ]
+  ],
+  "exports": {
+    "./base.json": "./base.json",
+    "./library.json": "./library.json",
+    "./node.json": "./node.json",
+    "./react.json": "./react.json",
+    "./react-native.json": "./react-native.json"
+  }
 }

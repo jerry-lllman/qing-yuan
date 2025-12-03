@@ -1,4 +1,4 @@
-# Copilot 开发指令 - Cyan 即时通讯应用
+# Copilot 开发指令 - Qing-Yuan 即时通讯应用
 
 > 本文档为 GitHub Copilot 提供项目上下文和开发规范,确保生成的代码符合项目标准
 
@@ -6,7 +6,7 @@
 
 ## 项目概述
 
-**Cyan** 是一款支持 iOS、Android、PC 的即时通讯软件,采用 TypeScript 全栈开发,使用 pnpm + Turborepo 构建 monorepo 架构。
+**Qing-Yuan** 是一款支持 iOS、Android、PC 的即时通讯软件,采用 TypeScript 全栈开发,使用 pnpm + Turborepo 构建 monorepo 架构。
 
 ### 核心特性
 
@@ -818,4 +818,4 @@ A: `pnpm info <package-name> version` 或访问 npmjs.com
 
 _文档版本: 1.0.0_
 _最后更新: 2025-12-03_
-_维护者: Cyan Team_
+_维护者: Qing-Yuan Team_

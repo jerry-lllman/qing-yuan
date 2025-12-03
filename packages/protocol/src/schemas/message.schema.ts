@@ -3,7 +3,7 @@
  */
 
 import { z } from 'zod';
-import { Limits } from '@cyan/shared';
+import { Limits } from '@qing-yuan/shared';
 
 /** 消息类型 */
 export const messageTypeSchema = z.enum(['text', 'image', 'file', 'voice', 'video', 'system']);

@@ -1,4 +1,4 @@
-# Cyan - 多端即时通讯应用架构文档
+# Qing-Yuan - 多端即时通讯应用架构文档
 
 > 一款支持 iOS、Android、PC 的即时通讯软件，采用 TypeScript 全栈开发
 
@@ -39,7 +39,7 @@
 ## 2. 项目结构
 
 ```
-cyan/
+qing-yuan/
 ├── apps/                               # 🚀 应用层（可独立部署的应用）
 │   │
 │   ├── desktop/                        # 💻 Electron 桌面应用
@@ -881,7 +881,7 @@ export function Button({ className, variant, size, ...props }: ButtonProps) {
 
 // packages/ui-web/src/components/chat/ChatBubble/ChatBubble.tsx
 // 聊天气泡 - 自定义实现
-import type { Message } from "@cyan/shared";
+import type { Message } from "@qing-yuan/shared";
 
 interface ChatBubbleProps {
   message: Message;
@@ -917,7 +917,7 @@ export function ChatBubble({ message, isOwn, showAvatar }: ChatBubbleProps) {
 // packages/ui-native/src/components/base/Button/Button.tsx
 // Gluestack UI v3 采用 copy-paste 模式，组件从本地导入
 import { Button as GluestackButton, ButtonText } from "@/components/ui/button";
-import type { Message } from "@cyan/shared";
+import type { Message } from "@qing-yuan/shared";
 
 interface ButtonProps {
   children: string;
@@ -944,7 +944,7 @@ import { Box } from "@/components/ui/box";
 import { Text } from "@/components/ui/text";
 import { HStack } from "@/components/ui/hstack";
 import { Avatar } from "@/components/ui/avatar";
-import type { Message } from "@cyan/shared";
+import type { Message } from "@qing-yuan/shared";
 
 interface ChatBubbleProps {
   message: Message;
@@ -1516,7 +1516,7 @@ export class PerformanceMonitor {
 # Server
 NODE_ENV=development
 PORT=3000
-DATABASE_URL=postgresql://user:pass@localhost:5432/cyan
+DATABASE_URL=postgresql://user:pass@localhost:5432/qing-yuan
 REDIS_URL=redis://localhost:6379
 
 # JWT
@@ -1530,7 +1530,7 @@ APNS_KEY_ID=your-apns-key-id
 APNS_TEAM_ID=your-team-id
 
 # Storage
-S3_BUCKET=cyan-uploads
+S3_BUCKET=qing-yuan-uploads
 S3_REGION=ap-northeast-1
 S3_ACCESS_KEY=your-access-key
 S3_SECRET_KEY=your-secret-key

@@ -1,5 +1,5 @@
 {
-  "name": "cyan",
+  "name": "qing-yuan",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -12,7 +12,7 @@
     "monorepo"
   ],
   "license": "MIT",
-  "author": "Cyan Team",
+  "author": "Qing-Yuan Team",
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
@@ -26,9 +26,9 @@
     "typecheck": "turbo typecheck"
   },
   "devDependencies": {
-    "@cyan/eslint-config": "workspace:*",
-    "@cyan/prettier-config": "workspace:*",
-    "@cyan/typescript-config": "workspace:*",
+    "@qing-yuan/eslint-config": "workspace:*",
+    "@qing-yuan/prettier-config": "workspace:*",
+    "@qing-yuan/typescript-config": "workspace:*",
     "prettier": "^3.4.2",
     "turbo": "^2.3.3",
     "typescript": "^5.7.2"

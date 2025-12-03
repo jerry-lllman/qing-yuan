@@ -8,13 +8,13 @@ importers:
 
   .:
     devDependencies:
-      '@cyan/eslint-config':
+      '@qing-yuan/eslint-config':
         specifier: workspace:*
         version: link:packages/eslint-config
-      '@cyan/prettier-config':
+      '@qing-yuan/prettier-config':
         specifier: workspace:*
         version: link:packages/prettier-config
-      '@cyan/typescript-config':
+      '@qing-yuan/typescript-config':
         specifier: workspace:*
         version: link:packages/typescript-config
       prettier:
@@ -29,10 +29,10 @@ importers:
 
   apps/server:
     dependencies:
-      '@cyan/protocol':
+      '@qing-yuan/protocol':
         specifier: workspace:*
         version: link:../../packages/protocol
-      '@cyan/shared':
+      '@qing-yuan/shared':
         specifier: workspace:*
         version: link:../../packages/shared
       '@nestjs/common':
@@ -211,14 +211,14 @@ importers:
 
   packages/protocol:
     dependencies:
-      '@cyan/shared':
+      '@qing-yuan/shared':
         specifier: workspace:*
         version: link:../shared
       zod:
         specifier: ^3.23.8
         version: 3.25.76
     devDependencies:
-      '@cyan/typescript-config':
+      '@qing-yuan/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
       typescript:
@@ -227,7 +227,7 @@ importers:
 
   packages/shared:
     devDependencies:
-      '@cyan/typescript-config':
+      '@qing-yuan/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
       typescript:

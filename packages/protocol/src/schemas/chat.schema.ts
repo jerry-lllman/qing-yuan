@@ -3,7 +3,7 @@
  */
 
 import { z } from 'zod';
-import { Limits } from '@cyan/shared';
+import { Limits } from '@qing-yuan/shared';
 
 /** 创建私聊 Schema */
 export const createPrivateChatSchema = z.object({

@@ -2,7 +2,7 @@
  * 会话事件载荷类型
  */
 
-import { type ConversationType } from '@cyan/shared';
+import { type ConversationType } from '@qing-yuan/shared';
 
 /** 创建私聊载荷 */
 export interface CreatePrivateChatPayload {

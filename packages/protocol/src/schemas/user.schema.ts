@@ -3,7 +3,7 @@
  */
 
 import { z } from 'zod';
-import { Limits } from '@cyan/shared';
+import { Limits } from '@qing-yuan/shared';
 
 /** 用户状态 */
 export const userStatusSchema = z.enum(['online', 'offline', 'away', 'busy', 'invisible']);

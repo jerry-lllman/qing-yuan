@@ -1,8 +1,8 @@
 {
   "name": "@cyan/server",
   "version": "0.1.0",
-  "description": "Cyan IM Server - Nest.js Backend",
-  "author": "Cyan Team",
+  "description": "Qing-Yuan IM Server - Nest.js Backend",
+  "author": "Qing-Yuan Team",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -25,8 +25,8 @@
     "db:studio": "prisma studio"
   },
   "dependencies": {
-    "@cyan/protocol": "workspace:*",
-    "@cyan/shared": "workspace:*",
+    "@qing-yuan/protocol": "workspace:*",
+    "@qing-yuan/shared": "workspace:*",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^3.3.0",
     "@nestjs/core": "^11.0.1",

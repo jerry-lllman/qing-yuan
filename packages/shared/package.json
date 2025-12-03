@@ -1,5 +1,5 @@
 {
-  "name": "@cyan/shared",
+  "name": "@qing-yuan/shared",
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
@@ -35,7 +35,7 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@cyan/typescript-config": "workspace:*",
+    "@qing-yuan/typescript-config": "workspace:*",
     "typescript": "^5.7.2"
   }
 }
