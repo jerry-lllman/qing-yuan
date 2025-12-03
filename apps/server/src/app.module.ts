@@ -10,6 +10,7 @@ import { UserModule } from './modules/user';
 import { FriendModule } from './modules/friend';
 import { ChatModule } from './modules/chat';
 import { MessageModule } from './modules/message';
+import { GroupModule } from './modules/group';
 import { GatewayModule } from './gateway';
 
 @Module({
@@ -33,6 +34,8 @@ import { GatewayModule } from './gateway';
     ChatModule,
     // 消息模块
     MessageModule,
+    // 群组模块
+    GroupModule,
     // WebSocket 网关
     GatewayModule,
   ],
