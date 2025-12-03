@@ -98,10 +98,7 @@ export function generatePreKeys(count: number, startId: number = 1): PreKey[] {
  * @param identityPrivateKey 身份私钥（Base64 编码）
  * @param keyId 签名预密钥 ID
  */
-export function generateSignedPreKey(
-  identityPrivateKey: string,
-  keyId: number = 1
-): SignedPreKey {
+export function generateSignedPreKey(identityPrivateKey: string, keyId: number = 1): SignedPreKey {
   // 解析身份私钥
   const identityKey = signal.PrivateKey.deserialize(fromBase64(identityPrivateKey));
 
@@ -128,10 +125,7 @@ export function generateSignedPreKey(
  * @param identityPublicKey 身份公钥（Base64 编码）
  * @param signedPreKey 签名预密钥
  */
-export function verifySignedPreKey(
-  identityPublicKey: string,
-  signedPreKey: SignedPreKey
-): boolean {
+export function verifySignedPreKey(identityPublicKey: string, signedPreKey: SignedPreKey): boolean {
   try {
     const identityKey = signal.PublicKey.deserialize(fromBase64(identityPublicKey));
     const publicKeyBytes = fromBase64(signedPreKey.publicKey);
