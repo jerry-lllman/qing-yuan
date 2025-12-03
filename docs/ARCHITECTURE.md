@@ -481,8 +481,8 @@ cyan/
 ```yaml
 # pnpm-workspace.yaml
 packages:
-  - "apps/*"
-  - "packages/*"
+  - 'apps/*'
+  - 'packages/*'
 
 catalog:
   # 核心框架
@@ -493,7 +493,7 @@ catalog:
 
   # 状态管理
   zustand: latest
-  "@tanstack/react-query": latest
+  '@tanstack/react-query': latest
 
   # 数据验证
   zod: latest
@@ -504,15 +504,15 @@ catalog:
   axios: latest
 
   # 后端框架
-  "@nestjs/core": latest
-  "@nestjs/common": latest
-  "@nestjs/platform-socket.io": latest
-  "@nestjs/websockets": latest
+  '@nestjs/core': latest
+  '@nestjs/common': latest
+  '@nestjs/platform-socket.io': latest
+  '@nestjs/websockets': latest
   prisma: latest
-  "@prisma/client": latest
+  '@prisma/client': latest
 
   # UI 组件库
-  "@radix-ui/react-*": latest
+  '@radix-ui/react-*': latest
   nativewind: latest # Gluestack UI v3 依赖
   tailwindcss: latest
 
@@ -522,12 +522,12 @@ catalog:
   electron-builder: latest
 
   # 加密
-  "@aspect-build/libsignal-client": latest
+  '@aspect-build/libsignal-client': latest
 
   # 测试
   vitest: latest
-  "@testing-library/react": latest
-  "@testing-library/react-native": latest
+  '@testing-library/react': latest
+  '@testing-library/react-native': latest
 ```
 
 > **注意**：生产环境建议使用 `pnpm update` 后锁定版本，确保构建可重复性。
@@ -685,29 +685,29 @@ catalog:
 // packages/protocol/src/events/message.events.ts
 export enum MessageEvent {
   // 客户端 -> 服务端
-  SEND = "message:send",
-  EDIT = "message:edit",
-  DELETE = "message:delete",
-  READ = "message:read",
-  TYPING_START = "message:typing:start",
-  TYPING_STOP = "message:typing:stop",
+  SEND = 'message:send',
+  EDIT = 'message:edit',
+  DELETE = 'message:delete',
+  READ = 'message:read',
+  TYPING_START = 'message:typing:start',
+  TYPING_STOP = 'message:typing:stop',
 
   // 服务端 -> 客户端
-  RECEIVE = "message:receive",
-  DELIVERED = "message:delivered",
-  UPDATED = "message:updated",
-  DELETED = "message:deleted",
-  READ_RECEIPT = "message:read:receipt",
-  TYPING = "message:typing",
+  RECEIVE = 'message:receive',
+  DELIVERED = 'message:delivered',
+  UPDATED = 'message:updated',
+  DELETED = 'message:deleted',
+  READ_RECEIPT = 'message:read:receipt',
+  TYPING = 'message:typing',
 }
 
 // packages/protocol/src/schemas/message.schema.ts
-import { z } from "zod";
+import { z } from 'zod';
 
 export const sendMessageSchema = z.object({
   conversationId: z.string().uuid(),
   content: z.string().min(1).max(10000),
-  type: z.enum(["text", "image", "file", "voice", "video"]),
+  type: z.enum(['text', 'image', 'file', 'voice', 'video']),
   replyTo: z.string().uuid().optional(),
   attachments: z
     .array(
@@ -766,8 +766,8 @@ export class SocketClient {
 
 ```typescript
 // packages/client-state/src/stores/message.store.ts
-import { create } from "zustand";
-import { immer } from "zustand/middleware/immer";
+import { create } from 'zustand';
+import { immer } from 'zustand/middleware/immer';
 
 interface MessageState {
   messages: Map<string, Message[]>; // conversationId -> messages
@@ -797,9 +797,7 @@ export const useMessageStore = create<MessageState>()(
 
 // packages/client-state/src/hooks/useMessages.ts
 export function useMessages(conversationId: string) {
-  const messages = useMessageStore(
-    (state) => state.messages.get(conversationId) || []
-  );
+  const messages = useMessageStore((state) => state.messages.get(conversationId) || []);
   const addMessage = useMessageStore((state) => state.addMessage);
   const socket = useSocket();
 
@@ -811,7 +809,7 @@ export function useMessages(conversationId: string) {
       socket.emit(MessageEvent.SEND, {
         conversationId,
         content,
-        type: "text",
+        type: 'text',
       });
     },
     [conversationId, addMessage, socket]
@@ -836,22 +834,13 @@ export class SignalSession {
   async initialize(): Promise<void>;
 
   // 建立会话
-  async createSession(
-    recipientId: string,
-    preKeyBundle: PreKeyBundle
-  ): Promise<void>;
+  async createSession(recipientId: string, preKeyBundle: PreKeyBundle): Promise<void>;
 
   // 加密消息
-  async encrypt(
-    recipientId: string,
-    plaintext: string
-  ): Promise<EncryptedMessage>;
+  async encrypt(recipientId: string, plaintext: string): Promise<EncryptedMessage>;
 
   // 解密消息
-  async decrypt(
-    senderId: string,
-    ciphertext: EncryptedMessage
-  ): Promise<string>;
+  async decrypt(senderId: string, ciphertext: EncryptedMessage): Promise<string>;
 }
 ```
 
@@ -993,8 +982,8 @@ export function ChatBubble({ message, isOwn, showAvatar }: ChatBubbleProps) {
 ```typescript
 // apps/server/src/gateway/chat.gateway.ts
 @WebSocketGateway({
-  namespace: "chat",
-  cors: { origin: "*", credentials: true },
+  namespace: 'chat',
+  cors: { origin: '*', credentials: true },
 })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
@@ -1030,9 +1019,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const message = await this.messageService.create(validated);
 
     // 广播给会话成员
-    const recipientIds = await this.getConversationMembers(
-      validated.conversationId
-    );
+    const recipientIds = await this.getConversationMembers(validated.conversationId);
     for (const recipientId of recipientIds) {
       this.server.to(`user:${recipientId}`).emit(MessageEvent.RECEIVE, message);
     }
@@ -1084,7 +1071,7 @@ interface SyncCursor {
 export class MessageSyncManager {
   // 增量同步：基于游标获取新消息
   async syncIncremental(cursor: SyncCursor): Promise<Message[]> {
-    const response = await this.api.get("/messages/sync", {
+    const response = await this.api.get('/messages/sync', {
       params: {
         conversationId: cursor.conversationId,
         after: cursor.lastMessageId,
@@ -1102,11 +1089,8 @@ export class MessageSyncManager {
   }
 
   // 分页加载历史消息
-  async loadHistory(
-    conversationId: string,
-    before: string
-  ): Promise<Message[]> {
-    return this.api.get("/messages/history", {
+  async loadHistory(conversationId: string, before: string): Promise<Message[]> {
+    return this.api.get('/messages/history', {
       params: { conversationId, before, limit: 50 },
     });
   }
@@ -1137,7 +1121,7 @@ export class OfflineQueue {
     };
 
     this.queue.push(pending);
-    await this.storage.set("offline_queue", this.queue);
+    await this.storage.set('offline_queue', this.queue);
 
     return pending.id;
   }
@@ -1159,7 +1143,7 @@ export class OfflineQueue {
       }
     }
 
-    await this.storage.set("offline_queue", this.queue);
+    await this.storage.set('offline_queue', this.queue);
   }
 }
 ```
@@ -1202,7 +1186,7 @@ async handleSyncRequest(
 
 ```typescript
 // apps/server/src/main.ts
-import { VersioningType } from "@nestjs/common";
+import { VersioningType } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -1210,23 +1194,23 @@ async function bootstrap() {
   // 启用 URI 版本控制
   app.enableVersioning({
     type: VersioningType.URI,
-    defaultVersion: "1",
+    defaultVersion: '1',
   });
 
   await app.listen(3000);
 }
 
 // apps/server/src/modules/user/user.controller.ts
-@Controller("users")
+@Controller('users')
 export class UserController {
   @Get()
-  @Version("1")
+  @Version('1')
   findAllV1() {
     // v1 实现
   }
 
   @Get()
-  @Version("2")
+  @Version('2')
   findAllV2() {
     // v2 实现，包含新字段
   }
@@ -1262,8 +1246,8 @@ handleSendV2(payload: SendMessagePayloadV2) { /* ... */ }
 const apiClient = axios.create({
   baseURL: process.env.API_URL,
   headers: {
-    "X-Client-Version": APP_VERSION,
-    "X-Client-Platform": PLATFORM, // 'ios' | 'android' | 'desktop'
+    'X-Client-Version': APP_VERSION,
+    'X-Client-Platform': PLATFORM, // 'ios' | 'android' | 'desktop'
   },
 });
 
@@ -1272,11 +1256,9 @@ const apiClient = axios.create({
 export class VersionInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler) {
     const request = context.switchToHttp().getRequest();
-    const clientVersion = request.headers["x-client-version"];
+    const clientVersion = request.headers['x-client-version'];
 
-    return next
-      .handle()
-      .pipe(map((data) => this.transformForVersion(data, clientVersion)));
+    return next.handle().pipe(map((data) => this.transformForVersion(data, clientVersion)));
   }
 }
 ```
@@ -1312,23 +1294,23 @@ export class VersionInterceptor implements NestInterceptor {
 
 ```typescript
 // apps/server/src/common/interceptors/metrics.interceptor.ts
-import { Counter, Histogram } from "prom-client";
+import { Counter, Histogram } from 'prom-client';
 
 const httpRequestDuration = new Histogram({
-  name: "http_request_duration_seconds",
-  help: "Duration of HTTP requests in seconds",
-  labelNames: ["method", "route", "status"],
+  name: 'http_request_duration_seconds',
+  help: 'Duration of HTTP requests in seconds',
+  labelNames: ['method', 'route', 'status'],
 });
 
 const wsConnectionsGauge = new Gauge({
-  name: "ws_connections_total",
-  help: "Total WebSocket connections",
+  name: 'ws_connections_total',
+  help: 'Total WebSocket connections',
 });
 
 const messagesSentCounter = new Counter({
-  name: "messages_sent_total",
-  help: "Total messages sent",
-  labelNames: ["type"],
+  name: 'messages_sent_total',
+  help: 'Total messages sent',
+  labelNames: ['type'],
 });
 
 @Injectable()
@@ -1340,9 +1322,7 @@ export class MetricsInterceptor implements NestInterceptor {
     return next.handle().pipe(
       tap(() => {
         const duration = (Date.now() - start) / 1000;
-        httpRequestDuration
-          .labels(request.method, request.route.path, "200")
-          .observe(duration);
+        httpRequestDuration.labels(request.method, request.route.path, '200').observe(duration);
       })
     );
   }
@@ -1353,7 +1333,7 @@ export class MetricsInterceptor implements NestInterceptor {
 
 ```typescript
 // packages/client-core/src/monitoring/error-reporter.ts
-import * as Sentry from "@sentry/react-native"; // 或 @sentry/electron
+import * as Sentry from '@sentry/react-native'; // 或 @sentry/electron
 
 export class ErrorReporter {
   static init(config: { dsn: string; environment: string }) {
@@ -1395,7 +1375,7 @@ export class PerformanceMonitor {
     return {
       end: () => {
         const latency = performance.now() - start;
-        this.report("message_latency", latency, { messageId });
+        this.report('message_latency', latency, { messageId });
       },
     };
   }
@@ -1414,16 +1394,12 @@ export class PerformanceMonitor {
       },
       markInteractive: () => {
         metrics.interactive = performance.now();
-        this.report("app_startup", metrics);
+        this.report('app_startup', metrics);
       },
     };
   }
 
-  private static report(
-    name: string,
-    value: any,
-    tags?: Record<string, string>
-  ) {
+  private static report(name: string, value: any, tags?: Record<string, string>) {
     // 发送到分析服务
   }
 }
@@ -1436,7 +1412,6 @@ export class PerformanceMonitor {
 ### 10.1 代码规范
 
 - **命名约定**
-
   - 文件：`kebab-case.ts` (如 `message-sync.ts`)
   - 组件：`PascalCase.tsx` (如 `ChatBubble.tsx`)
   - 类型：`PascalCase` (如 `MessagePayload`)
@@ -1455,7 +1430,6 @@ export class PerformanceMonitor {
 ### 10.2 Git 规范
 
 - **分支命名**
-
   - `feature/xxx` - 新功能
   - `fix/xxx` - Bug 修复
   - `refactor/xxx` - 重构
@@ -1476,7 +1450,6 @@ export class PerformanceMonitor {
 ### 10.3 测试规范
 
 - **覆盖率要求**
-
   - `packages/*`: 80%+
   - `apps/server`: 70%+
   - `apps/desktop`, `apps/mobile`: 60%+

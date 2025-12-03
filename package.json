@@ -2,6 +2,7 @@
   "name": "cyan",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "description": "多端即时通讯应用 - 支持 iOS、Android、PC",
   "keywords": [
     "im",

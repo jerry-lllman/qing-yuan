@@ -3,23 +3,23 @@ const config = {
   semi: true,
   singleQuote: true,
   tabWidth: 2,
-  trailingComma: "es5",
+  trailingComma: 'es5',
   printWidth: 100,
   bracketSpacing: true,
-  arrowParens: "always",
-  endOfLine: "lf",
+  arrowParens: 'always',
+  endOfLine: 'lf',
   plugins: [],
   overrides: [
     {
-      files: "*.json",
+      files: '*.json',
       options: {
         tabWidth: 2,
       },
     },
     {
-      files: "*.md",
+      files: '*.md',
       options: {
-        proseWrap: "preserve",
+        proseWrap: 'preserve',
       },
     },
   ],

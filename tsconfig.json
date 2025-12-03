@@ -4,7 +4,18 @@
     "baseUrl": ".",
     "paths": {
       "@cyan/*": ["packages/*/src"]
-    }
+    },
+    "noEmit": true
   },
-  "exclude": ["node_modules", "dist", "build", ".turbo"]
+  "include": ["packages/*/src/**/*", "apps/*/src/**/*"],
+  "exclude": [
+    "node_modules",
+    "**/node_modules",
+    "**/dist",
+    "**/build",
+    "**/.turbo",
+    "packages/eslint-config",
+    "packages/prettier-config",
+    "packages/typescript-config"
+  ]
 }
