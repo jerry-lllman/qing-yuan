@@ -1,0 +1,298 @@
+// Prisma Schema for Cyan IM
+// https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// 枚举定义
+// ============================================
+
+/// 用户在线状态
+enum UserStatus {
+  ONLINE
+  OFFLINE
+  AWAY
+  BUSY
+  INVISIBLE
+}
+
+/// 会话类型
+enum ConversationType {
+  PRIVATE // 私聊
+  GROUP   // 群聊
+}
+
+/// 群成员角色
+enum MemberRole {
+  OWNER  // 群主
+  ADMIN  // 管理员
+  MEMBER // 普通成员
+}
+
+/// 消息类型
+enum MessageType {
+  TEXT   // 文本
+  IMAGE  // 图片
+  FILE   // 文件
+  VOICE  // 语音
+  VIDEO  // 视频
+  SYSTEM // 系统消息
+}
+
+/// 好友请求状态
+enum FriendRequestStatus {
+  PENDING  // 待处理
+  ACCEPTED // 已接受
+  REJECTED // 已拒绝
+}
+
+// ============================================
+// 用户相关模型
+// ============================================
+
+/// 用户表
+model User {
+  id        String     @id @default(cuid())
+  username  String     @unique
+  email     String     @unique
+  phone     String?    @unique
+  password  String
+  nickname  String
+  avatar    String?
+  bio       String?
+  status    UserStatus @default(OFFLINE)
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+
+  // 关联关系
+  settings               UserSettings?
+  devices                UserDevice[]
+  sentMessages           Message[]              @relation("SentMessages")
+  conversationMembers    ConversationMember[]
+  sentFriendRequests     FriendRequest[]        @relation("SentFriendRequests")
+  receivedFriendRequests FriendRequest[]        @relation("ReceivedFriendRequests")
+  friendships            Friendship[]           @relation("UserFriendships")
+  friendOf               Friendship[]           @relation("FriendOfUser")
+  ownedGroups            Conversation[]         @relation("GroupOwner")
+  readReceipts           MessageReadReceipt[]
+  attachments            Attachment[]
+
+  @@index([username])
+  @@index([email])
+  @@index([status])
+  @@map("users")
+}
+
+/// 用户设置
+model UserSettings {
+  id                  String  @id @default(cuid())
+  userId              String  @unique @map("user_id")
+  language            String  @default("zh-CN")
+  theme               String  @default("system") // light, dark, system
+  notificationEnabled Boolean @default(true) @map("notification_enabled")
+  soundEnabled        Boolean @default(true) @map("sound_enabled")
+  vibrationEnabled    Boolean @default(true) @map("vibration_enabled")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_settings")
+}
+
+/// 用户设备（用于推送通知和多设备登录）
+model UserDevice {
+  id           String   @id @default(cuid())
+  userId       String   @map("user_id")
+  deviceId     String   @map("device_id")
+  deviceType   String   @map("device_type") // ios, android, desktop, web
+  pushToken    String?  @map("push_token")
+  lastActiveAt DateTime @default(now()) @map("last_active_at")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, deviceId])
+  @@index([userId])
+  @@map("user_devices")
+}
+
+// ============================================
+// 好友关系模型
+// ============================================
+
+/// 好友请求
+model FriendRequest {
+  id         String              @id @default(cuid())
+  senderId   String              @map("sender_id")
+  receiverId String              @map("receiver_id")
+  message    String?
+  status     FriendRequestStatus @default(PENDING)
+  createdAt  DateTime            @default(now()) @map("created_at")
+  updatedAt  DateTime            @updatedAt @map("updated_at")
+
+  sender   User @relation("SentFriendRequests", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver User @relation("ReceivedFriendRequests", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  @@unique([senderId, receiverId])
+  @@index([senderId])
+  @@index([receiverId])
+  @@index([status])
+  @@map("friend_requests")
+}
+
+/// 好友关系（双向存储，方便查询）
+model Friendship {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  friendId  String   @map("friend_id")
+  remark    String?  // 好友备注
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user   User @relation("UserFriendships", fields: [userId], references: [id], onDelete: Cascade)
+  friend User @relation("FriendOfUser", fields: [friendId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, friendId])
+  @@index([userId])
+  @@index([friendId])
+  @@map("friendships")
+}
+
+// ============================================
+// 会话相关模型
+// ============================================
+
+/// 会话（私聊/群聊）
+model Conversation {
+  id        String           @id @default(cuid())
+  type      ConversationType
+  name      String?          // 群聊名称
+  avatar    String?          // 群聊头像
+  ownerId   String?          @map("owner_id") // 群主 ID
+  notice    String?          // 群公告
+  createdAt DateTime         @default(now()) @map("created_at")
+  updatedAt DateTime         @updatedAt @map("updated_at")
+
+  owner    User?                @relation("GroupOwner", fields: [ownerId], references: [id], onDelete: SetNull)
+  members  ConversationMember[]
+  messages Message[]
+
+  @@index([type])
+  @@index([ownerId])
+  @@map("conversations")
+}
+
+/// 会话成员
+model ConversationMember {
+  id             String     @id @default(cuid())
+  conversationId String     @map("conversation_id")
+  userId         String     @map("user_id")
+  role           MemberRole @default(MEMBER)
+  nickname       String?    // 群内昵称
+  isMuted        Boolean    @default(false) @map("is_muted") // 是否免打扰
+  isPinned       Boolean    @default(false) @map("is_pinned") // 是否置顶
+  lastReadAt     DateTime?  @map("last_read_at")
+  joinedAt       DateTime   @default(now()) @map("joined_at")
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([conversationId, userId])
+  @@index([conversationId])
+  @@index([userId])
+  @@map("conversation_members")
+}
+
+// ============================================
+// 消息相关模型
+// ============================================
+
+/// 消息
+model Message {
+  id             String      @id @default(cuid())
+  conversationId String      @map("conversation_id")
+  senderId       String      @map("sender_id")
+  type           MessageType @default(TEXT)
+  content        String
+  replyToId      String?     @map("reply_to_id")
+  isEdited       Boolean     @default(false) @map("is_edited")
+  isDeleted      Boolean     @default(false) @map("is_deleted")
+  createdAt      DateTime    @default(now()) @map("created_at")
+  updatedAt      DateTime    @updatedAt @map("updated_at")
+
+  conversation Conversation         @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User                 @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  replyTo      Message?             @relation("MessageReplies", fields: [replyToId], references: [id], onDelete: SetNull)
+  replies      Message[]            @relation("MessageReplies")
+  attachments  Attachment[]
+  readReceipts MessageReadReceipt[]
+
+  @@index([conversationId])
+  @@index([senderId])
+  @@index([createdAt])
+  @@index([conversationId, createdAt])
+  @@map("messages")
+}
+
+/// 消息附件
+model Attachment {
+  id         String   @id @default(cuid())
+  messageId  String   @map("message_id")
+  uploaderId String   @map("uploader_id")
+  type       String   // image, video, audio, file
+  url        String
+  name       String
+  size       Int
+  width      Int?
+  height     Int?
+  duration   Int?     // 音视频时长（秒）
+  thumbnail  String?
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  message  Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  uploader User    @relation(fields: [uploaderId], references: [id], onDelete: Cascade)
+
+  @@index([messageId])
+  @@map("attachments")
+}
+
+/// 消息已读回执
+model MessageReadReceipt {
+  id        String   @id @default(cuid())
+  messageId String   @map("message_id")
+  userId    String   @map("user_id")
+  readAt    DateTime @default(now()) @map("read_at")
+
+  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([messageId, userId])
+  @@index([messageId])
+  @@index([userId])
+  @@map("message_read_receipts")
+}
+
+// ============================================
+// 认证相关模型
+// ============================================
+
+/// 刷新令牌
+model RefreshToken {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  token     String   @unique
+  deviceId  String?  @map("device_id")
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([userId])
+  @@index([token])
+  @@index([expiresAt])
+  @@map("refresh_tokens")
+}
+
