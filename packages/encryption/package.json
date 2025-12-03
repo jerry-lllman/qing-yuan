@@ -1,0 +1,39 @@
+{
+  "name": "@qing-yuan/encryption",
+  "version": "0.1.0",
+  "description": "End-to-end encryption module using Signal Protocol",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src/",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@qing-yuan/shared": "workspace:*",
+    "@qing-yuan/protocol": "workspace:*",
+    "@signalapp/libsignal-client": "^0.86.6"
+  },
+  "devDependencies": {
+    "@qing-yuan/typescript-config": "workspace:*",
+    "@types/node": "^20.10.0",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.0",
+    "vitest": "^2.1.0"
+  }
+}
