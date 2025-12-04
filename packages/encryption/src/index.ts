@@ -16,7 +16,7 @@ export * from './types';
 // 密钥管理
 export * from './keys';
 
-// TODO: 后续添加
-// export * from './session';
+// 会话管理
+export * from './session';
 // export * from './crypto';
 // export * from './store';
