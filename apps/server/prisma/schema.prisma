@@ -7,7 +7,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 // ============================================
@@ -26,29 +25,29 @@ enum UserStatus {
 /// 会话类型
 enum ConversationType {
   PRIVATE // 私聊
-  GROUP   // 群聊
+  GROUP // 群聊
 }
 
 /// 群成员角色
 enum MemberRole {
-  OWNER  // 群主
-  ADMIN  // 管理员
+  OWNER // 群主
+  ADMIN // 管理员
   MEMBER // 普通成员
 }
 
 /// 消息类型
 enum MessageType {
-  TEXT   // 文本
-  IMAGE  // 图片
-  FILE   // 文件
-  VOICE  // 语音
-  VIDEO  // 视频
+  TEXT // 文本
+  IMAGE // 图片
+  FILE // 文件
+  VOICE // 语音
+  VIDEO // 视频
   SYSTEM // 系统消息
 }
 
 /// 好友请求状态
 enum FriendRequestStatus {
-  PENDING  // 待处理
+  PENDING // 待处理
   ACCEPTED // 已接受
   REJECTED // 已拒绝
 }
@@ -74,13 +73,13 @@ model User {
   // 关联关系
   settings               UserSettings?
   devices                UserDevice[]
-  sentMessages           Message[]              @relation("SentMessages")
+  sentMessages           Message[]            @relation("SentMessages")
   conversationMembers    ConversationMember[]
-  sentFriendRequests     FriendRequest[]        @relation("SentFriendRequests")
-  receivedFriendRequests FriendRequest[]        @relation("ReceivedFriendRequests")
-  friendships            Friendship[]           @relation("UserFriendships")
-  friendOf               Friendship[]           @relation("FriendOfUser")
-  ownedGroups            Conversation[]         @relation("GroupOwner")
+  sentFriendRequests     FriendRequest[]      @relation("SentFriendRequests")
+  receivedFriendRequests FriendRequest[]      @relation("ReceivedFriendRequests")
+  friendships            Friendship[]         @relation("UserFriendships")
+  friendOf               Friendship[]         @relation("FriendOfUser")
+  ownedGroups            Conversation[]       @relation("GroupOwner")
   readReceipts           MessageReadReceipt[]
   attachments            Attachment[]
 
@@ -151,7 +150,7 @@ model Friendship {
   id        String   @id @default(cuid())
   userId    String   @map("user_id")
   friendId  String   @map("friend_id")
-  remark    String?  // 好友备注
+  remark    String? // 好友备注
   createdAt DateTime @default(now()) @map("created_at")
 
   user   User @relation("UserFriendships", fields: [userId], references: [id], onDelete: Cascade)
@@ -171,10 +170,10 @@ model Friendship {
 model Conversation {
   id        String           @id @default(cuid())
   type      ConversationType
-  name      String?          // 群聊名称
-  avatar    String?          // 群聊头像
+  name      String? // 群聊名称
+  avatar    String? // 群聊头像
   ownerId   String?          @map("owner_id") // 群主 ID
-  notice    String?          // 群公告
+  notice    String? // 群公告
   createdAt DateTime         @default(now()) @map("created_at")
   updatedAt DateTime         @updatedAt @map("updated_at")
 
@@ -193,7 +192,7 @@ model ConversationMember {
   conversationId String     @map("conversation_id")
   userId         String     @map("user_id")
   role           MemberRole @default(MEMBER)
-  nickname       String?    // 群内昵称
+  nickname       String? // 群内昵称
   isMuted        Boolean    @default(false) @map("is_muted") // 是否免打扰
   isPinned       Boolean    @default(false) @map("is_pinned") // 是否置顶
   lastReadAt     DateTime?  @map("last_read_at")
@@ -244,13 +243,13 @@ model Attachment {
   id         String   @id @default(cuid())
   messageId  String   @map("message_id")
   uploaderId String   @map("uploader_id")
-  type       String   // image, video, audio, file
+  type       String // image, video, audio, file
   url        String
   name       String
   size       Int
   width      Int?
   height     Int?
-  duration   Int?     // 音视频时长（秒）
+  duration   Int? // 音视频时长（秒）
   thumbnail  String?
   createdAt  DateTime @default(now()) @map("created_at")
 
@@ -295,4 +294,3 @@ model RefreshToken {
   @@index([expiresAt])
   @@map("refresh_tokens")
 }
-
