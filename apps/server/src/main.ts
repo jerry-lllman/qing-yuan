@@ -25,11 +25,11 @@ async function bootstrap() {
   // 全局验证管道
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
+      whitelist: true, // 自动剥离未声明的属性
+      // forbidNonWhitelisted: true, // 禁止包含未声明的属性
+      transform: true, // 自动转换有效负载到 DTO 实例
       transformOptions: {
-        enableImplicitConversion: true,
+        enableImplicitConversion: true, // 启用隐式类型转换
       },
     }),
   );
