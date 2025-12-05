@@ -31,6 +31,9 @@ export class FriendService {
     // 检查是否已经是好友
     const existingFriendship = await this.prisma.friendship.findUnique({
       where: {
+        // 在 prisma 中定义了
+        // apps/server/prisma/schema.prisma  -> model Friendship -> @@unique([userId, friendId])
+        // 所以这里可以直接用复合唯一索引来查询
         userId_friendId: {
           userId: senderId,
           friendId: dto.receiverId,

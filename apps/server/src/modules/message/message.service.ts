@@ -71,6 +71,11 @@ export class MessageService {
 
   /**
    * 获取会话的消息历史
+   * @param userId 当前用户 ID
+   * @param conversationId 会话 ID
+   * @param options.before 获取在此消息之前的消息 ID
+   * @param options.after 获取在此消息之后的消息 ID
+   * @param options.limit 获取的消息数量限制
    */
   async getMessages(
     userId: string,
