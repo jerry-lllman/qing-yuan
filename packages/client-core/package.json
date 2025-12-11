@@ -1,0 +1,38 @@
+{
+	"name": "@qing-yuan/client-core",
+	"version": "0.0.1",
+	"private": true,
+	"license": "MIT",
+	"type": "module",
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs"
+		}
+	},
+	"scripts": {
+		"build": "tsup",
+		"dev": "tsup --watch",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"test:coverage": "vitest run --coverage",
+		"typecheck": "tsc --noEmit"
+	},
+	"dependencies": {
+		"@qing-yuan/encryption": "workspace:*",
+		"@qing-yuan/protocol": "workspace:*",
+		"@qing-yuan/shared": "workspace:*",
+		"axios": "^1.13.2",
+		"socket.io-client": "^4.8.1"
+	},
+	"devDependencies": {
+		"@qing-yuan/typescript-config": "workspace:*",
+		"tsup": "^8.0.1",
+		"typescript": "^5.9.3",
+		"vite": "^7.2.7",
+		"vitest": "^4.0.15"
+	}
+}
