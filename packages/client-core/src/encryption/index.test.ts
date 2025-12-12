@@ -52,7 +52,7 @@ describe('EncryptionClient', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    storage = new MemoryStorageAdapter({ namespace: 'test' });
+    storage = new MemoryStorageAdapter({ namespace: 'encryption' });
     client = createEncryptionClient({ storage, deviceId: 1 });
   });
 
@@ -281,7 +281,7 @@ describe('EncryptionClient', () => {
 
 describe('createEncryptionClient', () => {
   it('should create an EncryptionClient instance', () => {
-    const storage = new MemoryStorageAdapter({ namespace: 'test' });
+    const storage = new MemoryStorageAdapter({ namespace: 'encryption' });
     const client = createEncryptionClient({ storage });
 
     expect(client).toBeInstanceOf(EncryptionClient);
