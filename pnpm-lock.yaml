@@ -183,6 +183,9 @@ importers:
       axios:
         specifier: ^1.13.2
         version: 1.13.2
+      idb:
+        specifier: ^8.0.3
+        version: 8.0.3
       socket.io-client:
         specifier: ^4.8.1
         version: 4.8.1
@@ -190,6 +193,9 @@ importers:
       '@qing-yuan/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
+      fake-indexeddb:
+        specifier: ^6.2.5
+        version: 6.2.5
       tsup:
         specifier: ^8.0.1
         version: 8.5.1(@swc/core@1.15.3)(jiti@2.6.1)(postcss@8.5.6)(typescript@5.9.3)
@@ -2461,6 +2467,10 @@ packages:
   exsolve@1.0.8:
     resolution: {integrity: sha512-LmDxfWXwcTArk8fUEnOfSZpHOJ6zOMUJKOtFLFqJLoKJetuQG874Uc7/Kki7zFLzYybmZhp1M7+98pfMqeX8yA==}
 
+  fake-indexeddb@6.2.5:
+    resolution: {integrity: sha512-CGnyrvbhPlWYMngksqrSSUT1BAVP49dZocrHuK0SvtR0D5TMs5wP0o3j7jexDJW01KSadjBp1M/71o/KR3nD1w==}
+    engines: {node: '>=18'}
+
   fast-check@3.23.2:
     resolution: {integrity: sha512-h5+1OzzfCC3Ef7VbtKdcv7zsstUQwUDlYpUTvjeUsJAssPgLn7QzbboPtL5ro04Mq0rPOsMzl7q5hIbRs2wD1A==}
     engines: {node: '>=8.0.0'}
@@ -2685,6 +2695,9 @@ packages:
   iconv-lite@0.7.0:
     resolution: {integrity: sha512-cf6L2Ds3h57VVmkZe+Pn+5APsT7FpqJtEhhieDCvrE2MK5Qk9MyffgQyuxQTm6BChfeZNtcOLHp9IcWRVcIcBQ==}
     engines: {node: '>=0.10.0'}
+
+  idb@8.0.3:
+    resolution: {integrity: sha512-LtwtVyVYO5BqRvcsKuB2iUMnHwPVByPCXFXOpuU96IZPPoPN6xjOGxZQ74pgSVVLQWtUOYgyeL4GE98BY5D3wg==}
 
   ieee754@1.2.1:
     resolution: {integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==}
@@ -6497,6 +6510,8 @@ snapshots:
 
   exsolve@1.0.8: {}
 
+  fake-indexeddb@6.2.5: {}
+
   fast-check@3.23.2:
     dependencies:
       pure-rand: 6.1.0
@@ -6743,6 +6758,8 @@ snapshots:
   iconv-lite@0.7.0:
     dependencies:
       safer-buffer: 2.1.2
+
+  idb@8.0.3: {}
 
   ieee754@1.2.1: {}
 
