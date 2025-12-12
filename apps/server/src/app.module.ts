@@ -11,6 +11,7 @@ import { FriendModule } from './modules/friend';
 import { ChatModule } from './modules/chat';
 import { MessageModule } from './modules/message';
 import { GroupModule } from './modules/group';
+import { KeyModule } from './modules/key';
 import { GatewayModule } from './gateway';
 
 @Module({
@@ -36,6 +37,8 @@ import { GatewayModule } from './gateway';
     MessageModule,
     // 群组模块
     GroupModule,
+    // 密钥模块
+    KeyModule,
     // WebSocket 网关
     GatewayModule,
   ],

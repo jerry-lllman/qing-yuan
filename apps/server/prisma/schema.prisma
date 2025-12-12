@@ -82,6 +82,7 @@ model User {
   ownedGroups            Conversation[]       @relation("GroupOwner")
   readReceipts           MessageReadReceipt[]
   attachments            Attachment[]
+  identityKey            UserIdentityKey?
 
   @@index([username])
   @@index([email])
@@ -293,4 +294,47 @@ model RefreshToken {
   @@index([token])
   @@index([expiresAt])
   @@map("refresh_tokens")
+}
+
+// ============================================
+// 端到端加密密钥模型
+// ============================================
+
+/// 用户身份密钥（长期密钥）
+model UserIdentityKey {
+  id                    String   @id @default(cuid())
+  userId                String   @unique @map("user_id")
+  registrationId        Int      @map("registration_id")
+  identityKey           Bytes    @map("identity_key") // 身份公钥
+  signedPreKeyId        Int      @map("signed_pre_key_id")
+  signedPreKey          Bytes    @map("signed_pre_key")
+  signedPreKeySignature Bytes    @map("signed_pre_key_signature")
+  signedPreKeyTimestamp DateTime @map("signed_pre_key_timestamp")
+  kyberPreKeyId         Int      @map("kyber_pre_key_id")
+  kyberPreKey           Bytes    @map("kyber_pre_key")
+  kyberPreKeySignature  Bytes    @map("kyber_pre_key_signature")
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  preKeys PreKey[]
+
+  @@index([userId])
+  @@map("user_identity_keys")
+}
+
+/// 一次性预密钥
+model PreKey {
+  id             String   @id @default(cuid())
+  userIdentityId String   @map("user_identity_id")
+  keyId          Int      @map("key_id")
+  publicKey      Bytes    @map("public_key")
+  used           Boolean  @default(false)
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  userIdentity UserIdentityKey @relation(fields: [userIdentityId], references: [id], onDelete: Cascade)
+
+  @@unique([userIdentityId, keyId])
+  @@index([userIdentityId, used])
+  @@map("pre_keys")
 }

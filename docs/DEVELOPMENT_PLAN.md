@@ -27,8 +27,8 @@
 | ----- | ---------------- | --------- | ---- |
 | 1     | 基础设施搭建     | ✅ 已完成 | 100% |
 | 2     | 后端核心开发     | ✅ 已完成 | 100% |
-| 3     | 加密模块开发     | 🔄 进行中 | 60%  |
-| 4     | 客户端核心层开发 | 🔄 进行中 | 40%  |
+| 3     | 加密模块开发     | 🔄 进行中 | 85%  |
+| 4     | 客户端核心层开发 | 🔄 进行中 | 70%  |
 | 5     | 状态管理层开发   | ⏳ 未开始 | 0%   |
 | 6     | UI 组件库开发    | ⏳ 未开始 | 0%   |
 | 7     | 桌面端应用开发   | ⏳ 未开始 | 0%   |
@@ -99,8 +99,9 @@
 | 3.3  | 实现会话管理 (X3DH)             | ✅   | SignalSessionManager, 内存存储实现                    |
 | 3.4  | 实现 Double Ratchet 算法集成    | ✅   | 通过 @signalapp/libsignal-client                      |
 | 3.5  | 实现消息加解密流程              | ✅   | encrypt/decrypt 方法，支持 PreKey 和 Whisper 消息     |
-| 3.6  | 实现服务端密钥交换接口          | ⏳   | 需要在 server 添加密钥上传/获取接口                   |
-| 3.7  | 编写加密模块单元测试            | ✅   | 34 个测试通过 (21 keys + 13 session)                  |
+| 3.6  | 实现持久化存储适配器            | ✅   | PersistentSignalSessionManager, 5 个 Store 类         |
+| 3.7  | 实现服务端密钥交换接口          | ✅   | KeyController, KeyService, 12 个 e2e 测试通过         |
+| 3.8  | 编写加密模块单元测试            | ✅   | 56 个测试通过 (21 keys + 13 session + 22 stores)      |
 
 ### Phase 3 技术要点
 
@@ -111,11 +112,16 @@
   - Signed Pre-Key: 中期密钥（建议 7 天轮换）
   - Pre-Keys: 一次性预密钥（用于会话建立）
   - Kyber Pre-Key: 后量子加密密钥
+- **服务端密钥交换 API**:
+  - `POST /keys/upload` - 上传密钥包
+  - `POST /keys/prekeys` - 补充一次性预密钥
+  - `GET /keys/bundle/:userId` - 获取用户密钥包
+  - `GET /keys/status` - 获取当前用户密钥状态
 
 ### Phase 3 待完成工作
 
-- [ ] 持久化存储适配器（替换内存存储）
-- [ ] 服务端密钥交换 API
+- [x] 持久化存储适配器（替换内存存储）✅ 2024-12-12
+- [x] 服务端密钥交换 API ✅ 2024-12-12
 - [ ] 群组加密（Sender Key）
 - [ ] 密钥备份与恢复
 
@@ -125,17 +131,17 @@
 
 **状态**: 🔄 进行中  
 **预计耗时**: Week 7-8  
-**测试覆盖**: 57 个单元测试通过 (28 API + 29 Socket)
+**测试覆盖**: 187 个单元测试通过 (28 API + 29 Socket + 20 Memory + 41 IndexedDB + 36 MMKV + 16 SignalAdapter + 17 EncryptionClient)
 
 | 序号 | 任务                             | 状态 | 备注                                        |
 | ---- | -------------------------------- | ---- | ------------------------------------------- |
 | 4.1  | 创建 `packages/client-core` 结构 | ✅   | tsup + vitest 配置                          |
 | 4.2  | 实现 HTTP API 封装 (Axios)       | ✅   | HttpClient 类，支持拦截器、Token 刷新、重试 |
 | 4.3  | 实现 WebSocket 客户端封装        | ✅   | SocketClient 类，支持自动重连、事件监听     |
-| 4.4  | 实现存储适配器接口               | ⏳   |                                             |
-| 4.5  | 实现 Web 存储适配器 (IndexedDB)  | ⏳   |                                             |
-| 4.6  | 实现 Native 存储适配器 (MMKV)    | ⏳   |                                             |
-| 4.7  | 集成加密模块到 client-core       | ⏳   |                                             |
+| 4.4  | 实现存储适配器接口               | ✅   | IStorageAdapter, StorageAdapter 基类        |
+| 4.5  | 实现 Web 存储适配器 (IndexedDB)  | ✅   | IndexedDBStorageAdapter, 41 个测试          |
+| 4.6  | 实现 Native 存储适配器 (MMKV)    | ✅   | MMKVStorageAdapter, 36 个测试               |
+| 4.7  | 集成加密模块到 client-core       | ✅   | EncryptionClient 封装, SignalStorageAdapter |
 | 4.8  | 实现消息同步策略                 | ⏳   |                                             |
 | 4.9  | 实现离线消息队列                 | ⏳   |                                             |
 
