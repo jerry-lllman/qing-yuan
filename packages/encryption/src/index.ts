@@ -18,5 +18,6 @@ export * from './keys';
 
 // 会话管理
 export * from './session';
-// export * from './crypto';
-// export * from './store';
+
+// 持久化存储
+export * from './stores';
