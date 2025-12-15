@@ -28,7 +28,7 @@
 | 1     | 基础设施搭建     | ✅ 已完成 | 100% |
 | 2     | 后端核心开发     | ✅ 已完成 | 100% |
 | 3     | 加密模块开发     | 🔄 进行中 | 85%  |
-| 4     | 客户端核心层开发 | 🔄 进行中 | 70%  |
+| 4     | 客户端核心层开发 | 🔄 进行中 | 90%  |
 | 5     | 状态管理层开发   | ⏳ 未开始 | 0%   |
 | 6     | UI 组件库开发    | ⏳ 未开始 | 0%   |
 | 7     | 桌面端应用开发   | ⏳ 未开始 | 0%   |
@@ -131,7 +131,7 @@
 
 **状态**: 🔄 进行中  
 **预计耗时**: Week 7-8  
-**测试覆盖**: 187 个单元测试通过 (28 API + 29 Socket + 20 Memory + 41 IndexedDB + 36 MMKV + 16 SignalAdapter + 17 EncryptionClient)
+**测试覆盖**: 214 个单元测试通过 (28 API + 29 Socket + 20 Memory + 41 IndexedDB + 36 MMKV + 16 SignalAdapter + 17 EncryptionClient + 27 Sync)
 
 | 序号 | 任务                             | 状态 | 备注                                        |
 | ---- | -------------------------------- | ---- | ------------------------------------------- |
@@ -142,7 +142,7 @@
 | 4.5  | 实现 Web 存储适配器 (IndexedDB)  | ✅   | IndexedDBStorageAdapter, 41 个测试          |
 | 4.6  | 实现 Native 存储适配器 (MMKV)    | ✅   | MMKVStorageAdapter, 36 个测试               |
 | 4.7  | 集成加密模块到 client-core       | ✅   | EncryptionClient 封装, SignalStorageAdapter |
-| 4.8  | 实现消息同步策略                 | ⏳   |                                             |
+| 4.8  | 实现消息同步策略                 | ✅   | SyncManager, SyncCursorManager, 27 个测试   |
 | 4.9  | 实现离线消息队列                 | ⏳   |                                             |
 
 ### Phase 4 技术要点
