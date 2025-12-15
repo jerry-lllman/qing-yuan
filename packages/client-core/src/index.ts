@@ -3,3 +3,4 @@ export * from './socket';
 export * from './storage';
 export * from './encryption';
 export * from './sync';
+export * from './offline-queue';
