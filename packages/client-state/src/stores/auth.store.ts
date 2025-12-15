@@ -100,32 +100,32 @@ export const useAuthStore = create<AuthState>()(
 
         // ========== 操作 ==========
         setStatus: (status) =>
-          set((state) => {
+          set((state: AuthState) => {
             state.status = status;
           }),
 
         setUser: (user) =>
-          set((state) => {
+          set((state: AuthState) => {
             state.user = user;
           }),
 
         setTokens: (tokens) =>
-          set((state) => {
+          set((state: AuthState) => {
             state.tokens = tokens;
           }),
 
         setError: (error) =>
-          set((state) => {
+          set((state: AuthState) => {
             state.error = error;
           }),
 
         setLoading: (isLoading) =>
-          set((state) => {
+          set((state: AuthState) => {
             state.isLoading = isLoading;
           }),
 
         loginSuccess: (user, tokens) =>
-          set((state) => {
+          set((state: AuthState) => {
             state.status = AuthStatus.AUTHENTICATED;
             state.user = user;
             state.tokens = tokens;
@@ -134,7 +134,7 @@ export const useAuthStore = create<AuthState>()(
           }),
 
         logout: () =>
-          set((state) => {
+          set((state: AuthState) => {
             state.status = AuthStatus.UNAUTHENTICATED;
             state.user = null;
             state.tokens = null;
@@ -143,12 +143,12 @@ export const useAuthStore = create<AuthState>()(
           }),
 
         refreshTokenSuccess: (tokens) =>
-          set((state) => {
+          set((state: AuthState) => {
             state.tokens = tokens;
           }),
 
         updateUser: (updates) =>
-          set((state) => {
+          set((state: AuthState) => {
             if (state.user) {
               Object.assign(state.user, updates);
             }
