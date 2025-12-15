@@ -6,6 +6,7 @@
 // Stores
 export * from './stores/auth.store';
 export * from './stores/chat.store';
+export * from './stores/contact.store';
 export * from './stores/message.store';
 
 // Queries (TanStack Query)
