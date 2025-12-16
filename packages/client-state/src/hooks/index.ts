@@ -24,3 +24,15 @@ export {
   type UseMessageOptions,
   type UseMessageReturn,
 } from './use-message';
+
+export {
+  useContact,
+  useFriend,
+  useIsFriend,
+  useIsBlocked,
+  useOnlineStatus,
+  usePendingRequestCount,
+  type ContactApi,
+  type UseContactOptions,
+  type UseContactReturn,
+} from './use-contact';
