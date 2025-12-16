@@ -12,7 +12,10 @@
     "monorepo"
   ],
   "license": "MIT",
-  "author": "Qing-Yuan Team",
+  "author": {
+    "name": "Jerry",
+    "url": "https://github.com/jerry-lllman"
+  },
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
