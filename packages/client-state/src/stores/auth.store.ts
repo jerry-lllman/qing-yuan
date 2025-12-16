@@ -94,7 +94,7 @@ const initialState: Pick<AuthState, 'status' | 'user' | 'tokens' | 'error' | 'is
 export const useAuthStore = create<AuthState>()(
   devtools(
     persist(
-      immer((set, get) => ({
+      immer((set) => ({
         // ========== 初始状态 ==========
         ...initialState,
 
@@ -190,29 +190,6 @@ export const useAuthStore = create<AuthState>()(
     { name: 'AuthStore' }
   )
 );
-
-// ========================
-// Selector Hooks（性能优化）
-// ========================
-
-/** 获取认证状态 */
-export const useAuthStatus = () => useAuthStore((state) => state.status);
-
-/** 获取当前用户 */
-export const useCurrentUser = () => useAuthStore((state) => state.user);
-
-/** 获取是否已认证 */
-export const useIsAuthenticated = () =>
-  useAuthStore((state) => state.status === AuthStatus.AUTHENTICATED);
-
-/** 获取 Token */
-export const useAuthTokens = () => useAuthStore((state) => state.tokens);
-
-/** 获取加载状态 */
-export const useAuthLoading = () => useAuthStore((state) => state.isLoading);
-
-/** 获取错误信息 */
-export const useAuthError = () => useAuthStore((state) => state.error);
 
 // ========================
 // 工具函数

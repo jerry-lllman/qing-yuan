@@ -1,35 +1,30 @@
-import Versions from './components/Versions'
-import electronLogo from './assets/electron.svg'
+import { Button, Input, Card, CardHeader, CardTitle, CardContent } from '@qing-yuan/ui-web';
 
 function App(): React.JSX.Element {
-  const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
+  const ipcHandle = (): void => window.electron.ipcRenderer.send('ping');
 
   return (
-    <>
-      <img alt="logo" className="logo" src={electronLogo} />
-      <div className="creator">Powered by electron-vite</div>
-      <div className="text">
-        Build an Electron app with <span className="react">React</span>
-        &nbsp;and <span className="ts">TypeScript</span>
-      </div>
-      <p className="tip">
-        Please try pressing <code>F12</code> to open the devTool
-      </p>
-      <div className="actions">
-        <div className="action">
-          <a href="https://electron-vite.org/" target="_blank" rel="noreferrer">
-            Documentation
-          </a>
-        </div>
-        <div className="action">
-          <a target="_blank" rel="noreferrer" onClick={ipcHandle}>
-            Send IPC
-          </a>
-        </div>
-      </div>
-      <Versions></Versions>
-    </>
-  )
+    <div className="flex h-screen items-center justify-center bg-background">
+      <Card className="w-[400px]">
+        <CardHeader>
+          <CardTitle className="text-center">Qing Yuan</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <p className="text-center text-muted-foreground">即时通讯桌面端</p>
+          <Input placeholder="用户名" />
+          <Input type="password" placeholder="密码" />
+          <div className="flex gap-2">
+            <Button className="flex-1" variant="outline">
+              注册
+            </Button>
+            <Button className="flex-1" onClick={ipcHandle}>
+              登录
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
 }
 
-export default App
+export default App;

@@ -7,7 +7,7 @@ import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import { enableMapSet } from 'immer';
-import type { Message, MessageStatus } from '@qing-yuan/shared';
+import type { Message } from '@qing-yuan/shared';
 
 // 启用 immer 的 Map/Set 支持
 enableMapSet();
@@ -264,7 +264,7 @@ export const useMessageStore = create<MessageState>()(
 
       updatePendingMessage: (tempId, updates) =>
         set((state: MessageState) => {
-          for (const [conversationId, messages] of state.pendingMessages) {
+          for (const [_conversationId, messages] of state.pendingMessages) {
             const index = messages.findIndex((m) => m.tempId === tempId);
             if (index !== -1) {
               Object.assign(messages[index]!, updates);
@@ -342,69 +342,6 @@ export const useMessageStore = create<MessageState>()(
     { name: 'MessageStore' }
   )
 );
-
-// ========================
-// Selector Hooks（性能优化）
-// ========================
-
-/** 获取会话消息列表 */
-export const useMessages = (conversationId: string) =>
-  useMessageStore((state) => state.messages.get(conversationId) || []);
-
-/** 获取待发送消息列表 */
-export const usePendingMessages = (conversationId: string) =>
-  useMessageStore((state) => state.pendingMessages.get(conversationId) || []);
-
-/** 获取会话所有消息（包括待发送） */
-export const useAllMessages = (conversationId: string) =>
-  useMessageStore((state) => {
-    const messages = state.messages.get(conversationId) || [];
-    const pending = state.pendingMessages.get(conversationId) || [];
-
-    // 将待发送消息转换为 Message 格式并合并
-    const pendingAsMessages: Message[] = pending.map((p) => ({
-      id: p.tempId,
-      conversationId: p.conversationId,
-      senderId: '', // 需要从 AuthStore 获取
-      sender: null as any, // 需要从 AuthStore 获取
-      type: p.type,
-      content: p.content,
-      attachments: p.attachments || [],
-      replyTo: null,
-      status: p.status === SendingStatus.SENT ? 'sent' : 'sending',
-      isEdited: false,
-      isDeleted: false,
-      createdAt: p.createdAt,
-      updatedAt: p.createdAt,
-    }));
-
-    return [...messages, ...pendingAsMessages];
-  });
-
-/** 获取草稿 */
-export const useDraft = (conversationId: string) =>
-  useMessageStore((state) => state.drafts.get(conversationId));
-
-/** 获取分页信息 */
-export const usePagination = (conversationId: string) =>
-  useMessageStore(
-    (state) =>
-      state.pagination.get(conversationId) || {
-        hasMore: true,
-        isLoading: false,
-      }
-  );
-
-/** 获取正在编辑的消息 ID */
-export const useEditingMessageId = () => useMessageStore((state) => state.editingMessageId);
-
-/** 检查消息是否正在加载 */
-export const useIsLoadingMessages = (conversationId: string) =>
-  useMessageStore((state) => state.pagination.get(conversationId)?.isLoading ?? false);
-
-/** 检查是否有更多消息 */
-export const useHasMoreMessages = (conversationId: string) =>
-  useMessageStore((state) => state.pagination.get(conversationId)?.hasMore ?? true);
 
 // ========================
 // 工具函数（非 React 环境）

@@ -13,17 +13,7 @@
 import { useCallback, useMemo } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { User, AuthTokens, LoginRequest, RegisterRequest } from '@qing-yuan/shared';
-import {
-  useAuthStore,
-  useAuthStatus,
-  useCurrentUser,
-  useIsAuthenticated,
-  useAuthTokens,
-  useAuthLoading,
-  useAuthError,
-  AuthStatus,
-  type AuthError,
-} from '../stores/auth.store';
+import { useAuthStore, AuthStatus, type AuthError } from '../stores/auth.store';
 import { userKeys } from '../queries/keys';
 
 // ========================
@@ -130,26 +120,21 @@ export function useAuth(options: UseAuthOptions): UseAuthReturn {
   const queryClient = useQueryClient();
 
   // ========== Store State ==========
-  const status = useAuthStatus();
-  const user = useCurrentUser();
-  const tokens = useAuthTokens();
-  const isAuthenticated = useIsAuthenticated();
-  const isLoading = useAuthLoading();
-  const error = useAuthError();
+  const status = useAuthStore((state) => state.status);
+  const user = useAuthStore((state) => state.user);
+  const tokens = useAuthStore((state) => state.tokens);
+  const isAuthenticated = useAuthStore((state) => state.status === AuthStatus.AUTHENTICATED);
+  const isLoading = useAuthStore((state) => state.isLoading);
+  const error = useAuthStore((state) => state.error);
 
-  // Store Actions
-  const {
-    setStatus,
-    setUser,
-    setTokens,
-    setError,
-    setLoading,
-    loginSuccess,
-    logout: storeLogout,
-    refreshTokenSuccess,
-    updateUser,
-    reset,
-  } = useAuthStore();
+  // Store Actions - 只获取实际使用的 actions
+  const setUser = useAuthStore((state) => state.setUser);
+  const setError = useAuthStore((state) => state.setError);
+  const setLoading = useAuthStore((state) => state.setLoading);
+  const loginSuccess = useAuthStore((state) => state.loginSuccess);
+  const storeLogout = useAuthStore((state) => state.logout);
+  const refreshTokenSuccess = useAuthStore((state) => state.refreshTokenSuccess);
+  const updateUser = useAuthStore((state) => state.updateUser);
 
   // ========== 错误处理 ==========
   const handleError = useCallback(

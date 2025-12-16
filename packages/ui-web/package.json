@@ -4,6 +4,9 @@
   "private": true,
   "license": "MIT",
   "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -11,11 +14,10 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./globals.css": "./src/styles/globals.css"
+    "./styles.css": "./dist/index.css"
   },
   "files": [
-    "dist",
-    "src/styles"
+    "dist"
   ],
   "scripts": {
     "dev": "vite",

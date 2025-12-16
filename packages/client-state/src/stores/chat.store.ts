@@ -135,7 +135,7 @@ function sortChatIds(chats: Map<string, ChatConversation>): string[] {
 export const useChatStore = create<ChatState>()(
   devtools(
     persist(
-      immer((set, get) => ({
+      immer((set) => ({
         // ========== 初始状态 ==========
         ...initialState,
 
@@ -268,54 +268,6 @@ export const useChatStore = create<ChatState>()(
     { name: 'ChatStore' }
   )
 );
-
-// ========================
-// Selector Hooks（性能优化）
-// ========================
-
-/** 获取会话列表（已排序） */
-export const useChatList = () =>
-  useChatStore((state) => state.chatIds.map((id) => state.chats.get(id)!).filter(Boolean));
-
-/** 获取当前会话 ID */
-export const useCurrentChatId = () => useChatStore((state) => state.currentChatId);
-
-/** 获取当前会话 */
-export const useCurrentChat = () =>
-  useChatStore((state) =>
-    state.currentChatId ? (state.chats.get(state.currentChatId) ?? null) : null
-  );
-
-/** 获取指定会话 */
-export const useChat = (chatId: string) => useChatStore((state) => state.chats.get(chatId) ?? null);
-
-/** 获取总未读数 */
-export const useTotalUnreadCount = () => useChatStore((state) => state.totalUnreadCount);
-
-/** 获取会话加载状态 */
-export const useChatLoading = () => useChatStore((state) => state.isLoading);
-
-/** 获取私聊会话列表 */
-export const usePrivateChats = () =>
-  useChatStore((state) =>
-    state.chatIds
-      .map((id) => state.chats.get(id))
-      .filter((chat): chat is PrivateConversation => chat?.type === 'private')
-  );
-
-/** 获取群聊会话列表 */
-export const useGroupChats = () =>
-  useChatStore((state) =>
-    state.chatIds
-      .map((id) => state.chats.get(id))
-      .filter((chat): chat is GroupConversation => chat?.type === 'group')
-  );
-
-/** 获取置顶会话列表 */
-export const usePinnedChats = () =>
-  useChatStore((state) =>
-    state.chatIds.map((id) => state.chats.get(id)!).filter((chat) => chat?.isPinned)
-  );
 
 // ========================
 // 工具函数（非 React 环境）

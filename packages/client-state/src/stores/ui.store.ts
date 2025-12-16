@@ -286,37 +286,6 @@ export const useUIStore = create<UIState>()(
 );
 
 // ========================
-// Selector Hooks（性能优化）
-// ========================
-
-/** 获取侧边栏状态 */
-export const useSidebarOpen = () => useUIStore((state) => state.sidebarOpen);
-
-/** 获取当前侧边栏面板 */
-export const useSidebarPanel = () => useUIStore((state) => state.sidebarPanel);
-
-/** 获取当前主题 */
-export const useTheme = () => useUIStore((state) => state.theme);
-
-/** 获取当前模态框 */
-export const useActiveModal = () => useUIStore((state) => state.activeModal);
-
-/** 获取模态框数据 */
-export const useModalData = () => useUIStore((state) => state.modalData);
-
-/** 获取 Toast 列表 */
-export const useToasts = () => useUIStore((state) => state.toasts);
-
-/** 获取表情选择器状态 */
-export const useShowEmojiPicker = () => useUIStore((state) => state.showEmojiPicker);
-
-/** 获取搜索状态 */
-export const useIsSearching = () => useUIStore((state) => state.isSearching);
-
-/** 获取搜索关键词 */
-export const useSearchQuery = () => useUIStore((state) => state.searchQuery);
-
-// ========================
 // 工具函数（非 React 环境）
 // ========================
 
