@@ -166,18 +166,18 @@
 
 **状态**: ✅ 已完成  
 **实际耗时**: Week 9-10  
-**测试覆盖**: 224 个单元测试通过 (35 auth + 36 chat + 43 contact + 49 message + 22 ui + 25 queries + 14 query-client)
+**测试覆盖**: 325 个单元测试通过 (35 auth + 36 chat + 43 contact + 49 message + 22 ui + 25 queries + 14 query-client + 21 use-auth + 30 use-chat + 23 use-message + 27 use-contact)
 
-| 序号 | 任务                              | 状态 | 备注                                              |
-| ---- | --------------------------------- | ---- | ------------------------------------------------- |
-| 5.1  | 创建 `packages/client-state` 结构 | ✅   | tsup + vitest 配置                                |
-| 5.2  | 实现 `auth.store`                 | ✅   | 认证状态、Token 管理、35 个测试                   |
-| 5.3  | 实现 `contact.store`              | ✅   | 好友列表、好友请求、在线状态、43 个测试           |
-| 5.4  | 实现 `chat.store`                 | ✅   | 会话管理、未读计数、置顶、静音、36 个测试         |
-| 5.5  | 实现 `message.store`              | ✅   | 消息管理、分页加载、发送状态、已读状态、49 个测试 |
-| 5.6  | 实现 `ui.store`                   | ✅   | 主题、侧边栏、模态框、通知、22 个测试             |
-| 5.7  | 实现业务 Hooks                    | ⏳   | 待后续开发                                        |
-| 5.8  | 实现 TanStack Query 配置          | ✅   | QueryClient 配置、Key 工厂、39 个测试             |
+| 序号 | 任务                              | 状态 | 备注                                                 |
+| ---- | --------------------------------- | ---- | ---------------------------------------------------- |
+| 5.1  | 创建 `packages/client-state` 结构 | ✅   | tsup + vitest 配置                                   |
+| 5.2  | 实现 `auth.store`                 | ✅   | 认证状态、Token 管理、35 个测试                      |
+| 5.3  | 实现 `contact.store`              | ✅   | 好友列表、好友请求、在线状态、43 个测试              |
+| 5.4  | 实现 `chat.store`                 | ✅   | 会话管理、未读计数、置顶、静音、36 个测试            |
+| 5.5  | 实现 `message.store`              | ✅   | 消息管理、分页加载、发送状态、已读状态、49 个测试    |
+| 5.6  | 实现 `ui.store`                   | ✅   | 主题、侧边栏、模态框、通知、22 个测试                |
+| 5.7  | 实现业务 Hooks                    | ✅   | useAuth, useChat, useMessage, useContact, 101 个测试 |
+| 5.8  | 实现 TanStack Query 配置          | ✅   | QueryClient 配置、Key 工厂、39 个测试                |
 
 ### Phase 5 技术要点
 
@@ -194,6 +194,12 @@
 - **TanStack Query 集成**:
   - 自定义 `createQueryClient` 配置（重试、缓存时间、GC）
   - Query Key 工厂模式：`userKeys`, `chatKeys`, `messageKeys`, `friendKeys`, `groupKeys`
+- **业务 Hooks**:
+  - `useAuth`: 认证管理（登录、注销、Token 刷新），21 个测试
+  - `useChat`: 会话管理（私聊/群聊、未读计数），30 个测试
+  - `useMessage`: 消息管理（发送、接收、分页加载），23 个测试
+  - `useContact`: 联系人管理（好友请求、黑名单），27 个测试
+  - 辅助 Hooks: `useIsAuthenticated`, `useCurrentUser`, `useConversation`, `useFriend`, `useIsFriend`, `useIsBlocked` 等
 
 ---
 
@@ -373,15 +379,16 @@
 
 ## 更新日志
 
-| 日期       | 更新内容                                                                |
-| ---------- | ----------------------------------------------------------------------- |
-| 2025-12-15 | 完成 Phase 5 状态管理层开发，224 个测试通过                             |
-| 2025-12-11 | 完成 Phase 4.1-4.3 客户端核心层（HTTP + WebSocket 封装），57 个测试通过 |
-| 2025-12-04 | 完成 Phase 3.1-3.5 加密模块（密钥生成 + 会话管理），34 个测试通过       |
-| 2025-12-03 | 完成 Phase 2 后端开发，107 个 e2e 测试通过；修复 Group 模块 bug         |
-| 2025-12-02 | 完成 Phase 1 基础设施搭建                                               |
+| 日期       | 更新内容                                                                              |
+| ---------- | ------------------------------------------------------------------------------------- |
+| 2025-12-16 | 完成 Phase 5.7 业务 Hooks（useAuth, useChat, useMessage, useContact），325 个测试通过 |
+| 2025-12-15 | 完成 Phase 5 Zustand Stores 开发，224 个测试通过                                      |
+| 2025-12-11 | 完成 Phase 4.1-4.3 客户端核心层（HTTP + WebSocket 封装），57 个测试通过               |
+| 2025-12-04 | 完成 Phase 3.1-3.5 加密模块（密钥生成 + 会话管理），34 个测试通过                     |
+| 2025-12-03 | 完成 Phase 2 后端开发，107 个 e2e 测试通过；修复 Group 模块 bug                       |
+| 2025-12-02 | 完成 Phase 1 基础设施搭建                                                             |
 
 ---
 
-_文档版本: 1.2.0_  
-_最后更新: 2025-12-15_
+_文档版本: 1.3.0_  
+_最后更新: 2025-12-16_
