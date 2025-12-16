@@ -32,7 +32,10 @@
 	},
 	"devDependencies": {
 		"@qing-yuan/typescript-config": "workspace:*",
+		"@testing-library/react": "^16.3.0",
 		"@types/react": "^19.2.7",
+		"@vitejs/plugin-react": "^5.1.2",
+		"jsdom": "^27.3.0",
 		"react": "^19.2.3",
 		"tsup": "^8.0.1",
 		"typescript": "^5.9.3",

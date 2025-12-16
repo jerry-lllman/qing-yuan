@@ -1,4 +1,4 @@
-# @cyan/server
+# @qing-yuan/server
 
 Qing-Yuan 即时通讯应用的后端服务，基于 Nest.js 构建。
 
@@ -207,7 +207,7 @@ pnpm db:studio        # 打开 Prisma Studio
        ↓
 @qing-yuan/protocol   # 通信协议
        ↓
-    @cyan/server      # 本服务
+    @qing-yuan/server      # 本服务
 ```
 
 ## 安全注意事项

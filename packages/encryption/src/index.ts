@@ -1,5 +1,5 @@
 /**
- * @cyan/encryption
+ * @qing-yuan/encryption
  *
  * 端到端加密模块，基于 Signal Protocol 实现
  *
