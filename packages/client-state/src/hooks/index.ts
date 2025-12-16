@@ -13,3 +13,14 @@ export {
   type UseChatOptions,
   type UseChatReturn,
 } from './use-chat';
+
+export {
+  useMessage,
+  useMessageById,
+  useHasPendingMessages,
+  useFailedMessageCount,
+  getFailedMessages,
+  type MessageApi,
+  type UseMessageOptions,
+  type UseMessageReturn,
+} from './use-message';
