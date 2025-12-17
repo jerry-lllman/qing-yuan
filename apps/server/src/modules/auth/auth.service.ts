@@ -27,7 +27,10 @@ export class AuthService {
       where: { username: dto.username },
     });
     if (existingUsername) {
-      throw new ConflictException('用户名已被使用');
+      throw new ConflictException({
+        message: '用户名已被使用',
+        field: 'username',
+      });
     }
 
     // 检查邮箱是否已存在
@@ -35,7 +38,10 @@ export class AuthService {
       where: { email: dto.email },
     });
     if (existingEmail) {
-      throw new ConflictException('邮箱已被使用');
+      throw new ConflictException({
+        message: '邮箱已被使用',
+        field: 'email',
+      });
     }
 
     // 密码加密

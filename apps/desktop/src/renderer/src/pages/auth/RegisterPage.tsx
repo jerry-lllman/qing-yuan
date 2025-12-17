@@ -22,11 +22,34 @@ import {
 } from '@qing-yuan/ui-web';
 import { useAuth } from '@qing-yuan/client-state';
 import { registerFormSchema, type RegisterFormInput } from '@qing-yuan/protocol';
+import { ApiRequestError } from '@qing-yuan/client-core';
 import { authApi } from '@/api/auth';
+
+/** 表单字段名类型 */
+type FormFieldName = keyof RegisterFormInput;
+
+/** 有效的表单字段列表 */
+const FORM_FIELDS: FormFieldName[] = [
+  'username',
+  'email',
+  'nickname',
+  'password',
+  'confirmPassword',
+];
+
+/** 检查字段名是否有效 */
+function isValidField(field: string): field is FormFieldName {
+  return FORM_FIELDS.includes(field as FormFieldName);
+}
+
+/** 类型保护：检查是否为 ApiRequestError */
+function isApiRequestError(error: unknown): error is ApiRequestError {
+  return error instanceof ApiRequestError;
+}
 
 export default function RegisterPage() {
   const navigate = useNavigate();
-  const { register, isRegistering, error: authError } = useAuth({ api: authApi });
+  const { register, isRegistering } = useAuth({ api: authApi });
 
   const form = useForm<RegisterFormInput>({
     resolver: zodResolver(registerFormSchema),
@@ -49,8 +72,16 @@ export default function RegisterPage() {
       });
       // 注册成功，跳转到聊天页面
       navigate('/chat', { replace: true });
-    } catch {
-      // 错误已通过 useAuth 的 error 状态处理
+    } catch (err: unknown) {
+      // 从后端错误中提取 field 信息
+      if (isApiRequestError(err) && err.field && isValidField(err.field)) {
+        // 后端返回了具体字段，映射到表单
+        form.setError(err.field, { type: 'server', message: err.message });
+      } else {
+        // 无 field 信息，设置为 root 错误
+        const message = err instanceof Error ? err.message : '注册失败';
+        form.setError('root', { type: 'server', message });
+      }
     }
   };
 
@@ -64,9 +95,9 @@ export default function RegisterPage() {
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              {authError && (
+              {form.formState.errors.root && (
                 <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
-                  {authError.message}
+                  {form.formState.errors.root.message}
                 </div>
               )}
               <FormField

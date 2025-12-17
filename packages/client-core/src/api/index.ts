@@ -55,6 +55,7 @@ export class NetworkError extends Error {
 /** API 错误 */
 export class ApiRequestError extends Error {
   public readonly code: string;
+  public readonly field?: string;
   public readonly details?: Record<string, unknown>;
   public readonly statusCode: number;
 
@@ -62,6 +63,7 @@ export class ApiRequestError extends Error {
     super(error.error.message);
     this.name = 'ApiRequestError';
     this.code = error.error.code;
+    this.field = error.error.field;
     this.details = error.error.details;
     this.statusCode = statusCode;
   }

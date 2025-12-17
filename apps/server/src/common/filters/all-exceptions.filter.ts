@@ -16,6 +16,7 @@ export interface ApiErrorResponse {
   error: {
     code: string;
     message: string;
+    field?: string; // 出错的字段名，用于前端表单错误映射
     details?: Record<string, unknown>;
   };
   timestamp: number;
@@ -34,6 +35,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
     let message = '服务器内部错误';
     let code = 'INTERNAL_ERROR';
+    let field: string | undefined;
     let details: Record<string, unknown> | undefined;
 
     if (exception instanceof HttpException) {
@@ -45,6 +47,10 @@ export class AllExceptionsFilter implements ExceptionFilter {
       } else if (typeof exceptionResponse === 'object') {
         const res = exceptionResponse as Record<string, unknown>;
         message = (res.message as string) || exception.message;
+        // 提取 field 信息（用于前端表单错误映射）
+        if (res.field && typeof res.field === 'string') {
+          field = res.field;
+        }
         // 处理 class-validator 的验证错误数组
         if (Array.isArray(res.message)) {
           message = res.message[0];
@@ -63,6 +69,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       error: {
         code,
         message,
+        ...(field && { field }),
         ...(details && { details }),
       },
       timestamp: Date.now(),

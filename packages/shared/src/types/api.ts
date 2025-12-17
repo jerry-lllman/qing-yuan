@@ -16,6 +16,7 @@ export interface ApiError {
   error: {
     code: string;
     message: string;
+    field?: string; // 出错的字段名，用于前端表单错误映射
     details?: Record<string, unknown>;
   };
   timestamp: number;
