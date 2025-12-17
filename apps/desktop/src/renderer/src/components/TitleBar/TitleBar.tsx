@@ -8,19 +8,31 @@
 
 import { useEffect, useState } from 'react';
 import { Minus, Square, Copy, X } from 'lucide-react';
-import { cn } from '@qyra/ui-web';
+import { Avatar, AvatarImage, AvatarFallback, cn } from '@qyra/ui-web';
+import { isWindows } from '@qyra/shared';
+import { useAuthStore } from '@qyra/client-state';
 import lightLogo from '@qyra/assets/images/light-logo.png';
 
 interface TitleBarProps {
   /** 是否显示为透明背景（用于叠加在内容上） */
   transparent?: boolean;
+  /** 是否显示应用 Logo */
+  showLogo?: boolean;
+  /** 是否展示用户信息 */
+  showUserInfo?: boolean;
   /** 自定义类名 */
   className?: string;
 }
 
-export function TitleBar({ transparent = false, className }: TitleBarProps) {
+export function TitleBar({
+  transparent = false,
+  showLogo = false,
+  showUserInfo = false,
+  className,
+}: TitleBarProps) {
   const [isMaximized, setIsMaximized] = useState(false);
-  const isMac = !navigator.platform.toLowerCase().includes('mac');
+  const isWindowsOS = isWindows();
+  const user = useAuthStore((state) => state.user);
 
   useEffect(() => {
     // 初始检查最大化状态
@@ -55,22 +67,6 @@ export function TitleBar({ transparent = false, className }: TitleBarProps) {
     window.windowControls?.close();
   };
 
-  // macOS: 只需要拖拽区域，红绿灯按钮由系统提供
-  if (isMac) {
-    return (
-      <div
-        className={cn(
-          'h-10 flex items-center app-drag-region',
-          transparent ? 'bg-transparent' : 'bg-background',
-          className
-        )}
-      >
-        {/* 左侧留空给红绿灯按钮 (约 80px) */}
-        <div className="w-20 shrink-0" />
-      </div>
-    );
-  }
-
   // Windows/Linux: 自定义窗口控制按钮
   return (
     <div
@@ -80,39 +76,58 @@ export function TitleBar({ transparent = false, className }: TitleBarProps) {
         className
       )}
     >
-      {/* 左侧可放 logo 或标题 */}
-      <div className="flex items-center px-4">
-        <img src={lightLogo} className="w-8 h-8" />
+      {/* Windows 时展示 logo */}
+      <div className="mx-4 w-8 h-8">
+        {isWindowsOS && showLogo && <img src={lightLogo} className="w-full h-full" />}
       </div>
-
+      {/* 用户信息 */}
+      <div className="flex">
+        {showUserInfo && (
+          <div className={cn('flex-1 flex items-center gap-1 app-no-drag ml-3')}>
+            <Avatar className="w-8 h-8">
+              {/* 用户头像 */}
+              <AvatarImage src={user?.avatar ?? undefined} alt={user?.nickname} />
+              <AvatarFallback>{user?.nickname?.charAt(0) ?? '?'}</AvatarFallback>
+            </Avatar>
+            {/* 用户昵称/用户名 */}
+            <div className="font-medium text-foreground truncate max-w-50">
+              {user?.nickname || user?.username || '未登录'}
+            </div>
+            {/* 用户签名 */}
+            <div className="text-sm text-foreground/70 truncate max-w-50">{user?.bio}</div>
+          </div>
+        )}
+      </div>
       {/* 右侧窗口控制按钮 */}
-      <div className="flex app-no-drag">
-        <button
-          onClick={handleMinimize}
-          className="w-12 h-10 hover:bg-muted flex items-center justify-center transition-colors"
-          aria-label="最小化"
-        >
-          <Minus size={16} className="text-foreground/70" />
-        </button>
-        <button
-          onClick={handleMaximize}
-          className="w-12 h-10 hover:bg-muted flex items-center justify-center transition-colors"
-          aria-label={isMaximized ? '还原' : '最大化'}
-        >
-          {isMaximized ? (
-            <Copy size={14} className="text-foreground/70" />
-          ) : (
-            <Square size={14} className="text-foreground/70" />
-          )}
-        </button>
-        <button
-          onClick={handleClose}
-          className="w-12 h-10 hover:bg-red-500 hover:text-white flex items-center justify-center transition-colors group"
-          aria-label="关闭"
-        >
-          <X size={16} className="text-foreground/70 group-hover:text-white" />
-        </button>
-      </div>
+      {isWindowsOS && (
+        <div className="flex app-no-drag ml-auto">
+          <button
+            onClick={handleMinimize}
+            className="w-12 h-10 hover:bg-muted flex items-center justify-center transition-colors"
+            aria-label="最小化"
+          >
+            <Minus size={16} className="text-foreground/70" />
+          </button>
+          <button
+            onClick={handleMaximize}
+            className="w-12 h-10 hover:bg-muted flex items-center justify-center transition-colors"
+            aria-label={isMaximized ? '还原' : '最大化'}
+          >
+            {isMaximized ? (
+              <Copy size={14} className="text-foreground/70" />
+            ) : (
+              <Square size={14} className="text-foreground/70" />
+            )}
+          </button>
+          <button
+            onClick={handleClose}
+            className="w-12 h-10 hover:bg-red-500 hover:text-white flex items-center justify-center transition-colors group"
+            aria-label="关闭"
+          >
+            <X size={16} className="text-foreground/70 group-hover:text-white" />
+          </button>
+        </div>
+      )}
     </div>
   );
 }

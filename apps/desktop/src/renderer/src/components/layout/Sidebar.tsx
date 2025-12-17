@@ -3,7 +3,7 @@
  */
 
 import { useAuthStore } from '@qyra/client-state';
-import { Button, Avatar, AvatarFallback, AvatarImage } from '@qyra/ui-web';
+import { Button } from '@qyra/ui-web';
 import { useNavigate } from 'react-router-dom';
 
 // 简单的图标组件
@@ -83,7 +83,6 @@ interface SidebarProps {
 
 export function Sidebar({ className }: SidebarProps) {
   const navigate = useNavigate();
-  const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
 
   const handleLogout = () => {
@@ -93,14 +92,8 @@ export function Sidebar({ className }: SidebarProps) {
 
   return (
     <aside
-      className={`w-16 bg-muted/50 border-r flex flex-col items-center py-4 ${className || ''}`}
+      className={`w-16  rounded-l-md bg-background flex flex-col items-center py-4 ${className || ''}`}
     >
-      {/* 用户头像 */}
-      <Avatar className="w-10 h-10 mb-6">
-        <AvatarImage src={user?.avatar || undefined} />
-        <AvatarFallback>{user?.nickname?.[0] || 'U'}</AvatarFallback>
-      </Avatar>
-
       {/* 导航图标 */}
       <nav className="flex-1 flex flex-col items-center gap-2">
         <Button variant="ghost" size="icon" className="w-10 h-10" title="消息">

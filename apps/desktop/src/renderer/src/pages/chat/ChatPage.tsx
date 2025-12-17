@@ -13,7 +13,7 @@ export default function ChatPage() {
   if (!conversationId) {
     // 未选择会话时显示欢迎页面
     return (
-      <div className="flex-1 flex flex-col items-center justify-center text-muted-foreground">
+      <div className="flex-1 flex flex-col items-center justify-center bg-background rounded-r-md">
         <img src={logo} alt="Qyra Logo" className="w-38 h-38" />
       </div>
     );
@@ -21,19 +21,19 @@ export default function ChatPage() {
 
   // TODO: 实现聊天界面
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex-1 flex flex-col gap-0.5 rounded-r-md">
       {/* 聊天头部 */}
-      <header className="h-14 border-b flex items-center px-4">
+      <header className="h-14 border-b flex items-center px-4 bg-background">
         <h3 className="font-medium">会话 {conversationId}</h3>
       </header>
 
       {/* 消息列表 */}
-      <div className="flex-1 overflow-y-auto p-4">
+      <div className="flex-1 overflow-y-auto p-4 bg-background">
         <p className="text-muted-foreground text-center">消息列表开发中...</p>
       </div>
 
       {/* 输入区域 */}
-      <footer className="h-32 border-t p-4">
+      <footer className="h-32 border-t p-4 bg-background">
         <p className="text-muted-foreground text-center text-sm">输入区域开发中...</p>
       </footer>
     </div>

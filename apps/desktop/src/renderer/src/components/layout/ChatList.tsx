@@ -38,14 +38,14 @@ export function ChatList() {
   const chatList = chatIds.map((id) => chats.get(id)).filter(Boolean);
 
   return (
-    <aside className="w-72 border-r flex flex-col bg-background">
+    <aside className="w-72  flex flex-col bg-background">
       {/* 搜索框 */}
       <div className="p-3">
         <div className="relative">
-          <div className="absolute left-3 top-1/2 -translate-y-1/2">
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
             <SearchIcon />
-          </div>
-          <Input placeholder="搜索" className="pl-9 h-9" />
+          </span>
+          <Input placeholder="搜索" className="pl-9 h-9 indent-5 placeholder:indent-5" />
         </div>
       </div>
 
