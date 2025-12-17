@@ -88,6 +88,7 @@ export function Sidebar({ className }: SidebarProps) {
       id: 'logout',
       icon: LogOut,
       title: '退出登录',
+      path: undefined,
       className: 'hover:text-destructive',
       onClick: () => {
         logout();
