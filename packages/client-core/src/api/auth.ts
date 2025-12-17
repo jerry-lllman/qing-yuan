@@ -1,10 +1,14 @@
 /**
  * Auth API 工厂
- * 提供带 Zod 验证的认证 API，可被 desktop/mobile 复用
+ * 提供认证 API，可被 desktop/mobile 复用
+ *
+ * 验证策略：
+ * - Form 层：使用 zod schema + react-hook-form 即时验证，提升 UX
+ * - API 层：纯 HTTP 封装，不重复验证（信任 Form 层）
+ * - 服务端：最终安全防线，必须验证
  */
 
 import type { User, AuthTokens, LoginRequest, RegisterRequest } from '@qing-yuan/shared';
-import { loginSchema, registerSchema } from '@qing-yuan/protocol';
 import { HttpClient } from './index';
 
 /** API 版本前缀 */
@@ -28,7 +32,7 @@ export interface AuthApi {
 
 /**
  * 创建 Auth API 实例
- * 内置 Zod schema 验证，确保所有调用都经过数据校验
+ * 纯 HTTP 封装，验证由 Form 层和服务端负责
  *
  * @param getHttpClient - 获取 HttpClient 实例的函数
  * @returns Auth API 实例
@@ -36,17 +40,13 @@ export interface AuthApi {
 export function createAuthApi(getHttpClient: () => HttpClient): AuthApi {
   return {
     async login(data: LoginRequest) {
-      // API 层统一验证
-      const validated = loginSchema.parse(data);
       const http = getHttpClient();
-      return http.post<{ user: User; tokens: AuthTokens }>(`${V1}/auth/login`, validated);
+      return http.post<{ user: User; tokens: AuthTokens }>(`${V1}/auth/login`, data);
     },
 
     async register(data: RegisterRequest) {
-      // API 层统一验证，确保数据格式正确
-      const validated = registerSchema.parse(data);
       const http = getHttpClient();
-      return http.post<{ user: User; tokens: AuthTokens }>(`${V1}/auth/register`, validated);
+      return http.post<{ user: User; tokens: AuthTokens }>(`${V1}/auth/register`, data);
     },
 
     async logout() {
