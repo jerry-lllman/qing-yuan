@@ -75,72 +75,70 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex h-screen items-center justify-center bg-background">
-      <Card className="w-100">
-        <CardHeader className="space-y-1">
-          <img src={logo} alt="Qyra Logo" className="w-24 h-24 mx-auto" />
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              {form.formState.errors.root && (
-                <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
-                  {form.formState.errors.root.message}
-                </div>
-              )}
-              <FormField
-                control={form.control}
-                name="account"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>用户名/邮箱</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="请输入用户名或邮箱"
-                        disabled={isLoggingIn}
-                        autoFocus
-                        {...field}
-                        onBlur={(e) => {
-                          field.onChange(e.target.value.trim());
-                          field.onBlur();
-                        }}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>密码</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="请输入密码"
-                        disabled={isLoggingIn}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button type="submit" className="w-full" disabled={isLoggingIn}>
-                {isLoggingIn ? '登录中...' : '登录'}
-              </Button>
-              <div className="text-center text-sm text-muted-foreground">
-                还没有账户？{' '}
-                <Link to="/register" className="text-primary hover:underline">
-                  立即注册
-                </Link>
+    <Card className="w-100">
+      <CardHeader className="space-y-1">
+        <img src={logo} alt="Qyra Logo" className="w-24 h-24 mx-auto" />
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            {form.formState.errors.root && (
+              <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+                {form.formState.errors.root.message}
               </div>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
-    </div>
+            )}
+            <FormField
+              control={form.control}
+              name="account"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>用户名/邮箱</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="请输入用户名或邮箱"
+                      disabled={isLoggingIn}
+                      autoFocus
+                      {...field}
+                      onBlur={(e) => {
+                        field.onChange(e.target.value.trim());
+                        field.onBlur();
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>密码</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      placeholder="请输入密码"
+                      disabled={isLoggingIn}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit" className="w-full" disabled={isLoggingIn}>
+              {isLoggingIn ? '登录中...' : '登录'}
+            </Button>
+            <div className="text-center text-sm text-muted-foreground">
+              还没有账户？{' '}
+              <Link to="/register" className="text-primary hover:underline">
+                立即注册
+              </Link>
+            </div>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   );
 }

@@ -106,3 +106,13 @@ body,
   padding: 0;
   overflow: hidden;
 }
+
+/* 窗口拖拽区域 */
+.app-drag-region {
+  -webkit-app-region: drag;
+}
+
+/* 不可拖拽区域（按钮、输入框等交互元素） */
+.app-no-drag {
+  -webkit-app-region: no-drag;
+}

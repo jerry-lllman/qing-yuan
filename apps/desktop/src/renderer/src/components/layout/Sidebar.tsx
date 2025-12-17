@@ -77,7 +77,11 @@ const LogoutIcon = () => (
   </svg>
 );
 
-export function Sidebar() {
+interface SidebarProps {
+  className?: string;
+}
+
+export function Sidebar({ className }: SidebarProps) {
   const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
@@ -88,7 +92,9 @@ export function Sidebar() {
   };
 
   return (
-    <aside className="w-16 bg-muted/50 border-r flex flex-col items-center py-4">
+    <aside
+      className={`w-16 bg-muted/50 border-r flex flex-col items-center py-4 ${className || ''}`}
+    >
       {/* 用户头像 */}
       <Avatar className="w-10 h-10 mb-6">
         <AvatarImage src={user?.avatar || undefined} />

@@ -37,13 +37,29 @@ function setupContentSecurityPolicy(): void {
   });
 }
 
+// 存储主窗口引用，用于 IPC 通信
+let mainWindow: BrowserWindow | null = null;
+
 function createWindow(): void {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
+    minWidth: 800,
+    minHeight: 600,
     show: false,
     autoHideMenuBar: true,
+    // 跨平台无边框窗口配置
+    // macOS: 使用 hiddenInset 保留原生红绿灯按钮
+    // Windows/Linux: 完全无边框，需要自定义窗口控制按钮
+    ...(process.platform === 'darwin'
+      ? {
+          titleBarStyle: 'hiddenInset',
+          trafficLightPosition: { x: 4, y: 4 },
+        }
+      : {
+          frame: false,
+        }),
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
@@ -52,7 +68,7 @@ function createWindow(): void {
   });
 
   mainWindow.on('ready-to-show', () => {
-    mainWindow.show();
+    mainWindow?.show();
   });
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
@@ -88,6 +104,27 @@ app.whenReady().then(() => {
 
   // IPC test
   ipcMain.on('ping', () => console.log('pong'));
+
+  // 窗口控制 IPC
+  ipcMain.on('window-minimize', () => {
+    mainWindow?.minimize();
+  });
+
+  ipcMain.on('window-maximize', () => {
+    if (mainWindow?.isMaximized()) {
+      mainWindow.unmaximize();
+    } else {
+      mainWindow?.maximize();
+    }
+  });
+
+  ipcMain.on('window-close', () => {
+    mainWindow?.close();
+  });
+
+  ipcMain.handle('window-is-maximized', () => {
+    return mainWindow?.isMaximized() ?? false;
+  });
 
   createWindow();
 

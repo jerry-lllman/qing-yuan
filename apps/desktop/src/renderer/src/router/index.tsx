@@ -9,6 +9,7 @@ import { ProtectedRoute } from './ProtectedRoute';
 // Pages - 懒加载
 import { lazy, Suspense } from 'react';
 
+const AuthLayout = lazy(() => import('@/layouts/AuthLayout'));
 const LoginPage = lazy(() => import('@/pages/auth/LoginPage'));
 const RegisterPage = lazy(() => import('@/pages/auth/RegisterPage'));
 const MainLayout = lazy(() => import('@/layouts/MainLayout'));
@@ -32,20 +33,30 @@ export const router = createHashRouter([
     element: <Navigate to="/chat" replace />,
   },
   {
-    path: '/login',
+    // 认证相关页面 (登录/注册) 使用 AuthLayout
     element: (
       <LazyWrapper>
-        <LoginPage />
+        <AuthLayout />
       </LazyWrapper>
     ),
-  },
-  {
-    path: '/register',
-    element: (
-      <LazyWrapper>
-        <RegisterPage />
-      </LazyWrapper>
-    ),
+    children: [
+      {
+        path: '/login',
+        element: (
+          <LazyWrapper>
+            <LoginPage />
+          </LazyWrapper>
+        ),
+      },
+      {
+        path: '/register',
+        element: (
+          <LazyWrapper>
+            <RegisterPage />
+          </LazyWrapper>
+        ),
+      },
+    ],
   },
   {
     // 需要登录的路由
