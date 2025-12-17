@@ -28,9 +28,7 @@ export const passwordSchema = z
   .string()
   .min(Limits.PASSWORD_MIN_LENGTH, `密码至少 ${Limits.PASSWORD_MIN_LENGTH} 个字符`)
   .max(Limits.PASSWORD_MAX_LENGTH, `密码最多 ${Limits.PASSWORD_MAX_LENGTH} 个字符`)
-  .regex(/[A-Z]/, '密码必须包含大写字母')
-  .regex(/[a-z]/, '密码必须包含小写字母')
-  .regex(/\d/, '密码必须包含数字');
+  .regex(/^\S+$/, '密码不能包含空格');
 
 /** 昵称 Schema（可复用） */
 export const nicknameSchema = z

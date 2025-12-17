@@ -107,6 +107,10 @@ export default function RegisterPage() {
                         disabled={isRegistering}
                         autoFocus
                         {...field}
+                        onBlur={(e) => {
+                          field.onChange(e.target.value.trim());
+                          field.onBlur();
+                        }}
                       />
                     </FormControl>
                     <FormMessage />
@@ -125,6 +129,10 @@ export default function RegisterPage() {
                         placeholder="your@email.com"
                         disabled={isRegistering}
                         {...field}
+                        onBlur={(e) => {
+                          field.onChange(e.target.value.trim());
+                          field.onBlur();
+                        }}
                       />
                     </FormControl>
                     <FormMessage />
@@ -138,7 +146,15 @@ export default function RegisterPage() {
                   <FormItem>
                     <FormLabel>昵称</FormLabel>
                     <FormControl>
-                      <Input placeholder="显示名称" disabled={isRegistering} {...field} />
+                      <Input
+                        placeholder="显示名称"
+                        disabled={isRegistering}
+                        {...field}
+                        onBlur={(e) => {
+                          field.onChange(e.target.value.trim());
+                          field.onBlur();
+                        }}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -153,7 +169,7 @@ export default function RegisterPage() {
                     <FormControl>
                       <Input
                         type="password"
-                        placeholder="至少8个字符，含大小写字母和数字"
+                        placeholder="请输入密码"
                         disabled={isRegistering}
                         {...field}
                       />

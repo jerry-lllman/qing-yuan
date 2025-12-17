@@ -42,6 +42,7 @@ export class RegisterDto {
   @IsNotEmpty({ message: '密码不能为空' })
   @MinLength(6, { message: '密码至少 6 个字符' })
   @MaxLength(50, { message: '密码最多 50 个字符' })
+  @Matches(/^\S+$/, { message: '密码不能包含空格' })
   password: string;
 
   @IsString()

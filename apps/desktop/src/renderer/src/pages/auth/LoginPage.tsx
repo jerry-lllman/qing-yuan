@@ -102,6 +102,10 @@ export default function LoginPage() {
                         disabled={isLoggingIn}
                         autoFocus
                         {...field}
+                        onBlur={(e) => {
+                          field.onChange(e.target.value.trim());
+                          field.onBlur();
+                        }}
                       />
                     </FormControl>
                     <FormMessage />
