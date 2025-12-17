@@ -21,6 +21,7 @@ describe('FriendController (e2e)', () => {
     username: 'friendtesta',
     email: 'friendtesta@example.com',
     password: 'Test123456',
+    confirmPassword: 'Test123456',
     nickname: '好友测试A',
   };
 
@@ -28,6 +29,7 @@ describe('FriendController (e2e)', () => {
     username: 'friendtestb',
     email: 'friendtestb@example.com',
     password: 'Test123456',
+    confirmPassword: 'Test123456',
     nickname: '好友测试B',
   };
 

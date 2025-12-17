@@ -25,6 +25,7 @@ describe('ChatController (e2e)', () => {
     username: 'chattesta',
     email: 'chattesta@example.com',
     password: 'Test123456',
+    confirmPassword: 'Test123456',
     nickname: '聊天测试A',
   };
 
@@ -32,6 +33,7 @@ describe('ChatController (e2e)', () => {
     username: 'chattestb',
     email: 'chattestb@example.com',
     password: 'Test123456',
+    confirmPassword: 'Test123456',
     nickname: '聊天测试B',
   };
 

@@ -15,6 +15,7 @@ describe('UserController (e2e)', () => {
     username: 'usertest',
     email: 'usertest@example.com',
     password: 'Test123456',
+    confirmPassword: 'Test123456',
     nickname: '用户测试',
   };
 
@@ -22,6 +23,7 @@ describe('UserController (e2e)', () => {
     username: 'searchuser',
     email: 'searchuser@example.com',
     password: 'Test123456',
+    confirmPassword: 'Test123456',
     nickname: '搜索用户',
   };
 

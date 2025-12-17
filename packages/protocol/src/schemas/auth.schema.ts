@@ -43,6 +43,7 @@ export const registerSchema = z.object({
   username: usernameSchema,
   email: emailSchema,
   password: passwordSchema,
+  confirmPassword: z.string().min(1, '请确认密码'),
   nickname: nicknameSchema.optional(),
 });
 

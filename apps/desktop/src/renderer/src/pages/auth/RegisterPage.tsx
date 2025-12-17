@@ -69,6 +69,7 @@ export default function RegisterPage() {
         email: data.email,
         nickname: data.nickname,
         password: data.password,
+        confirmPassword: data.confirmPassword,
       });
       // 注册成功，跳转到聊天页面
       navigate('/chat', { replace: true });

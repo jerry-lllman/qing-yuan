@@ -15,6 +15,7 @@ describe('KeyController (e2e)', () => {
     username: 'keyuser',
     email: 'keyuser@example.com',
     password: 'Test123456',
+    confirmPassword: 'Test123456',
     nickname: '密钥测试用户',
   };
 
@@ -22,6 +23,7 @@ describe('KeyController (e2e)', () => {
     username: 'keyuser2',
     email: 'keyuser2@example.com',
     password: 'Test123456',
+    confirmPassword: 'Test123456',
     nickname: '密钥测试用户2',
   };
 

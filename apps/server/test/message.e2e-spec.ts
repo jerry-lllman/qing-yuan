@@ -25,6 +25,7 @@ describe('MessageController (e2e)', () => {
     username: 'msgtesta',
     email: 'msgtesta@example.com',
     password: 'Test123456',
+    confirmPassword: 'Test123456',
     nickname: '消息测试A',
   };
 
@@ -32,6 +33,7 @@ describe('MessageController (e2e)', () => {
     username: 'msgtestb',
     email: 'msgtestb@example.com',
     password: 'Test123456',
+    confirmPassword: 'Test123456',
     nickname: '消息测试B',
   };
 

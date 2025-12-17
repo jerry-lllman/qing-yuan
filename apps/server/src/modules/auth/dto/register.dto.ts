@@ -5,7 +5,26 @@ import {
   Matches,
   MaxLength,
   MinLength,
+  Validate,
+  ValidatorConstraint,
+  ValidatorConstraintInterface,
+  ValidationArguments,
 } from 'class-validator';
+
+/**
+ * 自定义校验器：确认密码必须与密码一致
+ */
+@ValidatorConstraint({ name: 'matchPassword', async: false })
+export class MatchPasswordConstraint implements ValidatorConstraintInterface {
+  validate(confirmPassword: string, args: ValidationArguments): boolean {
+    const object = args.object as RegisterDto;
+    return confirmPassword === object.password;
+  }
+
+  defaultMessage(): string {
+    return '两次输入的密码不一致';
+  }
+}
 
 export class RegisterDto {
   @IsString()
@@ -24,6 +43,11 @@ export class RegisterDto {
   @MinLength(6, { message: '密码至少 6 个字符' })
   @MaxLength(50, { message: '密码最多 50 个字符' })
   password: string;
+
+  @IsString()
+  @IsNotEmpty({ message: '确认密码不能为空' })
+  @Validate(MatchPasswordConstraint)
+  confirmPassword: string;
 
   @IsString()
   @IsNotEmpty({ message: '昵称不能为空' })

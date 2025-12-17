@@ -15,6 +15,7 @@ describe('AuthController (e2e)', () => {
     username: 'testuser',
     email: 'testuser@example.com',
     password: 'Test123456',
+    confirmPassword: 'Test123456',
     nickname: '测试用户',
   };
 
@@ -108,6 +109,7 @@ describe('AuthController (e2e)', () => {
           username: 'newuser',
           email: 'invalid-email',
           password: 'Test123456',
+          confirmPassword: 'Test123456',
           nickname: '新用户',
         })
         .expect(400);
@@ -122,11 +124,27 @@ describe('AuthController (e2e)', () => {
           username: 'newuser2',
           email: 'newuser2@example.com',
           password: '123',
+          confirmPassword: '123',
           nickname: '新用户2',
         })
         .expect(400);
 
       expect(response.body.message).toBeDefined();
+    });
+
+    it('should fail when password and confirmPassword do not match', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/auth/register')
+        .send({
+          username: 'newuser3',
+          email: 'newuser3@example.com',
+          password: 'Test123456',
+          confirmPassword: 'DifferentPassword123',
+          nickname: '新用户3',
+        })
+        .expect(400);
+
+      expect(response.body.message).toContain('两次输入的密码不一致');
     });
   });
 

@@ -28,6 +28,7 @@ describe('GroupController (e2e)', () => {
     username: 'grouptesta',
     email: 'grouptesta@example.com',
     password: 'Test123456',
+    confirmPassword: 'Test123456',
     nickname: '群主A',
   };
 
@@ -35,6 +36,7 @@ describe('GroupController (e2e)', () => {
     username: 'grouptestb',
     email: 'grouptestb@example.com',
     password: 'Test123456',
+    confirmPassword: 'Test123456',
     nickname: '管理员B',
   };
 
@@ -42,6 +44,7 @@ describe('GroupController (e2e)', () => {
     username: 'grouptestc',
     email: 'grouptestc@example.com',
     password: 'Test123456',
+    confirmPassword: 'Test123456',
     nickname: '成员C',
   };
 
