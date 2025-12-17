@@ -14,7 +14,7 @@ export default function ChatPage() {
     // 未选择会话时显示欢迎页面
     return (
       <div className="flex-1 flex flex-col items-center justify-center text-muted-foreground">
-        <img src={logo} alt="Qyra Logo" className="w-68 h-68" />
+        <img src={logo} alt="Qyra Logo" className="w-38 h-38" />
       </div>
     );
   }

@@ -8,9 +8,7 @@ import {
   Input,
   Card,
   CardHeader,
-  CardTitle,
   CardContent,
-  CardDescription,
   Form,
   FormControl,
   FormField,
@@ -24,6 +22,7 @@ import { useAuth } from '@qyra/client-state';
 import { loginSchema, type LoginInput } from '@qyra/protocol';
 import { ApiRequestError } from '@qyra/client-core';
 import { authApi } from '@/api/auth';
+import logo from '@qyra/assets/images/logo.png';
 
 /** 表单字段名类型 */
 type FormFieldName = keyof LoginInput;
@@ -79,8 +78,7 @@ export default function LoginPage() {
     <div className="flex h-screen items-center justify-center bg-background">
       <Card className="w-100">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl text-center">Qing Yuan</CardTitle>
-          <CardDescription className="text-center">登录到你的账户</CardDescription>
+          <img src={logo} alt="Qyra Logo" className="w-24 h-24 mx-auto" />
         </CardHeader>
         <CardContent>
           <Form {...form}>
