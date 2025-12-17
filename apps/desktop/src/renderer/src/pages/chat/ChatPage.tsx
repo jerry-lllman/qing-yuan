@@ -5,6 +5,8 @@
 
 import { useParams } from 'react-router-dom';
 
+import logo from '@qyra/assets/images/logo.png';
+
 export default function ChatPage() {
   const { conversationId } = useParams<{ conversationId?: string }>();
 
@@ -12,9 +14,7 @@ export default function ChatPage() {
     // 未选择会话时显示欢迎页面
     return (
       <div className="flex-1 flex flex-col items-center justify-center text-muted-foreground">
-        <div className="text-6xl mb-4">💬</div>
-        <h2 className="text-xl font-medium mb-2">欢迎使用 Qing Yuan</h2>
-        <p className="text-sm">选择一个会话开始聊天</p>
+        <img src={logo} alt="Qyra Logo" className="w-68 h-68" />
       </div>
     );
   }

@@ -1,0 +1,14 @@
+{
+  "name": "@qyra/assets",
+  "version": "0.0.1",
+  "description": "Shared assets for Qyra applications",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./images/*": "./src/images/*",
+    "./icons/*": "./src/icons/*"
+  },
+  "files": [
+    "src"
+  ]
+}

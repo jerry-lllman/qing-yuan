@@ -32,6 +32,7 @@
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.2",
     "@electron-toolkit/utils": "^4.0.0",
+    "@qyra/assets": "workspace:*",
     "@qyra/client-core": "workspace:*",
     "@qyra/client-state": "workspace:*",
     "@qyra/protocol": "workspace:*",
