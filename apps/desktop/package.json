@@ -32,7 +32,10 @@
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.2",
     "@electron-toolkit/utils": "^4.0.0",
+    "@qing-yuan/client-core": "workspace:*",
     "@qing-yuan/client-state": "workspace:*",
+    "@qing-yuan/protocol": "workspace:*",
+    "@qing-yuan/shared": "workspace:^",
     "@qing-yuan/ui-web": "workspace:*",
     "@tanstack/react-query": "^5.90.12",
     "electron-updater": "^6.3.9",

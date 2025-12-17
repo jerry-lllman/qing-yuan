@@ -322,3 +322,6 @@ export const http = {
   upload: <T>(url: string, file: File | Blob, fieldName?: string, config?: RequestConfig) =>
     getHttpClient().upload<T>(url, file, fieldName, config),
 };
+
+// 导出 Auth API 工厂
+export { createAuthApi, type AuthApi } from './auth';

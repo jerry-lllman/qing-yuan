@@ -72,7 +72,7 @@ export class AuthService {
 
     return {
       user,
-      ...tokens,
+      tokens,
     };
   }
 
@@ -119,7 +119,7 @@ export class AuthService {
         avatar: user.avatar,
         status: 'ONLINE',
       },
-      ...tokens,
+      tokens,
     };
   }
 

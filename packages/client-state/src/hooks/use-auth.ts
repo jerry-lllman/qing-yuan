@@ -145,7 +145,7 @@ export function useAuth(options: UseAuthOptions): UseAuthReturn {
       };
       setError(authError);
       onError?.(authError);
-      throw err;
+      // 不再重新抛出错误，错误已通过 store 状态传递
     },
     [setError, onError]
   );
@@ -176,7 +176,8 @@ export function useAuth(options: UseAuthOptions): UseAuthReturn {
       setError(null);
       return api.register(data);
     },
-    onSuccess: ({ user: registeredUser, tokens: authTokens }) => {
+    onSuccess: async (data) => {
+      const { user: registeredUser, tokens: authTokens } = data;
       loginSuccess(registeredUser, authTokens);
       // 更新 Query 缓存
       queryClient.setQueryData(userKeys.me(), registeredUser);

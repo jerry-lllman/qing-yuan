@@ -4,7 +4,7 @@
  */
 
 // Stores (只导出 store 本身，不导出 selectors 以避免与 hooks 命名冲突)
-export { useAuthStore, type AuthState } from './stores/auth.store';
+export { useAuthStore, AuthStatus, type AuthState } from './stores/auth.store';
 export { useChatStore, type ChatState } from './stores/chat.store';
 export { useContactStore, type ContactState } from './stores/contact.store';
 export { useMessageStore, type MessageState } from './stores/message.store';

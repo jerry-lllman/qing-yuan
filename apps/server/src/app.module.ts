@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { configuration, validate } from './config';
@@ -13,6 +13,7 @@ import { MessageModule } from './modules/message';
 import { GroupModule } from './modules/group';
 import { KeyModule } from './modules/key';
 import { GatewayModule } from './gateway';
+import { TransformInterceptor, AllExceptionsFilter } from './common';
 
 @Module({
   imports: [
@@ -45,6 +46,16 @@ import { GatewayModule } from './gateway';
   controllers: [AppController],
   providers: [
     AppService,
+    // 全局异常过滤器
+    {
+      provide: APP_FILTER,
+      useClass: AllExceptionsFilter,
+    },
+    // 全局响应转换拦截器
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TransformInterceptor,
+    },
     // 全局认证守卫
     {
       provide: APP_GUARD,

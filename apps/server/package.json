@@ -25,8 +25,6 @@
     "db:studio": "prisma studio"
   },
   "dependencies": {
-    "@qing-yuan/protocol": "workspace:*",
-    "@qing-yuan/shared": "workspace:*",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^3.3.0",
     "@nestjs/core": "^11.0.1",
@@ -36,6 +34,8 @@
     "@nestjs/platform-socket.io": "^10.4.15",
     "@nestjs/websockets": "^10.4.15",
     "@prisma/client": "^6.1.0",
+    "@qing-yuan/protocol": "workspace:*",
+    "@qing-yuan/shared": "workspace:*",
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
@@ -58,7 +58,7 @@
     "@types/passport-jwt": "^4.0.1",
     "@types/passport-local": "^1.0.38",
     "@types/supertest": "^6.0.2",
-    "@vitest/coverage-v8": "^2.1.8",
+    "@vitest/coverage-v8": "^4.0.15",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.2",
@@ -72,6 +72,6 @@
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.20.0",
     "unplugin-swc": "^1.5.1",
-    "vitest": "^2.1.8"
+    "vitest": "^4.0.15"
   }
 }
