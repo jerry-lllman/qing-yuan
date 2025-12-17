@@ -14,7 +14,6 @@
 
 import { Outlet } from 'react-router-dom';
 import { Sidebar } from '@/components/layout/Sidebar';
-import { ChatList } from '@/components/layout/ChatList';
 import { TitleBar } from '@/components/TitleBar';
 
 export default function MainLayout() {
@@ -32,9 +31,6 @@ export default function MainLayout() {
         <div className="flex flex-1 gap-0.5 min-h-0">
           {/* 侧边栏 - 导航图标 */}
           <Sidebar />
-
-          {/* 会话列表 */}
-          <ChatList />
 
           {/* 聊天区域 - 由子路由填充 */}
           <main className="flex-1 flex flex-col min-w-0">
