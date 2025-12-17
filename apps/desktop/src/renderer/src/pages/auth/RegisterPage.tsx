@@ -64,16 +64,10 @@ export default function RegisterPage() {
 
   const onSubmit = async (data: RegisterFormInput) => {
     try {
-      await register({
-        username: data.username,
-        email: data.email,
-        nickname: data.nickname,
-        password: data.password,
-        confirmPassword: data.confirmPassword,
-      });
+      await register(data);
       // 注册成功，跳转到聊天页面
       navigate('/chat', { replace: true });
-    } catch (err: unknown) {
+    } catch (err) {
       // 从后端错误中提取 field 信息
       if (isApiRequestError(err) && err.field && isValidField(err.field)) {
         // 后端返回了具体字段，映射到表单
@@ -88,7 +82,7 @@ export default function RegisterPage() {
 
   return (
     <div className="flex h-screen items-center justify-center bg-background">
-      <Card className="w-[400px]">
+      <Card className="w-100">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl text-center">创建账户</CardTitle>
           <CardDescription className="text-center">注册一个新的 Qing Yuan 账户</CardDescription>

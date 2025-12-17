@@ -48,7 +48,8 @@ export interface AuthTokens {
 
 /** 登录请求 */
 export interface LoginRequest {
-  username: string;
+  /** 用户名或邮箱 */
+  account: string;
   password: string;
 }
 
