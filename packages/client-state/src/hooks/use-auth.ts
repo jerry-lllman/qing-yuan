@@ -12,7 +12,7 @@
 
 import { useCallback, useMemo } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { User, AuthTokens, LoginRequest, RegisterRequest } from '@qing-yuan/shared';
+import type { User, AuthTokens, LoginRequest, RegisterRequest } from '@qyra/shared';
 import { useAuthStore, AuthStatus, type AuthError } from '../stores/auth.store';
 import { userKeys } from '../queries/keys';
 

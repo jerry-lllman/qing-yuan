@@ -3,8 +3,8 @@
  * 配置 HttpClient 和 TokenManager
  */
 
-import { initHttpClient } from '@qing-yuan/client-core';
-import { useAuthStore } from '@qing-yuan/client-state';
+import { initHttpClient } from '@qyra/client-core';
+import { useAuthStore } from '@qyra/client-state';
 
 // API 基础 URL
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
@@ -16,8 +16,12 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000
 const tokenManager = {
   getAccessToken: () => useAuthStore.getState().tokens?.accessToken ?? null,
   getRefreshToken: () => useAuthStore.getState().tokens?.refreshToken ?? null,
-  setTokens: (tokens: { accessToken: string; refreshToken: string }) => {
-    useAuthStore.getState().setTokens(tokens);
+  setTokens: (tokens: { accessToken: string; refreshToken: string; expiresIn?: number }) => {
+    useAuthStore.getState().setTokens({
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+      expiresIn: tokens.expiresIn ?? 3600, // 默认 1 小时
+    });
   },
   clearTokens: () => {
     // 使用 setTokens(null) 清除 tokens

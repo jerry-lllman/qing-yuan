@@ -9,7 +9,7 @@ import { Response } from 'express';
 
 /**
  * API 统一错误响应格式
- * 与 @qing-yuan/shared 中的 ApiError 类型保持一致
+ * 与 @qyra/shared 中的 ApiError 类型保持一致
  */
 export interface ApiErrorResponse {
   success: false;

@@ -6,7 +6,7 @@ import { EncryptionClient, createEncryptionClient } from './index';
 import { MemoryStorageAdapter } from '../storage/adapters/memory';
 
 // Mock encryption 模块
-vi.mock('@qing-yuan/encryption', () => {
+vi.mock('@qyra/encryption', () => {
   const mockManager = {
     initialize: vi.fn(),
     getIdentityPublicKey: vi.fn(() => 'mock-public-key-base64'),
@@ -122,7 +122,7 @@ describe('EncryptionClient', () => {
     it('should check session existence', async () => {
       await client.initialize();
 
-      const { createPersistentSessionManager } = await import('@qing-yuan/encryption');
+      const { createPersistentSessionManager } = await import('@qyra/encryption');
       const mockManager = (createPersistentSessionManager as any).mock.results[0].value;
       mockManager.hasSession.mockResolvedValue(true);
 
@@ -135,7 +135,7 @@ describe('EncryptionClient', () => {
     it('should get session state', async () => {
       await client.initialize();
 
-      const { createPersistentSessionManager } = await import('@qing-yuan/encryption');
+      const { createPersistentSessionManager } = await import('@qyra/encryption');
       const mockManager = (createPersistentSessionManager as any).mock.results[0].value;
       mockManager.getSessionState.mockReturnValue({
         remoteUserId: 'user1',
@@ -167,7 +167,7 @@ describe('EncryptionClient', () => {
     it('should delete session', async () => {
       await client.initialize();
 
-      const { createPersistentSessionManager } = await import('@qing-yuan/encryption');
+      const { createPersistentSessionManager } = await import('@qyra/encryption');
       const mockManager = (createPersistentSessionManager as any).mock.results[0].value;
       mockManager.deleteSession.mockResolvedValue(undefined);
 
@@ -181,7 +181,7 @@ describe('EncryptionClient', () => {
     it('should encrypt message', async () => {
       await client.initialize();
 
-      const { createPersistentSessionManager } = await import('@qing-yuan/encryption');
+      const { createPersistentSessionManager } = await import('@qyra/encryption');
       const mockManager = (createPersistentSessionManager as any).mock.results[0].value;
       mockManager.encrypt.mockResolvedValue({
         type: 3,
@@ -204,7 +204,7 @@ describe('EncryptionClient', () => {
     it('should decrypt message', async () => {
       await client.initialize();
 
-      const { createPersistentSessionManager } = await import('@qing-yuan/encryption');
+      const { createPersistentSessionManager } = await import('@qyra/encryption');
       const mockManager = (createPersistentSessionManager as any).mock.results[0].value;
       mockManager.decrypt.mockResolvedValue('Hello');
 
@@ -238,7 +238,7 @@ describe('EncryptionClient', () => {
     it('should create session with pre key bundle', async () => {
       await client.initialize();
 
-      const { createPersistentSessionManager } = await import('@qing-yuan/encryption');
+      const { createPersistentSessionManager } = await import('@qyra/encryption');
       const mockManager = (createPersistentSessionManager as any).mock.results[0].value;
       mockManager.createSession.mockResolvedValue(undefined);
 

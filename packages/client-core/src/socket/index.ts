@@ -1,11 +1,5 @@
 import { io, Socket, ManagerOptions, SocketOptions } from 'socket.io-client';
-import {
-  ConnectionEvent,
-  MessageEvent,
-  ChatEvent,
-  FriendEvent,
-  UserEvent,
-} from '@qing-yuan/protocol';
+import { ConnectionEvent, MessageEvent, ChatEvent, FriendEvent, UserEvent } from '@qyra/protocol';
 import type {
   SendMessagePayload,
   EditMessagePayload,
@@ -20,7 +14,7 @@ import type {
   SyncResponsePayload,
   AuthenticatedPayload,
   UnauthorizedPayload,
-} from '@qing-yuan/protocol';
+} from '@qyra/protocol';
 
 // ============================================================================
 // 类型定义

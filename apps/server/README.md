@@ -1,6 +1,6 @@
-# @qing-yuan/server
+# @qyra/server
 
-Qing-Yuan 即时通讯应用的后端服务，基于 Nest.js 构建。
+Qyra 即时通讯应用的后端服务，基于 Nest.js 构建。
 
 ## 技术栈
 
@@ -203,11 +203,11 @@ pnpm db:studio        # 打开 Prisma Studio
 ## 依赖关系
 
 ```
-@qing-yuan/shared     # 共享类型定义
+@qyra/shared     # 共享类型定义
        ↓
-@qing-yuan/protocol   # 通信协议
+@qyra/protocol   # 通信协议
        ↓
-    @qing-yuan/server      # 本服务
+    @qyra/server      # 本服务
 ```
 
 ## 安全注意事项

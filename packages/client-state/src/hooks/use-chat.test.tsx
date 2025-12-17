@@ -8,7 +8,7 @@ import { renderHook, act, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useChat, useChatById, useHasUnread, useUnreadChatCount, type ChatApi } from './use-chat';
 import { useChatStore, type ChatConversation } from '../stores/chat.store';
-import type { PrivateConversation, GroupConversation } from '@qing-yuan/shared';
+import type { PrivateConversation, GroupConversation } from '@qyra/shared';
 
 // ========================
 // Mock 数据

@@ -23,14 +23,14 @@ interface QingYuanDBSchema extends DBSchema {
 
 /** IndexedDB 存储适配器配置 */
 export interface IndexedDBStorageAdapterConfig extends StorageAdapterConfig {
-  /** 数据库名称，默认 'qing-yuan-db' */
+  /** 数据库名称，默认 'qyra-db' */
   name?: string;
   /** 数据库版本，默认 1 */
   version?: number;
 }
 
 /** 默认数据库名称 */
-const DEFAULT_DB_NAME = 'qing-yuan-db';
+const DEFAULT_DB_NAME = 'qyra-db';
 /** 默认数据库版本 */
 const DEFAULT_DB_VERSION = 1;
 

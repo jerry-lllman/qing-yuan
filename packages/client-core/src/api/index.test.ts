@@ -10,7 +10,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import axios from 'axios';
 import type { AxiosInstance, AxiosResponse } from 'axios';
-import type { ApiResponse, ApiError, AuthTokens } from '@qing-yuan/shared';
+import type { ApiResponse, ApiError, AuthTokens } from '@qyra/shared';
 import {
   HttpClient,
   NetworkError,

@@ -1,5 +1,5 @@
 {
-  "extends": "@qing-yuan/typescript-config/library.json",
+  "extends": "@qyra/typescript-config/library.json",
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": "./src"

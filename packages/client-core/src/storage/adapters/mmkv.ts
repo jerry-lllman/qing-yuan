@@ -3,7 +3,7 @@
  * 用于 React Native 平台的高性能持久化存储
  *
  * 注意：此适配器依赖 react-native-mmkv，仅在 React Native 环境中可用
- * 安装：pnpm add react-native-mmkv --filter @qing-yuan/mobile
+ * 安装：pnpm add react-native-mmkv --filter @qyra/mobile
  */
 import { StorageAdapter } from '../adapter';
 import { StorageAdapterConfig, StorageKey, StorageValue } from '../types';
@@ -45,7 +45,7 @@ export interface MMKVStorageAdapterConfig extends StorageAdapterConfig {
    * import { MMKV } from 'react-native-mmkv';
    *
    * const mmkv = new MMKV({
-   *   id: 'qing-yuan-encryption',
+   *   id: 'qyra-encryption',
    *   encryptionKey: 'your-encryption-key',
    * });
    *

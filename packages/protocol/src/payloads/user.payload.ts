@@ -2,7 +2,7 @@
  * 用户事件载荷类型
  */
 
-import { type UserStatus } from '@qing-yuan/shared';
+import { type UserStatus } from '@qyra/shared';
 
 /** 更新用户状态载荷 */
 export interface UpdateUserStatusPayload {

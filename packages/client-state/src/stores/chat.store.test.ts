@@ -11,7 +11,7 @@ import {
   hasChat,
   type ChatConversation,
 } from './chat.store';
-import type { PrivateConversation, GroupConversation, Message } from '@qing-yuan/shared';
+import type { PrivateConversation, GroupConversation, Message } from '@qyra/shared';
 
 // Mock localStorage
 const localStorageMock = (() => {

@@ -16,7 +16,7 @@ import {
   type ContactApi,
 } from './use-contact';
 import { useContactStore, type BlockedUser, type OnlineStatus } from '../stores/contact.store';
-import type { Friend, FriendRequest, UserBrief } from '@qing-yuan/shared';
+import type { Friend, FriendRequest, UserBrief } from '@qyra/shared';
 
 // ========================
 // Mock 数据

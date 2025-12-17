@@ -154,8 +154,7 @@ export class EncryptionClient {
 
     try {
       // 动态导入 encryption 模块
-      const { createPersistentSessionManager, generateKeys } =
-        await import('@qing-yuan/encryption');
+      const { createPersistentSessionManager, generateKeys } = await import('@qyra/encryption');
 
       const manager = createPersistentSessionManager({
         storage: this.signalStorage,

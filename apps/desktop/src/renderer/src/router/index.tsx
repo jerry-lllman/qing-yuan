@@ -3,7 +3,7 @@
  * 使用 HashRouter 适配 Electron file:// 协议
  */
 
-import { createHashRouter, Navigate, Outlet } from 'react-router-dom';
+import { createHashRouter, Navigate } from 'react-router-dom';
 import { ProtectedRoute } from './ProtectedRoute';
 
 // Pages - 懒加载

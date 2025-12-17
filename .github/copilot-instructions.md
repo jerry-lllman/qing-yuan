@@ -1,4 +1,4 @@
-# Copilot 开发指令 - Qing-Yuan 即时通讯应用
+# Copilot 开发指令 - Qyra 即时通讯应用
 
 > 本文档为 GitHub Copilot 提供项目约束和开发规范
 
@@ -6,11 +6,12 @@
 
 ## 项目概述
 
-**Qing-Yuan** - TypeScript 全栈即时通讯应用，pnpm + Turborepo monorepo 架构
+**Qyra** - TypeScript 全栈即时通讯应用，pnpm + Turborepo monorepo 架构
 
 **核心特性**: 端到端加密 (Signal) | 实时同步 (WebSocket) | 多设备 | 离线队列
 
 **技术栈**:
+
 - 前端: Electron + React | React Native | Zustand + TanStack Query | Tailwind/NativeWind
 - 后端: Nest.js + PostgreSQL + Prisma + Socket.io + Redis
 - 工具: pnpm (必须) | Turborepo | Zod | radash | @aspect-build/libsignal-client
@@ -22,7 +23,7 @@
 ### 目录结构
 
 ```
-qing-yuan/
+qyra/
 ├── apps/           # 应用层
 │   ├── desktop/    # Electron
 │   ├── mobile/     # React Native
@@ -68,16 +69,16 @@ desktop    mobile
 
 ### 命名约定
 
-| 类型 | 规范 | 示例 |
-|------|------|------|
-| 文件 | kebab-case | `message-sync.ts` |
-| 组件文件 | PascalCase | `ChatBubble.tsx` |
-| 类型/接口 | PascalCase | `MessagePayload` |
-| 变量/函数 | camelCase | `sendMessage` |
-| 常量 | SCREAMING_SNAKE_CASE | `MAX_LENGTH` |
-| 枚举 | PascalCase | `MessageEvent` |
-| 枚举值 | SCREAMING_SNAKE_CASE | `SEND` |
-| 私有属性 | _camelCase | `_socket` |
+| 类型      | 规范                 | 示例              |
+| --------- | -------------------- | ----------------- |
+| 文件      | kebab-case           | `message-sync.ts` |
+| 组件文件  | PascalCase           | `ChatBubble.tsx`  |
+| 类型/接口 | PascalCase           | `MessagePayload`  |
+| 变量/函数 | camelCase            | `sendMessage`     |
+| 常量      | SCREAMING_SNAKE_CASE | `MAX_LENGTH`      |
+| 枚举      | PascalCase           | `MessageEvent`    |
+| 枚举值    | SCREAMING_SNAKE_CASE | `SEND`            |
+| 私有属性  | \_camelCase          | `_socket`         |
 
 ### 文件组织
 
@@ -137,7 +138,7 @@ export async function createUser(data: UserPayload): Promise<User> {
 ### 命令
 
 ```bash
-pnpm add <pkg>@latest --filter @qing-yuan/client-state
+pnpm add <pkg>@latest --filter @qyra/client-state
 pnpm add -D <pkg>@latest -w  # 根工作区
 pnpm why <pkg>               # 验证依赖树
 ```
@@ -154,7 +155,7 @@ pnpm why <pkg>               # 验证依赖树
 
 ```typescript
 // ✅ 简单操作用原生 JS
-const filtered = users.filter(u => u.active);
+const filtered = users.filter((u) => u.active);
 
 // ✅ 复杂操作用 radash
 import { debounce, retry, parallel, group } from 'radash';
@@ -182,6 +183,7 @@ import { Button } from '@gluestack-ui/themed';
 ```
 
 **添加组件**:
+
 ```bash
 cd packages/ui-web && npx shadcn-ui@latest add button
 cd packages/ui-native && npx gluestack-ui add button
@@ -205,7 +207,12 @@ interface MessageState {
 }
 
 export const useMessageStore = create<MessageState>()(
-  devtools(immer((set) => ({ /* ... */ })), { name: 'MessageStore' })
+  devtools(
+    immer((set) => ({
+      /* ... */
+    })),
+    { name: 'MessageStore' }
+  )
 );
 ```
 
@@ -226,7 +233,7 @@ export const userKeys = {
 ```typescript
 // 枚举事件
 export enum MessageEvent {
-  SEND = 'message:send',      // 客户端 -> 服务端
+  SEND = 'message:send', // 客户端 -> 服务端
   RECEIVE = 'message:receive', // 服务端 -> 客户端
 }
 
@@ -271,12 +278,12 @@ export class ChatGateway {
 
 ### 覆盖率要求
 
-| 类型 | 最低覆盖率 |
-|------|-----------|
-| `packages/*` | 80% |
-| `apps/server` | 70% |
-| `apps/desktop` | 60% |
-| `apps/mobile` | 60% |
+| 类型           | 最低覆盖率 |
+| -------------- | ---------- |
+| `packages/*`   | 80%        |
+| `apps/server`  | 70%        |
+| `apps/desktop` | 60%        |
+| `apps/mobile`  | 60%        |
 
 ---
 
@@ -344,8 +351,8 @@ try {
 
 ```bash
 pnpm build                              # 所有应用
-pnpm build --filter @qing-yuan/desktop  # 特定应用
-pnpm dev --filter @qing-yuan/desktop
+pnpm build --filter @qyra/desktop  # 特定应用
+pnpm dev --filter @qyra/desktop
 pnpm test && pnpm lint && pnpm typecheck
 ```
 
@@ -367,18 +374,21 @@ A: 最底层包，被所有包依赖，避免依赖爆炸
 ## 开发检查清单
 
 ### 编码前
+
 - [ ] 了解任务所属模块和包
 - [ ] 检查现有代码模式
 - [ ] 确认依赖版本和兼容性
 - [ ] 创建类型定义和 Zod schema
 
 ### 编码时
+
 - [ ] 遵循命名约定
 - [ ] 禁止使用 `any`
 - [ ] 处理所有错误情况
 - [ ] **逐步实现并测试，及时告知以便 git commit**
 
 ### 提交前
+
 - [ ] `pnpm lint && pnpm typecheck && pnpm test`
 - [ ] 编写测试用例（新功能必须）
 - [ ] 遵循 Git commit 规范

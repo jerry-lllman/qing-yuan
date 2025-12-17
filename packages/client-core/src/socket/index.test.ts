@@ -3,7 +3,7 @@
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { io } from 'socket.io-client';
-import { ConnectionEvent, MessageEvent } from '@qing-yuan/protocol';
+import { ConnectionEvent, MessageEvent } from '@qyra/protocol';
 import {
   SocketClient,
   ConnectionStatus,

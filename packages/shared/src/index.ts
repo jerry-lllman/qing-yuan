@@ -1,5 +1,5 @@
 /**
- * @qing-yuan/shared
+ * @qyra/shared
  * 共享类型定义、常量和工具函数
  */
 

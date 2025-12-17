@@ -1,3 +1,3 @@
-import config from '@qing-yuan/prettier-config';
+import config from '@qyra/prettier-config';
 
 export default config;

@@ -1,5 +1,5 @@
 {
-	"name": "@qing-yuan/client-core",
+	"name": "@qyra/client-core",
 	"version": "0.0.1",
 	"private": true,
 	"license": "MIT",
@@ -22,15 +22,15 @@
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
-		"@qing-yuan/encryption": "workspace:*",
-		"@qing-yuan/protocol": "workspace:*",
-		"@qing-yuan/shared": "workspace:*",
+		"@qyra/encryption": "workspace:*",
+		"@qyra/protocol": "workspace:*",
+		"@qyra/shared": "workspace:*",
 		"axios": "^1.13.2",
 		"idb": "^8.0.3",
 		"socket.io-client": "^4.8.1"
 	},
 	"devDependencies": {
-		"@qing-yuan/typescript-config": "workspace:*",
+		"@qyra/typescript-config": "workspace:*",
 		"fake-indexeddb": "^6.2.5",
 		"tsup": "^8.0.1",
 		"typescript": "^5.9.3",

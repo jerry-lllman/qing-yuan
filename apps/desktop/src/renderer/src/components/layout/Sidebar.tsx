@@ -2,8 +2,8 @@
  * 侧边栏组件 - 导航图标
  */
 
-import { useAuthStore } from '@qing-yuan/client-state';
-import { Button, Avatar, AvatarFallback, AvatarImage } from '@qing-yuan/ui-web';
+import { useAuthStore } from '@qyra/client-state';
+import { Button, Avatar, AvatarFallback, AvatarImage } from '@qyra/ui-web';
 import { useNavigate } from 'react-router-dom';
 
 // 简单的图标组件

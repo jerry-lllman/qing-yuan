@@ -1,4 +1,4 @@
-# Qing-Yuan 开发计划
+# Qyra 开发计划
 
 > 项目开发进度追踪与计划
 
@@ -157,7 +157,7 @@
   - 连接状态管理（`ConnectionStatus` 枚举）
   - 自动重连（指数退避）
   - Token 认证支持
-  - 类型安全的事件监听器（基于 `@qing-yuan/protocol` 事件）
+  - 类型安全的事件监听器（基于 `@qyra/protocol` 事件）
   - 消息发送/接收/已读/输入状态等完整功能
 
 ---
@@ -363,8 +363,8 @@
 ### 📝 代码规范提醒
 
 11. **包命名空间**
-    - 统一使用 `@qing-yuan/*`（不是 `@qing-yuan/*`）
-    - package.json 中的 name 字段格式：`@qing-yuan/package-name`
+    - 统一使用 `@qyra/*`（不是 `@qyra/*`）
+    - package.json 中的 name 字段格式：`@qyra/package-name`
 
 12. **组件库使用**
     - shadcn/ui 和 Gluestack UI 都是 copy-paste 模式

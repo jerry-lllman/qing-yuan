@@ -3,7 +3,7 @@
  */
 
 import { z } from 'zod';
-import { Limits } from '@qing-yuan/shared';
+import { Limits } from '@qyra/shared';
 
 /** 发送好友请求 Schema */
 export const sendFriendRequestSchema = z.object({

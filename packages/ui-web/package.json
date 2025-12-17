@@ -1,5 +1,5 @@
 {
-  "name": "@qing-yuan/ui-web",
+  "name": "@qyra/ui-web",
   "version": "0.0.1",
   "private": true,
   "license": "MIT",
@@ -26,8 +26,8 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@qing-yuan/eslint-config": "workspace:*",
-    "@qing-yuan/typescript-config": "workspace:*",
+    "@qyra/eslint-config": "workspace:*",
+    "@qyra/typescript-config": "workspace:*",
     "@tailwindcss/vite": "^4.1.18",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",

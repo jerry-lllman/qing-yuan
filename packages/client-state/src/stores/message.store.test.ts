@@ -14,7 +14,7 @@ import {
   type PendingMessage,
   type DraftMessage,
 } from './message.store';
-import type { Message } from '@qing-yuan/shared';
+import type { Message } from '@qyra/shared';
 
 // 测试数据
 const mockMessage: Message = {

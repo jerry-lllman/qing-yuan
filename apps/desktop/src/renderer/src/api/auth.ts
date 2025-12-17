@@ -3,7 +3,7 @@
  * 使用 client-core 的 createAuthApi 工厂函数，内置 Zod 验证
  */
 
-import { createAuthApi, getHttpClient } from '@qing-yuan/client-core';
+import { createAuthApi, getHttpClient } from '@qyra/client-core';
 
 /**
  * Auth API 实例

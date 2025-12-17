@@ -13,7 +13,7 @@
 import { useCallback, useMemo } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useShallow } from 'zustand/react/shallow';
-import type { PrivateConversation, GroupConversation } from '@qing-yuan/shared';
+import type { PrivateConversation, GroupConversation } from '@qyra/shared';
 import { useChatStore, type ChatConversation } from '../stores/chat.store';
 import { chatKeys } from '../queries/keys';
 

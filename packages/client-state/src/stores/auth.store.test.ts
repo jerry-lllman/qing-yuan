@@ -10,7 +10,7 @@ import {
   getCurrentUserId,
   checkIsAuthenticated,
 } from './auth.store';
-import type { User, AuthTokens } from '@qing-yuan/shared';
+import type { User, AuthTokens } from '@qyra/shared';
 
 // Mock localStorage
 const localStorageMock = (() => {

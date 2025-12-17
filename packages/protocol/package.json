@@ -1,5 +1,5 @@
 {
-  "name": "@qing-yuan/protocol",
+  "name": "@qyra/protocol",
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
@@ -35,11 +35,11 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@qing-yuan/shared": "workspace:*",
+    "@qyra/shared": "workspace:*",
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@qing-yuan/typescript-config": "workspace:*",
+    "@qyra/typescript-config": "workspace:*",
     "typescript": "^5.7.2"
   }
 }

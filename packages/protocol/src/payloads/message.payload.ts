@@ -2,7 +2,7 @@
  * 消息事件载荷类型
  */
 
-import { type MessageType, type MessageAttachment, type MessageStatus } from '@qing-yuan/shared';
+import { type MessageType, type MessageAttachment, type MessageStatus } from '@qyra/shared';
 
 /** 发送消息载荷 */
 export interface SendMessagePayload {

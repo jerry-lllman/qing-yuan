@@ -1,5 +1,5 @@
 /**
- * @qing-yuan/protocol
+ * @qyra/protocol
  * 前后端共享的通信协议定义
  */
 

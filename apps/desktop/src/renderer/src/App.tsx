@@ -1,4 +1,4 @@
-import { Button, Input, Card, CardHeader, CardTitle, CardContent } from '@qing-yuan/ui-web';
+import { Button, Input, Card, CardHeader, CardTitle, CardContent } from '@qyra/ui-web';
 
 function App(): React.JSX.Element {
   const ipcHandle = (): void => window.electron.ipcRenderer.send('ping');

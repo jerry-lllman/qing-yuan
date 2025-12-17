@@ -15,7 +15,7 @@ import {
   type MessageApi,
 } from './use-message';
 import { useMessageStore, SendingStatus, type PendingMessage } from '../stores/message.store';
-import type { Message, UserBrief } from '@qing-yuan/shared';
+import type { Message, UserBrief } from '@qyra/shared';
 
 // ========================
 // Mock 数据

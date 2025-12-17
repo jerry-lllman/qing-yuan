@@ -8,7 +8,7 @@
  * - 服务端：最终安全防线，必须验证
  */
 
-import type { User, AuthTokens, LoginRequest, RegisterRequest } from '@qing-yuan/shared';
+import type { User, AuthTokens, LoginRequest, RegisterRequest } from '@qyra/shared';
 import { HttpClient } from './index';
 
 /** API 版本前缀 */

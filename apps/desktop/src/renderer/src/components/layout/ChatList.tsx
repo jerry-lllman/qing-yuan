@@ -3,9 +3,9 @@
  */
 
 import { useNavigate, useParams } from 'react-router-dom';
-import { useChatStore } from '@qing-yuan/client-state';
-import { Avatar, AvatarFallback, AvatarImage, Input } from '@qing-yuan/ui-web';
-import { cn } from '@qing-yuan/ui-web';
+import { useChatStore } from '@qyra/client-state';
+import { Avatar, AvatarFallback, AvatarImage, Input } from '@qyra/ui-web';
+import { cn } from '@qyra/ui-web';
 
 // 搜索图标
 const SearchIcon = () => (

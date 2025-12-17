@@ -1,5 +1,5 @@
 /**
- * @qing-yuan/client-state
+ * @qyra/client-state
  * 客户端状态管理层
  */
 

@@ -6,7 +6,7 @@
 import { create } from 'zustand';
 import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
-import type { User, AuthTokens, LoginRequest, RegisterRequest } from '@qing-yuan/shared';
+import type { User, AuthTokens, LoginRequest, RegisterRequest } from '@qyra/shared';
 
 // ========================
 // 类型定义
@@ -157,7 +157,7 @@ export const useAuthStore = create<AuthState>()(
         reset: () => set(() => initialState),
       })),
       {
-        name: 'qing-yuan-auth',
+        name: 'qyra-auth',
         // 只持久化必要的数据
         partialize: (state) => ({
           tokens: state.tokens,

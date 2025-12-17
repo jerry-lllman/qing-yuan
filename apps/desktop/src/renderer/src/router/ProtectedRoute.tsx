@@ -3,7 +3,7 @@
  */
 
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { useAuthStore, AuthStatus } from '@qing-yuan/client-state';
+import { useAuthStore, AuthStatus } from '@qyra/client-state';
 
 export function ProtectedRoute() {
   const status = useAuthStore((state) => state.status);

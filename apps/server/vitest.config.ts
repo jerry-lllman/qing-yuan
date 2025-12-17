@@ -22,6 +22,7 @@ export default defineConfig({
   },
   plugins: [
     // 使用 SWC 编译，支持 Nest.js 装饰器
+    // @ts-expect-error - unplugin-swc 与 vitest 的 vite 版本类型不兼容，运行时正常
     swc.vite({
       module: { type: 'es6' },
     }),

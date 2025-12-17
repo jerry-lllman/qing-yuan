@@ -1,5 +1,5 @@
 {
-  "extends": "@qing-yuan/typescript-config/react.json",
+  "extends": "@qyra/typescript-config/react.json",
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {

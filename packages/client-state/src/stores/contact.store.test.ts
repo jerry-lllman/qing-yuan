@@ -14,7 +14,7 @@ import {
   type BlockedUser,
   type OnlineStatus,
 } from './contact.store';
-import type { Friend, FriendRequest } from '@qing-yuan/shared';
+import type { Friend, FriendRequest } from '@qyra/shared';
 
 // ========================
 // 测试数据

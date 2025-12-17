@@ -8,13 +8,13 @@ importers:
 
   .:
     devDependencies:
-      '@qing-yuan/eslint-config':
+      '@qyra/eslint-config':
         specifier: workspace:*
         version: link:packages/eslint-config
-      '@qing-yuan/prettier-config':
+      '@qyra/prettier-config':
         specifier: workspace:*
         version: link:packages/prettier-config
-      '@qing-yuan/typescript-config':
+      '@qyra/typescript-config':
         specifier: workspace:*
         version: link:packages/typescript-config
       prettier:
@@ -35,19 +35,19 @@ importers:
       '@electron-toolkit/utils':
         specifier: ^4.0.0
         version: 4.0.0(electron@39.2.7)
-      '@qing-yuan/client-core':
+      '@qyra/client-core':
         specifier: workspace:*
         version: link:../../packages/client-core
-      '@qing-yuan/client-state':
+      '@qyra/client-state':
         specifier: workspace:*
         version: link:../../packages/client-state
-      '@qing-yuan/protocol':
+      '@qyra/protocol':
         specifier: workspace:*
         version: link:../../packages/protocol
-      '@qing-yuan/shared':
+      '@qyra/shared':
         specifier: workspace:^
         version: link:../../packages/shared
-      '@qing-yuan/ui-web':
+      '@qyra/ui-web':
         specifier: workspace:*
         version: link:../../packages/ui-web
       '@tanstack/react-query':
@@ -156,10 +156,10 @@ importers:
       '@prisma/client':
         specifier: ^6.1.0
         version: 6.19.1(prisma@6.19.1(magicast@0.3.5)(typescript@5.9.3))(typescript@5.9.3)
-      '@qing-yuan/protocol':
+      '@qyra/protocol':
         specifier: workspace:*
         version: link:../../packages/protocol
-      '@qing-yuan/shared':
+      '@qyra/shared':
         specifier: workspace:*
         version: link:../../packages/shared
       bcryptjs:
@@ -271,13 +271,13 @@ importers:
 
   packages/client-core:
     dependencies:
-      '@qing-yuan/encryption':
+      '@qyra/encryption':
         specifier: workspace:*
         version: link:../encryption
-      '@qing-yuan/protocol':
+      '@qyra/protocol':
         specifier: workspace:*
         version: link:../protocol
-      '@qing-yuan/shared':
+      '@qyra/shared':
         specifier: workspace:*
         version: link:../shared
       axios:
@@ -290,7 +290,7 @@ importers:
         specifier: ^4.8.1
         version: 4.8.1
     devDependencies:
-      '@qing-yuan/typescript-config':
+      '@qyra/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
       fake-indexeddb:
@@ -311,7 +311,7 @@ importers:
 
   packages/client-state:
     dependencies:
-      '@qing-yuan/shared':
+      '@qyra/shared':
         specifier: workspace:*
         version: link:../shared
       '@tanstack/react-query':
@@ -324,7 +324,7 @@ importers:
         specifier: ^5.0.9
         version: 5.0.9(@types/react@19.2.7)(immer@11.0.1)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
     devDependencies:
-      '@qing-yuan/typescript-config':
+      '@qyra/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
       '@testing-library/react':
@@ -357,17 +357,17 @@ importers:
 
   packages/encryption:
     dependencies:
-      '@qing-yuan/protocol':
+      '@qyra/protocol':
         specifier: workspace:*
         version: link:../protocol
-      '@qing-yuan/shared':
+      '@qyra/shared':
         specifier: workspace:*
         version: link:../shared
       '@signalapp/libsignal-client':
         specifier: ^0.86.6
         version: 0.86.6
     devDependencies:
-      '@qing-yuan/typescript-config':
+      '@qyra/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
       '@types/node':
@@ -425,14 +425,14 @@ importers:
 
   packages/protocol:
     dependencies:
-      '@qing-yuan/shared':
+      '@qyra/shared':
         specifier: workspace:*
         version: link:../shared
       zod:
         specifier: ^3.23.8
         version: 3.25.76
     devDependencies:
-      '@qing-yuan/typescript-config':
+      '@qyra/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
       typescript:
@@ -441,7 +441,7 @@ importers:
 
   packages/shared:
     devDependencies:
-      '@qing-yuan/typescript-config':
+      '@qyra/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
       typescript:
@@ -501,10 +501,10 @@ importers:
         specifier: ^3.23.8
         version: 3.25.76
     devDependencies:
-      '@qing-yuan/eslint-config':
+      '@qyra/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
-      '@qing-yuan/typescript-config':
+      '@qyra/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
       '@tailwindcss/vite':

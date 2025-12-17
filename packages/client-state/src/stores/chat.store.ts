@@ -7,7 +7,7 @@ import { create } from 'zustand';
 import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import { enableMapSet } from 'immer';
-import type { Conversation, PrivateConversation, GroupConversation } from '@qing-yuan/shared';
+import type { Conversation, PrivateConversation, GroupConversation } from '@qyra/shared';
 
 // 启用 immer 的 Map/Set 支持
 enableMapSet();
@@ -247,7 +247,7 @@ export const useChatStore = create<ChatState>()(
         reset: () => set(() => initialState),
       })),
       {
-        name: 'qing-yuan-chats',
+        name: 'qyra-chats',
         // 只持久化必要的数据
         partialize: (state) => ({
           currentChatId: state.currentChatId,

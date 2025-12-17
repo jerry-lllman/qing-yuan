@@ -4,7 +4,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { createQueryClient } from '@qing-yuan/client-state';
+import { createQueryClient } from '@qyra/client-state';
 import { router } from './router';
 import { initializeApp } from './lib/init';
 

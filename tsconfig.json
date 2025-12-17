@@ -3,7 +3,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@qing-yuan/*": ["packages/*/src"]
+      "@qyra/*": ["packages/*/src"]
     },
     "noEmit": true
   },

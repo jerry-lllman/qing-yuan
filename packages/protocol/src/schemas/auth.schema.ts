@@ -3,7 +3,7 @@
  */
 
 import { z } from 'zod';
-import { Limits } from '@qing-yuan/shared';
+import { Limits } from '@qyra/shared';
 
 /** 登录请求 Schema */
 export const loginSchema = z.object({

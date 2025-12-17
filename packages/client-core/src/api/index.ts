@@ -4,7 +4,7 @@ import axios, {
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from 'axios';
-import type { ApiResponse, ApiError, AuthTokens } from '@qing-yuan/shared';
+import type { ApiResponse, ApiError, AuthTokens } from '@qyra/shared';
 
 // ============================================================================
 // 类型定义

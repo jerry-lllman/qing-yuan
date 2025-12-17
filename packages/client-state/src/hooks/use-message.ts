@@ -13,7 +13,7 @@
 import { useCallback, useMemo } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useShallow } from 'zustand/react/shallow';
-import type { Message, SendMessageRequest } from '@qing-yuan/shared';
+import type { Message, SendMessageRequest } from '@qyra/shared';
 import {
   useMessageStore,
   generateTempId,

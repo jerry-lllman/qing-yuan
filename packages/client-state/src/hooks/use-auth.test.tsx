@@ -8,7 +8,7 @@ import { renderHook, act, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useAuth, type AuthApi } from './use-auth';
 import { useAuthStore, AuthStatus } from '../stores/auth.store';
-import type { User, AuthTokens } from '@qing-yuan/shared';
+import type { User, AuthTokens } from '@qyra/shared';
 
 // ========================
 // Mock 数据

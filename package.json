@@ -1,5 +1,5 @@
 {
-  "name": "qing-yuan",
+  "name": "qyra",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -29,9 +29,9 @@
     "typecheck": "turbo typecheck"
   },
   "devDependencies": {
-    "@qing-yuan/eslint-config": "workspace:*",
-    "@qing-yuan/prettier-config": "workspace:*",
-    "@qing-yuan/typescript-config": "workspace:*",
+    "@qyra/eslint-config": "workspace:*",
+    "@qyra/prettier-config": "workspace:*",
+    "@qyra/typescript-config": "workspace:*",
     "prettier": "^3.4.2",
     "turbo": "^2.3.3",
     "typescript": "^5.7.2"

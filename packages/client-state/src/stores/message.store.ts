@@ -7,7 +7,7 @@ import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import { enableMapSet } from 'immer';
-import type { Message } from '@qing-yuan/shared';
+import type { Message } from '@qyra/shared';
 
 // 启用 immer 的 Map/Set 支持
 enableMapSet();

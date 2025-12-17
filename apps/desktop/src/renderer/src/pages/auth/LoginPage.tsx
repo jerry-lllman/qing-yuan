@@ -19,10 +19,10 @@ import {
   FormMessage,
   useForm,
   zodResolver,
-} from '@qing-yuan/ui-web';
-import { useAuth } from '@qing-yuan/client-state';
-import { loginSchema, type LoginInput } from '@qing-yuan/protocol';
-import { ApiRequestError } from '@qing-yuan/client-core';
+} from '@qyra/ui-web';
+import { useAuth } from '@qyra/client-state';
+import { loginSchema, type LoginInput } from '@qyra/protocol';
+import { ApiRequestError } from '@qyra/client-core';
 import { authApi } from '@/api/auth';
 
 /** 表单字段名类型 */

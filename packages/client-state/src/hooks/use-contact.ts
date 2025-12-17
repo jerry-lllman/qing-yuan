@@ -12,7 +12,7 @@
 import { useCallback, useMemo } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useShallow } from 'zustand/react/shallow';
-import type { Friend, FriendRequest } from '@qing-yuan/shared';
+import type { Friend, FriendRequest } from '@qyra/shared';
 import { useContactStore, type BlockedUser, type OnlineStatus } from '../stores/contact.store';
 import { contactKeys } from '../queries/keys';
 

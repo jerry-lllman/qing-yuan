@@ -1,11 +1,11 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 /* 
  * 导入 ui-web 预编译的样式
  * ui-web 构建时已将所有 Tailwind 类编译好
  */
-@import "@qing-yuan/ui-web/styles.css";
+@import '@qyra/ui-web/styles.css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -98,7 +98,9 @@
 }
 
 /* Electron specific */
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
   margin: 0;
   padding: 0;
