@@ -36,7 +36,9 @@ export function TitleBar({
       )}
     >
       {/* 左侧 Logo 区域 */}
-      <div className="mx-4">{isWindowsOS && showLogo && <TitleBarLogo src={lightLogo} />}</div>
+      <div className="mx-4 w-8 h-8">
+        {isWindowsOS && showLogo && <TitleBarLogo src={lightLogo} />}
+      </div>
 
       {/* 中间用户信息区域 */}
       <div className="flex flex-1">
