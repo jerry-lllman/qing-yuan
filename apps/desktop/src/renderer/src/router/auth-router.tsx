@@ -5,22 +5,11 @@
 
 import { createHashRouter, Navigate } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
+import PageLoading from '@/components/PageLoading';
 
 const AuthLayout = lazy(() => import('@/layouts/AuthLayout'));
 const LoginPage = lazy(() => import('@/pages/auth/LoginPage'));
 const RegisterPage = lazy(() => import('@/pages/auth/RegisterPage'));
-
-// Loading fallback
-const PageLoading = () => (
-  <div className="flex h-screen items-center justify-center">
-    <div className="text-muted-foreground">加载中...</div>
-  </div>
-);
-
-// 懒加载包装器
-const LazyWrapper = ({ children }: { children: React.ReactNode }) => (
-  <Suspense fallback={<PageLoading />}>{children}</Suspense>
-);
 
 export const authRouter = createHashRouter([
   {
@@ -30,25 +19,25 @@ export const authRouter = createHashRouter([
   {
     // 认证相关页面 (登录/注册) 使用 AuthLayout
     element: (
-      <LazyWrapper>
+      <Suspense fallback={<PageLoading />}>
         <AuthLayout />
-      </LazyWrapper>
+      </Suspense>
     ),
     children: [
       {
         path: '/login',
         element: (
-          <LazyWrapper>
+          <Suspense fallback={<PageLoading />}>
             <LoginPage />
-          </LazyWrapper>
+          </Suspense>
         ),
       },
       {
         path: '/register',
         element: (
-          <LazyWrapper>
+          <Suspense fallback={<PageLoading />}>
             <RegisterPage />
-          </LazyWrapper>
+          </Suspense>
         ),
       },
     ],

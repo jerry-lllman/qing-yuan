@@ -10,21 +10,10 @@ import { ProtectedRoute } from './ProtectedRoute';
 
 // Pages - 懒加载
 import { lazy, Suspense } from 'react';
+import PageLoading from '@/components/PageLoading';
 
 const MainLayout = lazy(() => import('@/layouts/MainLayout'));
 const ChatPage = lazy(() => import('@/pages/chat/ChatPage'));
-
-// Loading fallback
-const PageLoading = () => (
-  <div className="flex h-screen items-center justify-center">
-    <div className="text-muted-foreground">加载中...</div>
-  </div>
-);
-
-// 懒加载包装器
-const LazyWrapper = ({ children }: { children: React.ReactNode }) => (
-  <Suspense fallback={<PageLoading />}>{children}</Suspense>
-);
 
 export const router = createHashRouter([
   {
@@ -37,25 +26,25 @@ export const router = createHashRouter([
     children: [
       {
         element: (
-          <LazyWrapper>
+          <Suspense fallback={<PageLoading />}>
             <MainLayout />
-          </LazyWrapper>
+          </Suspense>
         ),
         children: [
           {
             path: '/chat',
             element: (
-              <LazyWrapper>
+              <Suspense fallback={<PageLoading />}>
                 <ChatPage />
-              </LazyWrapper>
+              </Suspense>
             ),
           },
           {
             path: '/chat/:conversationId',
             element: (
-              <LazyWrapper>
+              <Suspense fallback={<PageLoading />}>
                 <ChatPage />
-              </LazyWrapper>
+              </Suspense>
             ),
           },
         ],

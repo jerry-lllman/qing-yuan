@@ -41,5 +41,5 @@ export function initializeApp(): void {
     tokenManager,
   });
 
-  console.log('[App] Initialized with API:', API_BASE_URL);
+  console.warn('[App] Initialized with API:', API_BASE_URL);
 }

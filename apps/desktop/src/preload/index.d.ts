@@ -1,4 +1,4 @@
-import { ElectronAPI } from '@electron-toolkit/preload';
+import type { ElectronAPI } from '@electron-toolkit/preload';
 
 interface WindowControls {
   /** 最小化当前窗口 */
