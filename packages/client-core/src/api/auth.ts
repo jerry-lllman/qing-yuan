@@ -9,10 +9,7 @@
  */
 
 import type { User, AuthTokens, LoginRequest, RegisterRequest } from '@qyra/shared';
-import { HttpClient } from './index';
-
-/** API 版本前缀 */
-const V1 = '/v1';
+import { getHttpClient, API_VERSION } from './http-client';
 
 /** Auth API 接口 */
 export interface AuthApi {
@@ -37,22 +34,22 @@ export interface AuthApi {
  * @param getHttpClient - 获取 HttpClient 实例的函数
  * @returns Auth API 实例
  */
-export function createAuthApi(getHttpClient: () => HttpClient): AuthApi {
+export function createAuthApi(version = API_VERSION.V1): AuthApi {
   return {
     async login(data: LoginRequest) {
       const http = getHttpClient();
-      return http.post<{ user: User; tokens: AuthTokens }>(`${V1}/auth/login`, data);
+      return http.post<{ user: User; tokens: AuthTokens }>(`${version}/auth/login`, data);
     },
 
     async register(data: RegisterRequest) {
       const http = getHttpClient();
-      return http.post<{ user: User; tokens: AuthTokens }>(`${V1}/auth/register`, data);
+      return http.post<{ user: User; tokens: AuthTokens }>(`${version}/auth/register`, data);
     },
 
     async logout() {
       try {
         const http = getHttpClient();
-        await http.post<void>(`${V1}/auth/logout`);
+        await http.post<void>(`${version}/auth/logout`);
       } catch {
         // 即使请求失败也清除本地状态
       }
@@ -60,17 +57,17 @@ export function createAuthApi(getHttpClient: () => HttpClient): AuthApi {
 
     async refreshToken(refreshToken: string) {
       const http = getHttpClient();
-      return http.post<AuthTokens>(`${V1}/auth/refresh`, { refreshToken });
+      return http.post<AuthTokens>(`${version}/auth/refresh`, { refreshToken });
     },
 
     async getMe() {
       const http = getHttpClient();
-      return http.get<User>(`${V1}/users/me`);
+      return http.get<User>(`${version}/users/me`);
     },
 
     async updateProfile(data: Partial<User>) {
       const http = getHttpClient();
-      return http.patch<User>(`${V1}/users/me`, data);
+      return http.patch<User>(`${version}/users/me`, data);
     },
   };
 }

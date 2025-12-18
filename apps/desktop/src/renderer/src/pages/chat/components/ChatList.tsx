@@ -2,33 +2,18 @@
  * 会话列表组件
  */
 
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useChatStore } from '@qyra/client-state';
-import { Avatar, AvatarFallback, AvatarImage, Input } from '@qyra/ui-web';
+import { Avatar, AvatarFallback, AvatarImage, Button, Input } from '@qyra/ui-web';
 import { cn } from '@qyra/ui-web';
-
-// 搜索图标
-const SearchIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="text-muted-foreground"
-  >
-    <circle cx="11" cy="11" r="8" />
-    <path d="m21 21-4.3-4.3" />
-  </svg>
-);
+import { Plus, Search } from 'lucide-react';
+import { SearchUserDialog } from './SearchUserDialog';
 
 export function ChatList() {
   const navigate = useNavigate();
   const { conversationId: currentId } = useParams<{ conversationId?: string }>();
+  const [searchDialogOpen, setSearchDialogOpen] = useState(false);
 
   // 从 store 获取会话列表
   const chatIds = useChatStore((state) => state.chatIds);
@@ -40,14 +25,26 @@ export function ChatList() {
   return (
     <aside className="w-72  flex flex-col bg-background">
       {/* 搜索框 */}
-      <div className="p-3">
-        <div className="relative">
+      <div className="p-3 flex items-center gap-1">
+        <div className="relative flex-1">
           <span className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
-            <SearchIcon />
+            <Search className="text-muted-foreground size-4" />
           </span>
           <Input placeholder="搜索" className="pl-9 h-9 indent-5 placeholder:indent-5" />
         </div>
+        <Button variant="secondary" onClick={() => setSearchDialogOpen(true)}>
+          <Plus className="text-gray-500" />
+        </Button>
       </div>
+
+      {/* 搜索用户弹窗 */}
+      <SearchUserDialog
+        open={searchDialogOpen}
+        onOpenChange={setSearchDialogOpen}
+        onSelectUser={(_user) => {
+          // TODO: 创建或跳转到与该用户的会话
+        }}
+      />
 
       {/* 会话列表 */}
       <div className="flex-1 overflow-y-auto">
