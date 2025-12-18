@@ -1,5 +1,5 @@
-appId: com.qingyuan.app
-productName: Qing Yuan
+appId: com.qyra.app
+productName: Qyra
 directories:
   buildResources: build
 files:

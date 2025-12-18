@@ -5,9 +5,9 @@ function App(): React.JSX.Element {
 
   return (
     <div className="flex h-screen items-center justify-center bg-background">
-      <Card className="w-[400px]">
+      <Card className="w-100">
         <CardHeader>
-          <CardTitle className="text-center">Qing Yuan</CardTitle>
+          <CardTitle className="text-center">Qyra</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-center text-muted-foreground">即时通讯桌面端</p>

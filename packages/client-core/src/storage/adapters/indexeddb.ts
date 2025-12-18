@@ -8,7 +8,7 @@ import { StorageAdapterConfig, StorageKey, StorageValue } from '../types';
 import { StorageError, StorageErrorCode } from '../errors';
 
 /** IndexedDB 数据库 Schema */
-interface QingYuanDBSchema extends DBSchema {
+interface QyraDBSchema extends DBSchema {
   /** 普通键值存储 */
   keyvalue: {
     key: string;
@@ -39,7 +39,7 @@ const DEFAULT_DB_VERSION = 1;
  * 实现基于 IndexedDB 的持久化存储
  */
 export class IndexedDBStorageAdapter extends StorageAdapter {
-  private db: IDBPDatabase<QingYuanDBSchema> | null = null;
+  private db: IDBPDatabase<QyraDBSchema> | null = null;
   private readonly dbName: string;
   private readonly dbVersion: number;
 
@@ -59,7 +59,7 @@ export class IndexedDBStorageAdapter extends StorageAdapter {
     }
 
     try {
-      this.db = await openDB<QingYuanDBSchema>(this.dbName, this.dbVersion, {
+      this.db = await openDB<QyraDBSchema>(this.dbName, this.dbVersion, {
         upgrade(db) {
           // 创建普通键值存储
           if (!db.objectStoreNames.contains('keyvalue')) {
