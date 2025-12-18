@@ -2,7 +2,7 @@
  * 登录页面
  */
 
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
   Button,
   Input,
@@ -41,12 +41,7 @@ function isApiRequestError(error: unknown): error is ApiRequestError {
 }
 
 export default function LoginPage() {
-  const navigate = useNavigate();
-  const location = useLocation();
   const { login, isLoggingIn } = useAuth({ api: authApi });
-
-  // 登录后跳转的目标页面
-  const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/chat';
 
   const form = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
@@ -59,8 +54,8 @@ export default function LoginPage() {
   const onSubmit = async (data: LoginInput) => {
     try {
       await login(data);
-      // 登录成功，跳转到目标页面
-      navigate(from, { replace: true });
+      // 登录成功，切换到主窗口
+      window.windowControls.openMainWindow();
     } catch (err) {
       // 从后端错误中提取 field 信息
       if (isApiRequestError(err) && err.field && isValidField(err.field)) {

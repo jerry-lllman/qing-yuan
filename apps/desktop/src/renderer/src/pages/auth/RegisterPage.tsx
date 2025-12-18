@@ -2,7 +2,7 @@
  * 注册页面
  */
 
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
   Button,
   Input,
@@ -47,7 +47,6 @@ function isApiRequestError(error: unknown): error is ApiRequestError {
 }
 
 export default function RegisterPage() {
-  const navigate = useNavigate();
   const { register, isRegistering } = useAuth({ api: authApi });
 
   const form = useForm<RegisterFormInput>({
@@ -64,8 +63,8 @@ export default function RegisterPage() {
   const onSubmit = async (data: RegisterFormInput) => {
     try {
       await register(data);
-      // 注册成功，跳转到聊天页面
-      navigate('/chat', { replace: true });
+      // 注册成功，切换到主窗口
+      window.windowControls.openMainWindow();
     } catch (err) {
       // 从后端错误中提取 field 信息
       if (isApiRequestError(err) && err.field && isValidField(err.field)) {
