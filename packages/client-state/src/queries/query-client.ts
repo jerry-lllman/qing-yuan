@@ -67,7 +67,7 @@ export function createQueryClient(options?: {
       },
       mutations: {
         // mutation 重试配置
-        retry: 1,
+        retry: 0,
         retryDelay: 1000,
       },
     },

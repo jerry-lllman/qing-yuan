@@ -40,9 +40,9 @@ export function initializeApp(): void {
     baseURL: API_BASE_URL,
     timeout: 30000,
     tokenManager,
-    onError: (error: unknown) => {
-      toast('Event has been created', {
-        description: (error as Error).message || 'An unknown error occurred',
+    onError: (error) => {
+      toast.error('Request Error', {
+        description: error.error.message || 'An unknown error occurred',
       });
     },
   });

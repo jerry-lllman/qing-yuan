@@ -1,5 +1,5 @@
 import type { UserBrief } from '@qyra/shared';
-import { getHttpClient, API_VERSION } from './http-client';
+import { http, API_VERSION } from './http-client';
 
 /**  */
 export interface SearchApi {
@@ -13,7 +13,6 @@ export interface SearchApi {
 export function createSearchApi(version = API_VERSION.V1): SearchApi {
   return {
     async searchUsers(params: { keyword: string; limit?: number }) {
-      const http = getHttpClient();
       return http.get<UserBrief[]>(`${version}/users/search`, { params });
     },
   };

@@ -14,6 +14,7 @@ import {
   AvatarFallback,
   AvatarImage,
   Button,
+  toast,
 } from '@qyra/ui-web';
 import { Search, UserPlus, Loader2 } from 'lucide-react';
 import { searchApi } from '@renderer/api/search';
@@ -39,8 +40,9 @@ export function SearchUserDialog({ open, onOpenChange }: SearchUserDialogProps) 
   });
 
   const onAddFriend = async (user: UserBrief) => {
-    await sendFriendRequest(user.id, '你好，我想加你为好友');
-    search(); // 重新搜索，更新状态
+    sendFriendRequest(user.id, '你好，我想加你为好友').then(() => {
+      toast('好友请求已发送');
+    });
   };
 
   // 关闭弹窗时重置状态
@@ -95,7 +97,6 @@ export function SearchUserDialog({ open, onOpenChange }: SearchUserDialogProps) 
           ) : users.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-8 text-muted-foreground">
               <p className="text-sm">未找到相关用户</p>
-              <p className="text-xs mt-1">尝试其他关键词</p>
             </div>
           ) : (
             <ul className="space-y-1 px-2">

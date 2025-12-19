@@ -111,6 +111,7 @@ export function useSearch(options: UseSearchOptions): UseSearchReturn {
       onSuccess?.(result);
     },
     onError: handleError,
+    retry: 1,
   });
 
   // ========== 暴露的方法 ==========
