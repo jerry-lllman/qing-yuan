@@ -5,6 +5,7 @@
 
 import { initHttpClient } from '@qyra/client-core';
 import { useAuthStore } from '@qyra/client-state';
+import { toast } from '@qyra/ui-web';
 
 // API 基础 URL (包含 /api/v1 前缀)
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api/v1';
@@ -39,6 +40,11 @@ export function initializeApp(): void {
     baseURL: API_BASE_URL,
     timeout: 30000,
     tokenManager,
+    onError: (error: unknown) => {
+      toast('Event has been created', {
+        description: (error as Error).message || 'An unknown error occurred',
+      });
+    },
   });
 
   console.warn('[App] Initialized with API:', API_BASE_URL);

@@ -13,6 +13,8 @@
  */
 
 import { Outlet } from 'react-router-dom';
+import { Toaster } from '@qyra/ui-web';
+
 import { Sidebar } from '@/components/layout/Sidebar';
 import { TitleBar } from '@/components/TitleBar';
 
@@ -38,6 +40,7 @@ export default function MainLayout() {
           </main>
         </div>
       </div>
+      <Toaster />
     </div>
   );
 }

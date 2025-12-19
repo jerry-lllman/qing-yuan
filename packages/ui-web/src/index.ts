@@ -17,3 +17,6 @@ export { cn } from './lib/utils';
 // Form utilities - 重新导出 react-hook-form 和 zod resolver
 export { useForm } from 'react-hook-form';
 export { zodResolver } from '@hookform/resolvers/zod';
+
+// Toast utility
+export { toast } from 'sonner';

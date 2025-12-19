@@ -6,6 +6,7 @@
 
 import { Outlet } from 'react-router-dom';
 import { TitleBar } from '@/components/TitleBar';
+import { Toaster } from '@qyra/ui-web';
 
 export default function AuthLayout() {
   return (
@@ -17,6 +18,7 @@ export default function AuthLayout() {
       <div className="flex-1 flex items-center justify-center">
         <Outlet />
       </div>
+      <Toaster />
     </div>
   );
 }

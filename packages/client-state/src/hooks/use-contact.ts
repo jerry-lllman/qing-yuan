@@ -39,11 +39,11 @@ export interface ContactApi {
   /** 获取发出的好友请求 */
   getSentRequests: () => Promise<FriendRequest[]>;
   /** 拉黑用户 */
-  blockUser: (userId: string) => Promise<BlockedUser>;
+  // blockUser: (userId: string) => Promise<BlockedUser>;
   /** 取消拉黑 */
   unblockUser: (userId: string) => Promise<void>;
   /** 获取黑名单 */
-  getBlockedUsers: () => Promise<BlockedUser[]>;
+  // getBlockedUsers: () => Promise<BlockedUser[]>;
 }
 
 /** useContact Hook 配置 */
@@ -51,7 +51,7 @@ export interface UseContactOptions {
   /** 联系人 API 实现 */
   api: ContactApi;
   /** 好友请求接受成功回调 */
-  onAcceptSuccess?: (friend: Friend) => void;
+  // onAcceptSuccess?: (friend: Friend) => void;
   /** 错误回调 */
   onError?: (error: Error) => void;
 }
@@ -78,7 +78,7 @@ export interface UseContactReturn {
   /** 刷新好友请求 */
   fetchRequests: () => Promise<void>;
   /** 刷新黑名单 */
-  fetchBlockedUsers: () => Promise<void>;
+  // fetchBlockedUsers: () => Promise<void>;
   /** 发送好友请求 */
   sendFriendRequest: (userId: string, message?: string) => Promise<FriendRequest>;
   /** 接受好友请求 */
@@ -90,7 +90,7 @@ export interface UseContactReturn {
   /** 更新好友备注 */
   updateFriendRemark: (friendId: string, remark: string | null) => Promise<void>;
   /** 拉黑用户 */
-  blockUser: (userId: string) => Promise<void>;
+  // blockUser: (userId: string) => Promise<void>;
   /** 取消拉黑 */
   unblockUser: (userId: string) => Promise<void>;
 
@@ -146,7 +146,11 @@ export interface UseContactReturn {
  * ```
  */
 export function useContact(options: UseContactOptions): UseContactReturn {
-  const { api, onAcceptSuccess, onError } = options;
+  const {
+    api,
+    //  onAcceptSuccess,
+    onError,
+  } = options;
 
   // ========== Store State ==========
   const {
@@ -180,8 +184,8 @@ export function useContact(options: UseContactOptions): UseContactReturn {
     addSentRequest,
     updateRequestStatus,
     removeRequest,
-    setBlockedUsers,
-    blockUser: storeBlockUser,
+    // setBlockedUsers,
+    // blockUser: storeBlockUser,
     unblockUser: storeUnblockUser,
     setLoadingFriends,
     setLoadingRequests,
@@ -198,7 +202,7 @@ export function useContact(options: UseContactOptions): UseContactReturn {
     (err: unknown) => {
       const error = err instanceof Error ? err : new Error(String(err));
       onError?.(error);
-      throw error;
+      // throw error;
     },
     [onError]
   );
@@ -247,15 +251,15 @@ export function useContact(options: UseContactOptions): UseContactReturn {
   });
 
   // ========== 黑名单 Query ==========
-  const blockedUsersQuery = useQuery({
-    queryKey: contactKeys.list({ status: 'blocked' }),
-    queryFn: async () => {
-      const data = await api.getBlockedUsers();
-      setBlockedUsers(data);
-      return data;
-    },
-    staleTime: 1000 * 60 * 10, // 10 分钟
-  });
+  // const blockedUsersQuery = useQuery({
+  //   queryKey: contactKeys.list({ status: 'blocked' }),
+  //   queryFn: async () => {
+  //     const data = await api.getBlockedUsers();
+  //     setBlockedUsers(data);
+  //     return data;
+  //   },
+  //   staleTime: 1000 * 60 * 10, // 10 分钟
+  // });
 
   // ========== 发送好友请求 Mutation ==========
   const sendRequestMutation = useMutation({
@@ -273,7 +277,7 @@ export function useContact(options: UseContactOptions): UseContactReturn {
     onSuccess: (friend, requestId) => {
       addFriend(friend);
       removeRequest(requestId);
-      onAcceptSuccess?.(friend);
+      // onAcceptSuccess?.(friend);
     },
     onError: handleError,
   });
@@ -307,15 +311,15 @@ export function useContact(options: UseContactOptions): UseContactReturn {
   });
 
   // ========== 拉黑用户 Mutation ==========
-  const blockUserMutation = useMutation({
-    mutationFn: (userId: string) => api.blockUser(userId),
-    onSuccess: (blockedUser) => {
-      storeBlockUser(blockedUser);
-      // 如果是好友，则移除
-      removeFriend(blockedUser.userId);
-    },
-    onError: handleError,
-  });
+  // const blockUserMutation = useMutation({
+  //   mutationFn: (userId: string) => api.blockUser(userId),
+  //   onSuccess: (blockedUser) => {
+  //     storeBlockUser(blockedUser);
+  //     // 如果是好友，则移除
+  //     removeFriend(blockedUser.userId);
+  //   },
+  //   onError: handleError,
+  // });
 
   // ========== 取消拉黑 Mutation ==========
   const unblockUserMutation = useMutation({
@@ -335,9 +339,9 @@ export function useContact(options: UseContactOptions): UseContactReturn {
     await Promise.all([receivedRequestsQuery.refetch(), sentRequestsQuery.refetch()]);
   }, [receivedRequestsQuery, sentRequestsQuery]);
 
-  const fetchBlockedUsers = useCallback(async () => {
-    await blockedUsersQuery.refetch();
-  }, [blockedUsersQuery]);
+  // const fetchBlockedUsers = useCallback(async () => {
+  //   await blockedUsersQuery.refetch();
+  // }, [blockedUsersQuery]);
 
   const sendFriendRequest = useCallback(
     async (userId: string, message?: string) => {
@@ -374,12 +378,12 @@ export function useContact(options: UseContactOptions): UseContactReturn {
     [updateRemarkMutation]
   );
 
-  const blockUser = useCallback(
-    async (userId: string) => {
-      await blockUserMutation.mutateAsync(userId);
-    },
-    [blockUserMutation]
-  );
+  // const blockUser = useCallback(
+  //   async (userId: string) => {
+  //     await blockUserMutation.mutateAsync(userId);
+  //   },
+  //   [blockUserMutation]
+  // );
 
   const unblockUser = useCallback(
     async (userId: string) => {
@@ -422,13 +426,13 @@ export function useContact(options: UseContactOptions): UseContactReturn {
     // 操作
     fetchFriends,
     fetchRequests,
-    fetchBlockedUsers,
+    // fetchBlockedUsers,
     sendFriendRequest,
     acceptFriendRequest,
     rejectFriendRequest,
     deleteFriend,
     updateFriendRemark,
-    blockUser,
+    // blockUser,
     unblockUser,
 
     // 查询方法

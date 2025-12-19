@@ -16,23 +16,32 @@ import {
   Button,
 } from '@qyra/ui-web';
 import { Search, UserPlus, Loader2 } from 'lucide-react';
-import { useSearch } from '@qyra/client-state';
-import { usersApi } from '@renderer/api/users';
+import { searchApi } from '@renderer/api/search';
+import { useContact, useSearch } from '@qyra/client-state';
+import { contactApi } from '@renderer/api/contact';
 
 interface SearchUserDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSelectUser?: (user: UserBrief) => void;
 }
 
-export function SearchUserDialog({ open, onOpenChange, onSelectUser }: SearchUserDialogProps) {
+export function SearchUserDialog({ open, onOpenChange }: SearchUserDialogProps) {
   const { keyword, setKeyword, users, hasSearched, isSearching, search, reset, handleKeyDown } =
     useSearch({
-      api: usersApi,
+      api: searchApi,
       onError: (error) => {
         console.error('搜索用户失败:', error);
       },
     });
+
+  const { sendFriendRequest } = useContact({
+    api: contactApi,
+  });
+
+  const onAddFriend = async (user: UserBrief) => {
+    await sendFriendRequest(user.id, '你好，我想加你为好友');
+    search(); // 重新搜索，更新状态
+  };
 
   // 关闭弹窗时重置状态
   const handleOpenChange = useCallback(
@@ -108,7 +117,7 @@ export function SearchUserDialog({ open, onOpenChange, onSelectUser }: SearchUse
                       size="sm"
                       className="shrink-0"
                       // 发起添加好友请求
-                      onClick={() => onSelectUser?.(user)}
+                      onClick={() => onAddFriend(user)}
                     >
                       <UserPlus className="size-4" />
                     </Button>
