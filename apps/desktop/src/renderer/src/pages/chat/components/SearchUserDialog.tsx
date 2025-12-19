@@ -2,7 +2,7 @@
  * 搜索用户弹窗组件
  */
 
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import type { UserBrief } from '@qyra/shared';
 import {
   Dialog,
@@ -16,6 +16,7 @@ import {
   Button,
 } from '@qyra/ui-web';
 import { Search, UserPlus, Loader2 } from 'lucide-react';
+import { useSearch } from '@qyra/client-state';
 import { usersApi } from '@renderer/api/users';
 
 interface SearchUserDialogProps {
@@ -25,56 +26,23 @@ interface SearchUserDialogProps {
 }
 
 export function SearchUserDialog({ open, onOpenChange, onSelectUser }: SearchUserDialogProps) {
-  const [keyword, setKeyword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [users, setUsers] = useState<UserBrief[]>([]);
-  const [hasSearched, setHasSearched] = useState(false);
-
-  // 搜索用户
-  const handleSearch = useCallback(async () => {
-    if (!keyword.trim()) return;
-
-    setIsLoading(true);
-    setHasSearched(true);
-
-    // TODO: 对接真实接口
-    const result = await usersApi.searchUsers({ keyword });
-    setUsers(result);
-    setIsLoading(false);
-  }, [keyword]);
-
-  // 按下回车键搜索
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === 'Enter') {
-        handleSearch();
-      }
-    },
-    [handleSearch]
-  );
-
-  const handleSelectUser = useCallback(
-    (user: UserBrief) => {
-      onSelectUser?.(user);
-      onOpenChange(false);
-      setKeyword('');
-      setUsers([]);
-      setHasSearched(false);
-    },
-    [onSelectUser, onOpenChange]
-  );
+  const { keyword, setKeyword, users, hasSearched, isSearching, search, reset, handleKeyDown } =
+    useSearch({
+      api: usersApi,
+      onError: (error) => {
+        console.error('搜索用户失败:', error);
+      },
+    });
 
   // 关闭弹窗时重置状态
   const handleOpenChange = useCallback(
-    (open: boolean) => {
-      onOpenChange(open);
-      if (!open) {
-        setKeyword('');
-        setUsers([]);
-        setHasSearched(false);
+    (isOpen: boolean) => {
+      onOpenChange(isOpen);
+      if (!isOpen) {
+        reset();
       }
     },
-    [onOpenChange]
+    [onOpenChange, reset]
   );
 
   return (
@@ -98,8 +66,8 @@ export function SearchUserDialog({ open, onOpenChange, onSelectUser }: SearchUse
               onKeyDown={handleKeyDown}
             />
           </div>
-          <Button onClick={handleSearch} disabled={!keyword.trim() || isLoading}>
-            {isLoading ? <Loader2 className="size-4 animate-spin" /> : '搜索'}
+          <Button onClick={search} disabled={!keyword.trim() || isSearching}>
+            {isSearching ? <Loader2 className="size-4 animate-spin" /> : '搜索'}
           </Button>
         </div>
 
@@ -110,7 +78,7 @@ export function SearchUserDialog({ open, onOpenChange, onSelectUser }: SearchUse
               <Search className="size-8 mb-2 opacity-50" />
               <p className="text-sm">输入关键词搜索用户</p>
             </div>
-          ) : isLoading ? (
+          ) : isSearching ? (
             <div className="flex flex-col items-center justify-center py-8 text-muted-foreground">
               <Loader2 className="size-8 mb-2 animate-spin" />
               <p className="text-sm">搜索中...</p>
@@ -124,10 +92,7 @@ export function SearchUserDialog({ open, onOpenChange, onSelectUser }: SearchUse
             <ul className="space-y-1 px-2">
               {users.map((user) => (
                 <li key={user.id}>
-                  <button
-                    className="w-full flex items-center gap-3 p-3 rounded-lg text-left hover:bg-accent transition-colors"
-                    onClick={() => handleSelectUser(user)}
-                  >
+                  <div className="w-full flex items-center gap-3 p-3 rounded-lg text-left hover:bg-accent transition-colors">
                     <Avatar className="size-10 shrink-0">
                       <AvatarImage src={user.avatar ?? undefined} />
                       <AvatarFallback>
@@ -138,10 +103,16 @@ export function SearchUserDialog({ open, onOpenChange, onSelectUser }: SearchUse
                       <p className="font-medium truncate">{user.nickname || user.username}</p>
                       <p className="text-sm text-muted-foreground truncate">@{user.username}</p>
                     </div>
-                    <Button variant="ghost" size="sm" className="shrink-0">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="shrink-0"
+                      // 发起添加好友请求
+                      onClick={() => onSelectUser?.(user)}
+                    >
                       <UserPlus className="size-4" />
                     </Button>
-                  </button>
+                  </div>
                 </li>
               ))}
             </ul>

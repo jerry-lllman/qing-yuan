@@ -220,7 +220,7 @@ export class HttpClient {
     }
 
     const response = await this.instance.post<ApiResponse<AuthTokens>>(
-      '/auth/refresh',
+      `${API_VERSION.V1}/auth/refresh`,
       { refreshToken },
       { skipAuth: true } as RequestConfig
     );

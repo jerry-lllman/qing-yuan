@@ -6,9 +6,6 @@ import { Link } from 'react-router-dom';
 import {
   Button,
   Input,
-  Card,
-  CardHeader,
-  CardContent,
   Form,
   FormControl,
   FormField,
@@ -70,11 +67,11 @@ export default function LoginPage() {
   };
 
   return (
-    <Card className="w-100">
-      <CardHeader className="space-y-1">
-        <img src={logo} alt="Qyra Logo" className="w-24 h-24 mx-auto" />
-      </CardHeader>
-      <CardContent>
+    <div className="w-100 p-8">
+      <div className="space-y-1">
+        <img src={logo} alt="Qyra Logo" className="w-24 h-24 mx-auto mb-4" />
+      </div>
+      <div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             {form.formState.errors.root && (
@@ -133,7 +130,7 @@ export default function LoginPage() {
             </div>
           </form>
         </Form>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

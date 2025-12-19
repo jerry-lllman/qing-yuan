@@ -61,3 +61,8 @@ export interface RegisterRequest {
   confirmPassword: string;
   nickname?: string;
 }
+
+/** 搜索用户 */
+export interface SearchUsersRequest {
+  keyword: string;
+}

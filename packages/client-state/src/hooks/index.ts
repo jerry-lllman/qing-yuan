@@ -36,3 +36,10 @@ export {
   type UseContactOptions,
   type UseContactReturn,
 } from './use-contact';
+
+export {
+  useSearch,
+  type SearchApi,
+  type UseSearchOptions,
+  type UseSearchReturn,
+} from './use-search';
