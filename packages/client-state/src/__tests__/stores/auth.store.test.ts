@@ -9,7 +9,7 @@ import {
   getAccessToken,
   getCurrentUserId,
   checkIsAuthenticated,
-} from './auth.store';
+} from '../../stores/auth.store';
 import type { User, AuthTokens } from '@qyra/shared';
 
 // Mock localStorage

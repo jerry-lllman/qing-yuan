@@ -10,7 +10,7 @@ import {
   getTotalUnreadCount,
   hasChat,
   type ChatConversation,
-} from './chat.store';
+} from '../../stores/chat.store';
 import type { PrivateConversation, GroupConversation, Message } from '@qyra/shared';
 
 // Mock localStorage

@@ -13,8 +13,8 @@ import {
   useFailedMessageCount,
   getFailedMessages,
   type MessageApi,
-} from './use-message';
-import { useMessageStore, SendingStatus, type PendingMessage } from '../stores/message.store';
+} from '../../hooks/use-message';
+import { useMessageStore, SendingStatus, type PendingMessage } from '../../stores/message.store';
 import type { Message, UserBrief } from '@qyra/shared';
 
 // ========================

@@ -14,7 +14,7 @@ import {
   DEFAULT_STALE_TIME,
   DEFAULT_GC_TIME,
   DEFAULT_RETRY_COUNT,
-} from './query-client';
+} from '../../queries/query-client';
 
 describe('Query Client', () => {
   beforeEach(() => {

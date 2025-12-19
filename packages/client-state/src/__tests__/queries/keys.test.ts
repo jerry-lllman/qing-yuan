@@ -11,7 +11,7 @@ import {
   groupKeys,
   notificationKeys,
   queryKeys,
-} from './keys';
+} from '../../queries/keys';
 
 describe('Query Keys', () => {
   describe('userKeys', () => {

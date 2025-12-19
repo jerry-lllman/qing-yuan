@@ -14,8 +14,8 @@ import {
   useOnlineStatus,
   usePendingRequestCount,
   type ContactApi,
-} from './use-contact';
-import { useContactStore, type BlockedUser, type OnlineStatus } from '../stores/contact.store';
+} from '../../hooks/use-contact';
+import { useContactStore, type BlockedUser, type OnlineStatus } from '../../stores/contact.store';
 import type { Friend, FriendRequest, UserBrief } from '@qyra/shared';
 
 // ========================

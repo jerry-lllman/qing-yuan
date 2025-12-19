@@ -13,7 +13,7 @@ import {
   getPendingRequestCount,
   type BlockedUser,
   type OnlineStatus,
-} from './contact.store';
+} from '../../stores/contact.store';
 import type { Friend, FriendRequest } from '@qyra/shared';
 
 // ========================

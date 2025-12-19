@@ -6,8 +6,8 @@ import { type ReactNode } from 'react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useAuth, type AuthApi } from './use-auth';
-import { useAuthStore, AuthStatus } from '../stores/auth.store';
+import { useAuth, type AuthApi } from '../../hooks/use-auth';
+import { useAuthStore, AuthStatus } from '../../stores/auth.store';
 import type { User, AuthTokens } from '@qyra/shared';
 
 // ========================
@@ -135,11 +135,11 @@ describe('useAuth', () => {
       });
 
       await act(async () => {
-        await result.current.login({ username: 'testuser', password: 'password123' });
+        await result.current.login({ account: 'testuser', password: 'password123' });
       });
 
       expect(mockApi.login).toHaveBeenCalledWith({
-        username: 'testuser',
+        account: 'testuser',
         password: 'password123',
       });
       expect(result.current.status).toBe(AuthStatus.AUTHENTICATED);
@@ -160,7 +160,7 @@ describe('useAuth', () => {
 
       await act(async () => {
         try {
-          await result.current.login({ username: 'testuser', password: 'wrong' });
+          await result.current.login({ account: 'testuser', password: 'wrong' });
         } catch {
           // Expected error
         }
@@ -189,7 +189,7 @@ describe('useAuth', () => {
 
       let loginPromise: Promise<void>;
       act(() => {
-        loginPromise = result.current.login({ username: 'testuser', password: 'password' });
+        loginPromise = result.current.login({ account: 'testuser', password: 'password' });
       });
 
       await waitFor(() => {
@@ -222,6 +222,7 @@ describe('useAuth', () => {
         await result.current.register({
           email: 'new@example.com',
           password: 'password123',
+          confirmPassword: 'password123',
           username: 'newuser',
         });
       });
@@ -229,6 +230,7 @@ describe('useAuth', () => {
       expect(mockApi.register).toHaveBeenCalledWith({
         email: 'new@example.com',
         password: 'password123',
+        confirmPassword: 'password123',
         username: 'newuser',
       });
       expect(result.current.status).toBe(AuthStatus.AUTHENTICATED);
@@ -251,6 +253,7 @@ describe('useAuth', () => {
           await result.current.register({
             email: 'existing@example.com',
             password: 'password',
+            confirmPassword: 'password',
             username: 'existinguser',
           });
         } catch {
@@ -283,6 +286,7 @@ describe('useAuth', () => {
         registerPromise = result.current.register({
           email: 'new@example.com',
           password: 'password',
+          confirmPassword: 'password',
           username: 'newuser',
         });
       });
@@ -315,7 +319,7 @@ describe('useAuth', () => {
 
       // 先登录
       await act(async () => {
-        await result.current.login({ username: 'testuser', password: 'password' });
+        await result.current.login({ account: 'testuser', password: 'password' });
       });
 
       expect(result.current.isAuthenticated).toBe(true);
@@ -342,7 +346,7 @@ describe('useAuth', () => {
 
       // 先登录
       await act(async () => {
-        await result.current.login({ username: 'testuser', password: 'password' });
+        await result.current.login({ account: 'testuser', password: 'password' });
       });
 
       // 登出（即使 API 失败也应该清除本地状态）
@@ -370,7 +374,7 @@ describe('useAuth', () => {
 
       // 先登录
       await act(async () => {
-        await result.current.login({ username: 'testuser', password: 'password' });
+        await result.current.login({ account: 'testuser', password: 'password' });
       });
 
       let logoutPromise: Promise<void>;
@@ -405,7 +409,7 @@ describe('useAuth', () => {
 
       // 先登录
       await act(async () => {
-        await result.current.login({ username: 'testuser', password: 'password' });
+        await result.current.login({ account: 'testuser', password: 'password' });
       });
 
       expect(result.current.tokens).toEqual(mockTokens);
@@ -444,7 +448,7 @@ describe('useAuth', () => {
 
       // 先登录
       await act(async () => {
-        await result.current.login({ username: 'testuser', password: 'password' });
+        await result.current.login({ account: 'testuser', password: 'password' });
       });
 
       // 刷新 Token（失败）
@@ -476,7 +480,7 @@ describe('useAuth', () => {
 
       // 先登录
       await act(async () => {
-        await result.current.login({ username: 'testuser', password: 'password' });
+        await result.current.login({ account: 'testuser', password: 'password' });
       });
 
       let refreshPromise: Promise<void>;
@@ -514,7 +518,7 @@ describe('useAuth', () => {
 
       // 先登录
       await act(async () => {
-        await result.current.login({ username: 'testuser', password: 'password' });
+        await result.current.login({ account: 'testuser', password: 'password' });
       });
 
       // 更新用户信息
@@ -537,7 +541,7 @@ describe('useAuth', () => {
 
       // 先登录
       await act(async () => {
-        await result.current.login({ username: 'testuser', password: 'password' });
+        await result.current.login({ account: 'testuser', password: 'password' });
       });
 
       // 更新用户信息（失败）
@@ -567,7 +571,7 @@ describe('useAuth', () => {
 
       // 先登录
       await act(async () => {
-        await result.current.login({ username: 'testuser', password: 'password' });
+        await result.current.login({ account: 'testuser', password: 'password' });
       });
 
       let updatePromise: Promise<void>;
@@ -606,7 +610,7 @@ describe('useAuth', () => {
       // 触发错误
       await act(async () => {
         try {
-          await result.current.login({ username: 'testuser', password: 'wrong' });
+          await result.current.login({ account: 'testuser', password: 'wrong' });
         } catch {
           // Expected error
         }
@@ -632,7 +636,7 @@ describe('useAuth', () => {
 
       await act(async () => {
         try {
-          await result.current.login({ username: 'testuser', password: 'wrong' });
+          await result.current.login({ account: 'testuser', password: 'wrong' });
         } catch {
           // Expected error
         }
@@ -657,7 +661,7 @@ describe('useAuth', () => {
 
       // 先登录
       await act(async () => {
-        await result.current.login({ username: 'testuser', password: 'password' });
+        await result.current.login({ account: 'testuser', password: 'password' });
       });
 
       // 重置 mock 调用计数
