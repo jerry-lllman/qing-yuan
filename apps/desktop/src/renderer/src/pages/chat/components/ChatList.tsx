@@ -22,6 +22,19 @@ export function ChatList() {
   // 转换为数组
   const chatList = chatIds.map((id) => chats.get(id)).filter(Boolean);
 
+  // const chatList = [
+  //   {
+  //     type: 'private',
+  //     participant: {
+  //       id: 'string',
+  //       username: 'string',
+  //       nickname: 'string',
+  //       avatar: null,
+  //       status: 'online',
+  //     },
+  //   },
+  // ];
+
   return (
     <aside className="w-72  flex flex-col bg-background">
       {/* 搜索框 */}
@@ -38,13 +51,7 @@ export function ChatList() {
       </div>
 
       {/* 搜索用户弹窗 */}
-      <SearchUserDialog
-        open={searchDialogOpen}
-        onOpenChange={setSearchDialogOpen}
-        onSelectUser={(_user) => {
-          // TODO: 创建或跳转到与该用户的会话
-        }}
-      />
+      <SearchUserDialog open={searchDialogOpen} onOpenChange={setSearchDialogOpen} />
 
       {/* 会话列表 */}
       <div className="flex-1 overflow-y-auto">

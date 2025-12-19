@@ -14,6 +14,8 @@ import PageLoading from '@/components/PageLoading';
 
 const MainLayout = lazy(() => import('@/layouts/MainLayout'));
 const ChatPage = lazy(() => import('@/pages/chat/ChatPage'));
+const ContactPage = lazy(() => import('@/pages/contact/ContactPage'));
+const ConversationPage = lazy(() => import('@/pages/chat/conversation/ConversationPage'));
 
 export const router = createHashRouter([
   {
@@ -38,12 +40,22 @@ export const router = createHashRouter([
                 <ChatPage />
               </Suspense>
             ),
+            children: [
+              {
+                path: ':conversationId',
+                element: (
+                  <Suspense fallback={<PageLoading />}>
+                    <ConversationPage />
+                  </Suspense>
+                ),
+              },
+            ],
           },
           {
-            path: '/chat/:conversationId',
+            path: '/contacts',
             element: (
               <Suspense fallback={<PageLoading />}>
-                <ChatPage />
+                <ContactPage />
               </Suspense>
             ),
           },
