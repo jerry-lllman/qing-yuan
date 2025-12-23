@@ -11,8 +11,7 @@
  */
 
 import { useCallback, useMemo } from 'react';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { useShallow } from 'zustand/react/shallow';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { Message, SendMessageRequest } from '@qyra/shared';
 import {
   useMessageStore,
@@ -51,6 +50,8 @@ export interface UseMessageOptions {
   api: MessageApi;
   /** 会话 ID */
   conversationId: string;
+  /** 当前用户 ID（用于标记 pending 消息的发送者） */
+  currentUserId: string;
   /** 每页消息数量 */
   pageSize?: number;
   /** 消息发送成功回调 */
@@ -140,7 +141,7 @@ export interface UseMessageReturn {
  * });
  *
  * // 发送消息
- * await sendMessage({ type: 'text', content: 'Hello!' });
+ * await sendMessage({ type: 'TEXT', content: 'Hello!' });
  *
  * // 加载更多
  * if (hasMore) {
@@ -148,55 +149,54 @@ export interface UseMessageReturn {
  * }
  * ```
  */
+// 默认值（保持引用稳定）
+const DEFAULT_PAGINATION: MessagePagination = { hasMore: true, isLoading: false };
+const EMPTY_MESSAGES: Message[] = [];
+const EMPTY_PENDING: PendingMessage[] = [];
+
 export function useMessage(options: UseMessageOptions): UseMessageReturn {
-  const { api, conversationId, pageSize = 20, onSendSuccess, onSendError, onError } = options;
+  const {
+    api,
+    conversationId,
+    currentUserId,
+    pageSize = 20,
+    onSendSuccess,
+    onSendError,
+    onError,
+  } = options;
+
+  const queryClient = useQueryClient();
 
   // ========== Store State ==========
-  const { messagesMap, pendingMessagesMap, draftsMap, paginationMap, editingMessageId } =
-    useMessageStore(
-      useShallow((state) => ({
-        messagesMap: state.messages,
-        pendingMessagesMap: state.pendingMessages,
-        draftsMap: state.drafts,
-        paginationMap: state.pagination,
-        editingMessageId: state.editingMessageId,
-      }))
-    );
+  // 现在使用普通对象而非 Map + Immer，直接使用 selector 即可
+  const messages = useMessageStore((state) => state.messages[conversationId] ?? EMPTY_MESSAGES);
+
+  const pendingMessages = useMessageStore(
+    (state) => state.pendingMessages[conversationId] ?? EMPTY_PENDING
+  );
+
+  const draft = useMessageStore((state) => state.drafts[conversationId]);
+
+  const pagination = useMessageStore(
+    (state) => state.pagination[conversationId] ?? DEFAULT_PAGINATION
+  );
+
+  const editingMessageId = useMessageStore((state) => state.editingMessageId);
 
   // Store Actions
-  const {
-    setMessages,
-    prependMessages,
-    addMessage,
-    updateMessage,
-    deleteMessage: storeDeleteMessage,
-    addPendingMessage,
-    updatePendingMessage,
-    removePendingMessage,
-    markPendingAsFailed,
-    setDraft: storeSetDraft,
-    clearDraft: storeClearDraft,
-    setPagination,
-    setEditingMessage,
-  } = useMessageStore();
-
-  // ========== 派生状态 ==========
-  const messages = useMemo(
-    () => messagesMap.get(conversationId) || [],
-    [messagesMap, conversationId]
-  );
-
-  const pendingMessages = useMemo(
-    () => pendingMessagesMap.get(conversationId) || [],
-    [pendingMessagesMap, conversationId]
-  );
-
-  const draft = useMemo(() => draftsMap.get(conversationId), [draftsMap, conversationId]);
-
-  const pagination = useMemo(
-    () => paginationMap.get(conversationId) || { hasMore: true, isLoading: false },
-    [paginationMap, conversationId]
-  );
+  const setMessages = useMessageStore((state) => state.setMessages);
+  const prependMessages = useMessageStore((state) => state.prependMessages);
+  const addMessage = useMessageStore((state) => state.addMessage);
+  const updateMessage = useMessageStore((state) => state.updateMessage);
+  const storeDeleteMessage = useMessageStore((state) => state.deleteMessage);
+  const addPendingMessage = useMessageStore((state) => state.addPendingMessage);
+  const updatePendingMessage = useMessageStore((state) => state.updatePendingMessage);
+  const removePendingMessage = useMessageStore((state) => state.removePendingMessage);
+  const markPendingAsFailed = useMessageStore((state) => state.markPendingAsFailed);
+  const storeSetDraft = useMessageStore((state) => state.setDraft);
+  const storeClearDraft = useMessageStore((state) => state.clearDraft);
+  const setPagination = useMessageStore((state) => state.setPagination);
+  const setEditingMessage = useMessageStore((state) => state.setEditingMessage);
 
   // 合并消息列表（包含待发送消息）
   const allMessages = useMemo(() => {
@@ -204,8 +204,15 @@ export function useMessage(options: UseMessageOptions): UseMessageReturn {
     const pendingAsMessages: Message[] = pendingMessages.map((pm) => ({
       id: pm.tempId,
       conversationId: pm.conversationId,
-      senderId: 'current-user', // 由使用方替换
-      sender: { id: 'current-user', username: '', nickname: '', avatar: null, status: 'online' },
+      senderId: currentUserId, // 使用当前用户 ID
+      sender: {
+        id: currentUserId,
+        username: '',
+        nickname: '',
+        avatar: null,
+        status: 'online' as const,
+        email: '',
+      },
       type: pm.type,
       content: pm.content,
       attachments: pm.attachments || [],
@@ -217,7 +224,7 @@ export function useMessage(options: UseMessageOptions): UseMessageReturn {
       updatedAt: pm.createdAt,
     }));
     return [...messages, ...pendingAsMessages];
-  }, [messages, pendingMessages]);
+  }, [messages, pendingMessages, currentUserId]);
 
   // ========== 错误处理 ==========
   const handleError = useCallback(
@@ -236,9 +243,12 @@ export function useMessage(options: UseMessageOptions): UseMessageReturn {
       setPagination(conversationId, { isLoading: true });
       try {
         const result = await api.getMessages(conversationId, { limit: pageSize });
+
+        // 直接设置服务端返回的消息，不做本地合并
+        // 因为刚发送的消息应该已经通过 mutation 的 queryClient.setQueryData 更新到缓存了
         setMessages(conversationId, result.messages);
         setPagination(conversationId, { hasMore: result.hasMore, isLoading: false });
-        return result;
+        return { messages: result.messages, hasMore: result.hasMore };
       } catch (err) {
         setPagination(conversationId, { isLoading: false });
         throw err;
@@ -279,6 +289,21 @@ export function useMessage(options: UseMessageOptions): UseMessageReturn {
         // 发送成功，移除待发送消息，添加实际消息
         removePendingMessage(conversationId, tempId);
         addMessage(conversationId, message);
+
+        // 同时更新 React Query 缓存，防止 refetch 时覆盖
+        queryClient.setQueryData(
+          messageKeys.list(conversationId),
+          (oldData: { messages: Message[]; hasMore: boolean } | undefined) => {
+            if (!oldData) return { messages: [message], hasMore: false };
+            // 检查消息是否已存在
+            const exists = oldData.messages.some((m) => m.id === message.id);
+            if (exists) return oldData;
+            return {
+              ...oldData,
+              messages: [...oldData.messages, message],
+            };
+          }
+        );
 
         onSendSuccess?.(message);
         return message;
@@ -511,7 +536,7 @@ export function useMessageById(
 ): Message | undefined {
   return useMessageStore((state) => {
     if (!messageId) return undefined;
-    const messages = state.messages.get(conversationId);
+    const messages = state.messages[conversationId];
     return messages?.find((m) => m.id === messageId);
   });
 }
@@ -521,7 +546,7 @@ export function useMessageById(
  */
 export function useHasPendingMessages(conversationId: string): boolean {
   return useMessageStore((state) => {
-    const pending = state.pendingMessages.get(conversationId);
+    const pending = state.pendingMessages[conversationId];
     return !!pending && pending.length > 0;
   });
 }
@@ -531,7 +556,7 @@ export function useHasPendingMessages(conversationId: string): boolean {
  */
 export function useFailedMessageCount(conversationId: string): number {
   return useMessageStore((state) => {
-    const pending = state.pendingMessages.get(conversationId) || [];
+    const pending = state.pendingMessages[conversationId] || [];
     return pending.filter((pm) => pm.status === SendingStatus.FAILED).length;
   });
 }
@@ -540,6 +565,6 @@ export function useFailedMessageCount(conversationId: string): number {
  * 获取失败的待发送消息（非响应式，直接获取）
  */
 export function getFailedMessages(conversationId: string): PendingMessage[] {
-  const pending = useMessageStore.getState().pendingMessages.get(conversationId) || [];
+  const pending = useMessageStore.getState().pendingMessages[conversationId] || [];
   return pending.filter((pm) => pm.status === SendingStatus.FAILED);
 }

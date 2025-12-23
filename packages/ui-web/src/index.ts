@@ -9,7 +9,9 @@ export * from './components/ui/dialog';
 export * from './components/ui/form';
 export * from './components/ui/input';
 export * from './components/ui/label';
+export * from './components/ui/scroll-area';
 export * from './components/ui/sonner';
+export * from './components/ui/textarea';
 
 // Utilities
 export { cn } from './lib/utils';

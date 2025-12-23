@@ -5,7 +5,7 @@
 import { type UserBrief } from './user.js';
 
 /** 消息类型 */
-export type MessageType = 'text' | 'image' | 'file' | 'voice' | 'video' | 'system';
+export type MessageType = 'TEXT' | 'IMAGE' | 'FILE' | 'VOICE' | 'VIDEO' | 'SYSTEM';
 
 /** 消息状态 */
 export type MessageStatus = 'pending' | 'sent' | 'delivered' | 'read' | 'failed';

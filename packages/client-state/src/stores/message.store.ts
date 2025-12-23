@@ -1,16 +1,13 @@
 /**
  * 消息状态管理
  * 负责消息列表、消息发送状态、草稿等
+ *
+ * 注意：不使用 Immer middleware 避免 proxy 撤销问题
  */
 
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { immer } from 'zustand/middleware/immer';
-import { enableMapSet } from 'immer';
 import type { Message } from '@qyra/shared';
-
-// 启用 immer 的 Map/Set 支持
-enableMapSet();
 
 // ========================
 // 类型定义
@@ -81,14 +78,14 @@ export interface MessagePagination {
 /** 消息状态 */
 export interface MessageState {
   // ========== 状态 ==========
-  /** 消息列表（按会话 ID 分组） */
-  messages: Map<string, Message[]>;
+  /** 消息列表（按会话 ID 分组）- 使用普通对象而非 Map */
+  messages: Record<string, Message[]>;
   /** 待发送消息队列 */
-  pendingMessages: Map<string, PendingMessage[]>;
+  pendingMessages: Record<string, PendingMessage[]>;
   /** 草稿消息 */
-  drafts: Map<string, DraftMessage>;
+  drafts: Record<string, DraftMessage>;
   /** 分页信息（按会话 ID） */
-  pagination: Map<string, MessagePagination>;
+  pagination: Record<string, MessagePagination>;
   /** 正在编辑的消息 ID */
   editingMessageId: string | null;
 
@@ -140,10 +137,10 @@ const initialState: Pick<
   MessageState,
   'messages' | 'pendingMessages' | 'drafts' | 'pagination' | 'editingMessageId'
 > = {
-  messages: new Map(),
-  pendingMessages: new Map(),
-  drafts: new Map(),
-  pagination: new Map(),
+  messages: {},
+  pendingMessages: {},
+  drafts: {},
+  pagination: {},
   editingMessageId: null,
 };
 
@@ -154,191 +151,214 @@ const initialState: Pick<
 /**
  * 消息 Store
  *
- * 注意：消息不做持久化，每次打开应用从服务器获取
- * 草稿可以考虑持久化（如果需要可以添加 persist 中间件）
+ * 注意：
+ * - 不使用 Immer middleware，避免 proxy 撤销问题
+ * - 使用普通对象而非 Map，避免序列化问题
+ * - 所有更新都是不可变的（创建新对象）
  */
 export const useMessageStore = create<MessageState>()(
   devtools(
-    immer((set, get) => ({
+    (set, get) => ({
       // ========== 初始状态 ==========
       ...initialState,
 
       // ========== 消息操作 ==========
       setMessages: (conversationId, messages) =>
-        set((state: MessageState) => {
-          state.messages.set(conversationId, messages);
-
-          // 更新分页信息
+        set((state) => {
+          const newPagination = { ...state.pagination };
           if (messages.length > 0) {
-            const pagination = state.pagination.get(conversationId) || {
-              hasMore: true,
+            newPagination[conversationId] = {
+              ...state.pagination[conversationId],
+              hasMore: state.pagination[conversationId]?.hasMore ?? true,
               isLoading: false,
+              oldestMessageId: messages[0]?.id,
+              newestMessageId: messages[messages.length - 1]?.id,
             };
-            pagination.oldestMessageId = messages[0]?.id;
-            pagination.newestMessageId = messages[messages.length - 1]?.id;
-            state.pagination.set(conversationId, pagination);
           }
+          return {
+            messages: { ...state.messages, [conversationId]: [...messages] },
+            pagination: newPagination,
+          };
         }),
 
       prependMessages: (conversationId, messages) =>
-        set((state: MessageState) => {
-          const existing = state.messages.get(conversationId);
-          if (existing) {
-            // 在现有数组前面插入新消息
-            existing.unshift(...messages);
-          } else {
-            state.messages.set(conversationId, [...messages]);
-          }
-
-          // 更新最早消息 ID
+        set((state) => {
+          const existing = state.messages[conversationId] || [];
+          const newPagination = { ...state.pagination };
           if (messages.length > 0) {
-            const pagination = state.pagination.get(conversationId) || {
-              hasMore: true,
+            newPagination[conversationId] = {
+              ...state.pagination[conversationId],
+              hasMore: state.pagination[conversationId]?.hasMore ?? true,
               isLoading: false,
+              oldestMessageId: messages[0]?.id,
             };
-            pagination.oldestMessageId = messages[0]?.id;
-            state.pagination.set(conversationId, pagination);
           }
+          return {
+            messages: { ...state.messages, [conversationId]: [...messages, ...existing] },
+            pagination: newPagination,
+          };
         }),
 
       addMessage: (conversationId, message) =>
-        set((state: MessageState) => {
-          const existing = state.messages.get(conversationId) || [];
-
+        set((state) => {
+          const existing = state.messages[conversationId] || [];
           // 检查消息是否已存在（避免重复）
-          const exists = existing.some((m) => m.id === message.id);
-          if (!exists) {
-            state.messages.set(conversationId, [...existing, message]);
-
-            // 更新最新消息 ID
-            const pagination = state.pagination.get(conversationId) || {
-              hasMore: true,
-              isLoading: false,
-            };
-            pagination.newestMessageId = message.id;
-            state.pagination.set(conversationId, pagination);
+          if (existing.some((m) => m.id === message.id)) {
+            return state;
           }
+          const newPagination = {
+            ...state.pagination,
+            [conversationId]: {
+              ...state.pagination[conversationId],
+              hasMore: state.pagination[conversationId]?.hasMore ?? true,
+              isLoading: false,
+              newestMessageId: message.id,
+            },
+          };
+          return {
+            messages: { ...state.messages, [conversationId]: [...existing, message] },
+            pagination: newPagination,
+          };
         }),
 
       updateMessage: (conversationId, messageId, updates) =>
-        set((state: MessageState) => {
-          const messages = state.messages.get(conversationId);
-          if (messages) {
-            const index = messages.findIndex((m) => m.id === messageId);
-            if (index !== -1) {
-              Object.assign(messages[index]!, updates);
-            }
-          }
+        set((state) => {
+          const messages = state.messages[conversationId];
+          if (!messages) return state;
+          const index = messages.findIndex((m) => m.id === messageId);
+          if (index === -1) return state;
+          const newMessages = [...messages];
+          newMessages[index] = { ...messages[index]!, ...updates };
+          return {
+            messages: { ...state.messages, [conversationId]: newMessages },
+          };
         }),
 
       deleteMessage: (conversationId, messageId) =>
-        set((state: MessageState) => {
-          const messages = state.messages.get(conversationId);
-          if (messages) {
-            const index = messages.findIndex((m) => m.id === messageId);
-            if (index !== -1) {
-              // 软删除：标记为已删除
-              messages[index]!.isDeleted = true;
-              messages[index]!.content = '';
-            }
-          }
+        set((state) => {
+          const messages = state.messages[conversationId];
+          if (!messages) return state;
+          const index = messages.findIndex((m) => m.id === messageId);
+          if (index === -1) return state;
+          const newMessages = [...messages];
+          newMessages[index] = { ...messages[index]!, isDeleted: true, content: '' };
+          return {
+            messages: { ...state.messages, [conversationId]: newMessages },
+          };
         }),
 
       clearMessages: (conversationId) =>
-        set((state: MessageState) => {
-          state.messages.delete(conversationId);
-          state.pagination.delete(conversationId);
+        set((state) => {
+          const { [conversationId]: _, ...restMessages } = state.messages;
+          const { [conversationId]: __, ...restPagination } = state.pagination;
+          return {
+            messages: restMessages,
+            pagination: restPagination,
+          };
         }),
 
       // ========== 待发送消息操作 ==========
       addPendingMessage: (message) =>
-        set((state: MessageState) => {
-          const existing = state.pendingMessages.get(message.conversationId);
-          if (existing) {
-            // 直接 push 到现有数组，避免创建新数组导致 proxy 问题
-            existing.push(message);
-          } else {
-            state.pendingMessages.set(message.conversationId, [message]);
-          }
+        set((state) => {
+          const existing = state.pendingMessages[message.conversationId] || [];
+          return {
+            pendingMessages: {
+              ...state.pendingMessages,
+              [message.conversationId]: [...existing, message],
+            },
+          };
         }),
 
       updatePendingMessage: (tempId, updates) =>
-        set((state: MessageState) => {
-          for (const [_conversationId, messages] of state.pendingMessages) {
+        set((state) => {
+          const newPendingMessages = { ...state.pendingMessages };
+          for (const conversationId of Object.keys(newPendingMessages)) {
+            const messages = newPendingMessages[conversationId]!;
             const index = messages.findIndex((m) => m.tempId === tempId);
             if (index !== -1) {
-              Object.assign(messages[index]!, updates);
+              const newMessages = [...messages];
+              newMessages[index] = { ...messages[index]!, ...updates };
+              newPendingMessages[conversationId] = newMessages;
               break;
             }
           }
+          return { pendingMessages: newPendingMessages };
         }),
 
       removePendingMessage: (conversationId, tempId) =>
-        set((state: MessageState) => {
-          const messages = state.pendingMessages.get(conversationId);
-          if (!messages) return;
-
-          // 从后往前遍历查找并删除，避免索引问题
-          for (let i = messages.length - 1; i >= 0; i--) {
-            if (messages[i]?.tempId === tempId) {
-              messages.splice(i, 1);
-              break;
-            }
+        set((state) => {
+          const messages = state.pendingMessages[conversationId];
+          if (!messages) return state;
+          const filtered = messages.filter((m) => m.tempId !== tempId);
+          if (filtered.length === 0) {
+            const { [conversationId]: _, ...rest } = state.pendingMessages;
+            return { pendingMessages: rest };
           }
-
-          // 如果数组为空，删除 key
-          if (messages.length === 0) {
-            state.pendingMessages.delete(conversationId);
-          }
+          return {
+            pendingMessages: { ...state.pendingMessages, [conversationId]: filtered },
+          };
         }),
 
       markPendingAsFailed: (tempId, error) =>
-        set((state: MessageState) => {
-          for (const [, messages] of state.pendingMessages) {
-            const message = messages.find((m) => m.tempId === tempId);
-            if (message) {
-              message.status = SendingStatus.FAILED;
-              message.error = error;
-              message.retryCount += 1;
+        set((state) => {
+          const newPendingMessages = { ...state.pendingMessages };
+          for (const conversationId of Object.keys(newPendingMessages)) {
+            const messages = newPendingMessages[conversationId]!;
+            const index = messages.findIndex((m) => m.tempId === tempId);
+            if (index !== -1) {
+              const newMessages = [...messages];
+              newMessages[index] = {
+                ...messages[index]!,
+                status: SendingStatus.FAILED,
+                error,
+                retryCount: messages[index]!.retryCount + 1,
+              };
+              newPendingMessages[conversationId] = newMessages;
               break;
             }
           }
+          return { pendingMessages: newPendingMessages };
         }),
 
       // ========== 草稿操作 ==========
       setDraft: (draft) =>
-        set((state: MessageState) => {
-          state.drafts.set(draft.conversationId, draft);
-        }),
+        set((state) => ({
+          drafts: { ...state.drafts, [draft.conversationId]: draft },
+        })),
 
       getDraft: (conversationId) => {
-        return get().drafts.get(conversationId);
+        return get().drafts[conversationId];
       },
 
       clearDraft: (conversationId) =>
-        set((state: MessageState) => {
-          state.drafts.delete(conversationId);
+        set((state) => {
+          const { [conversationId]: _, ...rest } = state.drafts;
+          return { drafts: rest };
         }),
 
       // ========== 分页操作 ==========
       setPagination: (conversationId, pagination) =>
-        set((state: MessageState) => {
-          const existing = state.pagination.get(conversationId) || {
-            hasMore: true,
-            isLoading: false,
-          };
-          state.pagination.set(conversationId, { ...existing, ...pagination });
-        }),
+        set((state) => ({
+          pagination: {
+            ...state.pagination,
+            [conversationId]: {
+              hasMore: true,
+              isLoading: false,
+              ...state.pagination[conversationId],
+              ...pagination,
+            },
+          },
+        })),
 
       // ========== 编辑消息 ==========
       setEditingMessage: (messageId) =>
-        set((state: MessageState) => {
-          state.editingMessageId = messageId;
-        }),
+        set(() => ({
+          editingMessageId: messageId,
+        })),
 
       // ========== 重置 ==========
-      reset: () => set(() => initialState),
-    })),
+      reset: () => set(() => ({ ...initialState })),
+    }),
     { name: 'MessageStore' }
   )
 );
@@ -351,14 +371,14 @@ export const useMessageStore = create<MessageState>()(
  * 获取会话消息
  */
 export function getMessages(conversationId: string): Message[] {
-  return useMessageStore.getState().messages.get(conversationId) || [];
+  return useMessageStore.getState().messages[conversationId] || [];
 }
 
 /**
  * 获取单条消息
  */
 export function getMessage(conversationId: string, messageId: string): Message | undefined {
-  const messages = useMessageStore.getState().messages.get(conversationId);
+  const messages = useMessageStore.getState().messages[conversationId];
   return messages?.find((m) => m.id === messageId);
 }
 
@@ -366,14 +386,14 @@ export function getMessage(conversationId: string, messageId: string): Message |
  * 获取待发送消息
  */
 export function getPendingMessages(conversationId: string): PendingMessage[] {
-  return useMessageStore.getState().pendingMessages.get(conversationId) || [];
+  return useMessageStore.getState().pendingMessages[conversationId] || [];
 }
 
 /**
  * 获取草稿
  */
 export function getDraft(conversationId: string): DraftMessage | undefined {
-  return useMessageStore.getState().drafts.get(conversationId);
+  return useMessageStore.getState().drafts[conversationId];
 }
 
 /**

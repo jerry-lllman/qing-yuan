@@ -1,7 +1,12 @@
 import { useContact } from '@qyra/client-state';
 import { Button } from '@qyra/ui-web';
+import { createChatApi } from '@qyra/client-core';
 import { contactApi } from '@renderer/api/contact';
 import { useNavigate } from 'react-router-dom';
+import { useCallback, useState } from 'react';
+
+// 创建 Chat API 实例
+const chatApi = createChatApi();
 
 export default function ContactList() {
   /// 顶部搜索
@@ -11,24 +16,27 @@ export default function ContactList() {
   const { receivedRequests, friends, acceptFriendRequest } = useContact({
     api: contactApi,
   });
-  // {
-  //             "id": "cmjcik1kg0006lww8v10mv9ee",
-  //             "senderId": "cmj8mq18v0006lweggmy2fvje",
-  //             "receiverId": "cmj8myksi000clwegb94e5kfg",
-  //             "message": "你好，我想加你为好友",
-  //             "status": "PENDING",
-  //             "createdAt": "2025-12-19T06:53:56.849Z",
-  //             "updatedAt": "2025-12-19T06:53:56.849Z",
-  //             "sender": {
-  //                 "id": "cmj8mq18v0006lweggmy2fvje",
-  //                 "username": "jerry",
-  //                 "nickname": "Jerry",
-  //                 "avatar": null,
-  //                 "bio": null
-  //             }
-  //         }
 
   const navigate = useNavigate();
+  const [startingChatUserId, setStartingChatUserId] = useState<string | null>(null);
+
+  // 发起会话 - 创建或获取私聊会话后跳转
+  const handleStartChat = useCallback(
+    async (targetUserId: string) => {
+      try {
+        setStartingChatUserId(targetUserId);
+        // 调用 API 创建或获取私聊会话
+        const conversation = await chatApi.createPrivateChat(targetUserId);
+        // 使用会话 ID 进行导航
+        navigate(`/chat/${conversation.id}`);
+      } catch (error) {
+        console.error('[ContactList] Failed to create/get chat:', error);
+      } finally {
+        setStartingChatUserId(null);
+      }
+    },
+    [navigate]
+  );
 
   return (
     <div>
@@ -53,7 +61,12 @@ export default function ContactList() {
               {friendItem.remark ?? friendItem.friend.nickname ?? friendItem.friend?.username} (
               {friendItem.friend.email})
             </div>
-            <Button onClick={() => navigate(`/chat/${friendItem.friend.id}`)}>发起会话</Button>
+            <Button
+              onClick={() => handleStartChat(friendItem.friend.id)}
+              disabled={startingChatUserId === friendItem.friend.id}
+            >
+              {startingChatUserId === friendItem.friend.id ? '加载中...' : '发起会话'}
+            </Button>
           </div>
         ))}
       </div>
