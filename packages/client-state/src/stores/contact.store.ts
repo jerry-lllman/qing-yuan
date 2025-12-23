@@ -366,5 +366,5 @@ export function getOnlineStatus(userId: string): OnlineStatus | undefined {
  * 获取待处理请求数量
  */
 export function getPendingRequestCount(): number {
-  return useContactStore.getState().receivedRequests.filter((r) => r.status === 'pending').length;
+  return useContactStore.getState().receivedRequests.filter((r) => r.status === 'PENDING').length;
 }

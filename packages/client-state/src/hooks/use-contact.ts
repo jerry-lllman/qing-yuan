@@ -193,7 +193,7 @@ export function useContact(options: UseContactOptions): UseContactReturn {
 
   // ========== 派生状态 ==========
   const pendingRequestCount = useMemo(
-    () => receivedRequests.filter((r) => r.status === 'pending').length,
+    () => receivedRequests.filter((r) => r.status === 'PENDING').length,
     [receivedRequests]
   );
 
@@ -286,7 +286,7 @@ export function useContact(options: UseContactOptions): UseContactReturn {
   const rejectRequestMutation = useMutation({
     mutationFn: (requestId: string) => api.rejectFriendRequest(requestId),
     onSuccess: (_, requestId) => {
-      updateRequestStatus(requestId, 'rejected');
+      updateRequestStatus(requestId, 'REJECTED');
     },
     onError: handleError,
   });
@@ -492,6 +492,6 @@ export function useOnlineStatus(userId: string): OnlineStatus | undefined {
  */
 export function usePendingRequestCount(): number {
   return useContactStore(
-    (state) => state.receivedRequests.filter((r) => r.status === 'pending').length
+    (state) => state.receivedRequests.filter((r) => r.status === 'PENDING').length
   );
 }

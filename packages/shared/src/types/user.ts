@@ -26,6 +26,7 @@ export interface UserBrief {
   nickname: string;
   avatar: string | null;
   status: UserStatus;
+  email: string;
 }
 
 /** 用户资料更新 */

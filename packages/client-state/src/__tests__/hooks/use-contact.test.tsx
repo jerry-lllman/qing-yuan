@@ -52,24 +52,24 @@ const mockFriends = [mockFriend, mockFriend2];
 
 const mockReceivedRequest: FriendRequest = {
   id: 'request-1',
-  fromUserId: 'user-4',
-  toUserId: 'user-1',
-  fromUser: { ...mockUserBrief, id: 'user-4', username: 'user4', nickname: 'User 4' },
-  toUser: { ...mockUserBrief, id: 'user-1', username: 'user1', nickname: 'User 1' },
+  senderId: 'user-4',
+  receiverId: 'user-1',
+  sender: { ...mockUserBrief, id: 'user-4', username: 'user4', nickname: 'User 4' },
+  receiver: { ...mockUserBrief, id: 'user-1', username: 'user1', nickname: 'User 1' },
   message: "Hi, let's be friends!",
-  status: 'pending',
+  status: 'PENDING',
   createdAt: new Date('2024-01-10'),
   updatedAt: new Date('2024-01-10'),
 };
 
 const mockSentRequest: FriendRequest = {
   id: 'request-2',
-  fromUserId: 'user-1',
-  toUserId: 'user-5',
-  fromUser: { ...mockUserBrief, id: 'user-1', username: 'user1', nickname: 'User 1' },
-  toUser: { ...mockUserBrief, id: 'user-5', username: 'user5', nickname: 'User 5' },
+  senderId: 'user-1',
+  receiverId: 'user-5',
+  sender: { ...mockUserBrief, id: 'user-1', username: 'user1', nickname: 'User 1' },
+  receiver: { ...mockUserBrief, id: 'user-5', username: 'user5', nickname: 'User 5' },
   message: 'Hello!',
-  status: 'pending',
+  status: 'PENDING',
   createdAt: new Date('2024-01-11'),
   updatedAt: new Date('2024-01-11'),
 };
@@ -515,13 +515,13 @@ describe('usePendingRequestCount', () => {
     const pendingRequest: FriendRequest = {
       ...mockReceivedRequest,
       id: 'pending-1',
-      status: 'pending',
+      status: 'PENDING',
     };
 
     const acceptedRequest: FriendRequest = {
       ...mockReceivedRequest,
       id: 'accepted-1',
-      status: 'accepted',
+      status: 'ACCEPTED',
     };
 
     act(() => {

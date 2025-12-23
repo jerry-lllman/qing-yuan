@@ -8,7 +8,7 @@ export default function ContactList() {
   /// 新朋友
   /// 好友列表
 
-  const { friends, receivedRequests, acceptFriendRequest } = useContact({
+  const { receivedRequests, friends, acceptFriendRequest } = useContact({
     api: contactApi,
   });
   // {
@@ -36,7 +36,9 @@ export default function ContactList() {
       <div>
         {receivedRequests.map((request) => (
           <div key={request.id}>
-            <div>{request.sender.nickname}</div>
+            <div>
+              {request.sender.nickname}({request.sender.email})
+            </div>
             <div>{request.message}</div>
             <Button onClick={() => acceptFriendRequest(request.id)}>同意</Button>
           </div>
@@ -48,7 +50,8 @@ export default function ContactList() {
         {friends.map((friendItem) => (
           <div key={friendItem.id}>
             <div>
-              {friendItem.remark ?? friendItem.friend.nickname ?? friendItem.friend?.username}
+              {friendItem.remark ?? friendItem.friend.nickname ?? friendItem.friend?.username} (
+              {friendItem.friend.email})
             </div>
             <Button onClick={() => navigate(`/chat/${friendItem.friend.id}`)}>发起会话</Button>
           </div>

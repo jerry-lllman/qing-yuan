@@ -67,16 +67,16 @@ const mockFriend3: Friend = {
 
 const mockReceivedRequest: FriendRequest = {
   id: 'request-1',
-  fromUserId: 'user-2',
-  fromUser: {
+  senderId: 'user-2',
+  sender: {
     id: 'user-2',
     username: 'david',
     nickname: 'David',
     avatar: null,
     status: 'online',
   },
-  toUserId: 'user-1',
-  toUser: {
+  receiverId: 'user-1',
+  receiver: {
     id: 'user-1',
     username: 'me',
     nickname: 'Me',
@@ -84,23 +84,23 @@ const mockReceivedRequest: FriendRequest = {
     status: 'online',
   },
   message: '我是你的同学',
-  status: 'pending',
+  status: 'PENDING',
   createdAt: new Date('2024-01-10'),
   updatedAt: new Date('2024-01-10'),
 };
 
 const mockSentRequest: FriendRequest = {
   id: 'request-2',
-  fromUserId: 'user-1',
-  fromUser: {
+  senderId: 'user-1',
+  sender: {
     id: 'user-1',
     username: 'me',
     nickname: 'Me',
     avatar: null,
     status: 'online',
   },
-  toUserId: 'user-3',
-  toUser: {
+  receiverId: 'user-3',
+  receiver: {
     id: 'user-3',
     username: 'eve',
     nickname: 'Eve',
@@ -108,7 +108,7 @@ const mockSentRequest: FriendRequest = {
     status: 'offline',
   },
   message: '你好，加个好友',
-  status: 'pending',
+  status: 'PENDING',
   createdAt: new Date('2024-01-11'),
   updatedAt: new Date('2024-01-11'),
 };
@@ -329,10 +329,10 @@ describe('ContactStore', () => {
         const { setReceivedRequests, updateRequestStatus } = useContactStore.getState();
 
         setReceivedRequests([mockReceivedRequest]);
-        updateRequestStatus(mockReceivedRequest.id, 'accepted');
+        updateRequestStatus(mockReceivedRequest.id, 'ACCEPTED');
 
         const state = useContactStore.getState();
-        expect(state.receivedRequests[0]?.status).toBe('accepted');
+        expect(state.receivedRequests[0]?.status).toBe('ACCEPTED');
         expect(state.receivedRequests[0]?.updatedAt).not.toEqual(mockReceivedRequest.updatedAt);
       });
 
@@ -340,10 +340,10 @@ describe('ContactStore', () => {
         const { setSentRequests, updateRequestStatus } = useContactStore.getState();
 
         setSentRequests([mockSentRequest]);
-        updateRequestStatus(mockSentRequest.id, 'rejected');
+        updateRequestStatus(mockSentRequest.id, 'REJECTED');
 
         const state = useContactStore.getState();
-        expect(state.sentRequests[0]?.status).toBe('rejected');
+        expect(state.sentRequests[0]?.status).toBe('REJECTED');
       });
 
       it('should do nothing if request not found', () => {
@@ -353,7 +353,7 @@ describe('ContactStore', () => {
         updateRequestStatus('non-existent', 'accepted');
 
         const state = useContactStore.getState();
-        expect(state.receivedRequests[0]?.status).toBe('pending');
+        expect(state.receivedRequests[0]?.status).toBe('PENDING');
       });
     });
 
@@ -649,8 +649,8 @@ describe('ContactStore', () => {
     });
 
     it('getPendingRequestCount should return pending count', () => {
-      const accepted: FriendRequest = { ...mockReceivedRequest, id: 'r2', status: 'accepted' };
-      const rejected: FriendRequest = { ...mockReceivedRequest, id: 'r3', status: 'rejected' };
+      const accepted: FriendRequest = { ...mockReceivedRequest, id: 'r2', status: 'ACCEPTED' };
+      const rejected: FriendRequest = { ...mockReceivedRequest, id: 'r3', status: 'REJECTED' };
       useContactStore.getState().setReceivedRequests([mockReceivedRequest, accepted, rejected]);
       expect(getPendingRequestCount()).toBe(1);
     });

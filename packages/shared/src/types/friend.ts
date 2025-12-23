@@ -5,7 +5,7 @@
 import { type UserBrief } from './user.js';
 
 /** 好友请求状态 */
-export type FriendRequestStatus = 'pending' | 'accepted' | 'rejected';
+export type FriendRequestStatus = 'PENDING' | 'ACCEPTED' | 'REJECTED';
 
 /** 好友关系 */
 export interface Friend {
@@ -20,10 +20,10 @@ export interface Friend {
 /** 好友请求 */
 export interface FriendRequest {
   id: string;
-  fromUserId: string;
-  fromUser: UserBrief;
-  toUserId: string;
-  toUser: UserBrief;
+  senderId: string;
+  sender: UserBrief;
+  receiverId: string;
+  receiver: UserBrief;
   message: string | null;
   status: FriendRequestStatus;
   createdAt: Date;
