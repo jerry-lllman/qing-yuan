@@ -77,44 +77,58 @@ export function useSocketSetup(): void {
 
   // 初始化 Socket 客户端并连接
   useEffect(() => {
+    console.log(
+      '[Socket] Init effect - isAuthenticated:',
+      isAuthenticated,
+      'hasToken:',
+      !!tokens?.accessToken
+    );
+
     if (!isAuthenticated || !tokens?.accessToken) {
       return;
     }
 
-    // 防止重复初始化
-    if (isInitialized.current) {
-      return;
+    // 初始化 Socket 客户端（只初始化一次）
+    if (!isInitialized.current) {
+      console.log('[Socket] Initializing socket client...');
+
+      const config: SocketClientConfig = {
+        url: SOCKET_URL,
+        namespace: '/chat',
+        tokenProvider,
+        autoReconnect: true,
+        maxReconnectAttempts: 5,
+        reconnectDelay: 3000,
+        timeout: 10000,
+      };
+
+      initSocketClient(config);
+      isInitialized.current = true;
     }
 
-    const config: SocketClientConfig = {
-      url: SOCKET_URL,
-      namespace: '/chat',
-      tokenProvider,
-      autoReconnect: true,
-      maxReconnectAttempts: 5,
-      reconnectDelay: 3000,
-      timeout: 10000,
-    };
-
-    initSocketClient(config);
-    isInitialized.current = true;
-
-    // 监听连接状态变化
+    // 每次 effect 运行都要注册状态监听器（因为 cleanup 会取消订阅）
+    console.log('[Socket] Registering status change listener...');
     const unsubscribeStatus = socket.onStatusChange((status, error) => {
       console.log('[Socket] Status changed:', status, error?.message);
       if (status === ConnectionStatus.AUTHENTICATED) {
-        console.log('[Socket] Authenticated successfully');
-        // 设置连接状态，触发事件监听器的 effect
+        console.log('[Socket] Authenticated successfully, setting isConnected=true');
         setIsConnected(true);
       } else if (status === ConnectionStatus.DISCONNECTED || status === ConnectionStatus.ERROR) {
         setIsConnected(false);
       }
     });
 
-    // 连接到服务器
-    socket.connect().catch((error) => {
-      console.error('[Socket] Connection failed:', error);
-    });
+    // 如果还没连接，开始连接
+    if (!socket.isConnected) {
+      console.log('[Socket] Connecting...');
+      socket.connect().catch((error) => {
+        console.error('[Socket] Connection failed:', error);
+      });
+    } else {
+      // 已经连接，直接设置状态
+      console.log('[Socket] Already connected, setting isConnected=true');
+      setIsConnected(true);
+    }
 
     return () => {
       unsubscribeStatus();
@@ -123,6 +137,7 @@ export function useSocketSetup(): void {
 
   // 设置事件监听器 - 只有在连接成功后才设置
   useEffect(() => {
+    console.log('[Socket] Event listeners effect, isConnected:', isConnected);
     if (!isConnected) {
       return;
     }
@@ -139,23 +154,27 @@ export function useSocketSetup(): void {
     const unsubscribeReceive = socket.on(MessageEvent.RECEIVE, async (payload) => {
       // 服务端实际发送的是完整的 Message 对象
       const message = payload as unknown as Message;
-      console.log('[Socket] Message received:', message);
+      console.log('[Socket] Message received in listener:', message);
 
       const { conversationId } = message;
 
       // 如果本地没有这个会话，先获取会话详情
       if (!hasChatLocally(conversationId)) {
+        console.log('[Socket] Chat not found locally, fetching...');
         await fetchAndAddChat(conversationId);
       }
 
       // 添加到消息 store
+      console.log('[Socket] Adding message to store:', conversationId, message.id);
       addMessage(conversationId, message);
 
       // 更新会话的最后一条消息
+      console.log('[Socket] Updating last message');
       updateLastMessage(conversationId, message);
 
       // 如果不是当前会话，增加未读计数
       const currentChatId = getCurrentChatId();
+      console.log('[Socket] Current chat:', currentChatId, 'Message chat:', conversationId);
       if (currentChatId !== conversationId) {
         incrementUnread(conversationId);
       }

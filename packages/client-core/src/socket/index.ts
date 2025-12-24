@@ -232,11 +232,13 @@ export class SocketClient {
         clearTimeout(connectTimeout);
         this.reconnectAttempts = 0;
         this.setStatus(ConnectionStatus.CONNECTED);
+        console.log('[SocketClient] Connected, waiting for authentication...');
         // 等待服务端认证确认
       });
 
       this.socket.once(ConnectionEvent.CONNECT_ERROR, (error: Error) => {
         clearTimeout(connectTimeout);
+        console.error('[SocketClient] Connection error:', error);
         const socketError = new SocketConnectionError(error.message);
         this.setStatus(ConnectionStatus.ERROR, socketError);
         reject(socketError);
@@ -247,6 +249,7 @@ export class SocketClient {
 
       // 认证成功
       this.socket.once(ConnectionEvent.AUTHENTICATED, (payload: AuthenticatedPayload) => {
+        console.log('[SocketClient] Authenticated:', payload);
         this.setStatus(ConnectionStatus.AUTHENTICATED);
         this.notifyListeners(ConnectionEvent.AUTHENTICATED, payload);
         resolve();
@@ -362,6 +365,7 @@ export class SocketClient {
 
     allEvents.forEach((event) => {
       this.socket?.on(event, (payload: unknown) => {
+        console.log(`[SocketClient] Received event: ${event}`, payload);
         this.notifyListeners(event, payload);
       });
     });
@@ -395,12 +399,17 @@ export class SocketClient {
   // --------------------------------------------------------------------------
 
   private setStatus(status: ConnectionStatus, error?: Error): void {
+    console.log('[SocketClient] setStatus:', status, 'listeners:', this.statusListeners.size);
     this._status = status;
     this.statusListeners.forEach((listener) => listener(status, error));
   }
 
   /** 监听状态变更 */
   onStatusChange(listener: StatusChangeListener): () => void {
+    console.log(
+      '[SocketClient] onStatusChange registered, total listeners:',
+      this.statusListeners.size + 1
+    );
     this.statusListeners.add(listener);
     return () => this.statusListeners.delete(listener);
   }
@@ -435,7 +444,12 @@ export class SocketClient {
   }
 
   private notifyListeners(event: string, payload: unknown): void {
-    this.eventListeners.get(event)?.forEach((listener) => {
+    const listeners = this.eventListeners.get(event);
+    console.log(
+      `[SocketClient] notifyListeners for ${event}, listeners count:`,
+      listeners?.size ?? 0
+    );
+    listeners?.forEach((listener) => {
       try {
         listener(payload);
       } catch (error) {

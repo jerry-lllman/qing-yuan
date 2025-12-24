@@ -1,5 +1,6 @@
 import type { Message, SendMessageRequest } from '@qyra/shared';
 import { API_VERSION, http } from './http-client';
+import { getSocketClient } from '../socket';
 
 /** 获取消息列表参数 */
 export interface GetMessagesParams {
@@ -19,7 +20,7 @@ export interface GetMessagesResponse {
 
 /** Message API 接口 */
 export interface MessageApi {
-  /** 发送消息（REST API 备用，主要通过 WebSocket） */
+  /** 发送消息（通过 WebSocket 发送以支持实时通知） */
   sendMessage: (data: SendMessageRequest) => Promise<Message>;
   /** 获取会话消息历史 */
   getMessages: (conversationId: string, params?: GetMessagesParams) => Promise<GetMessagesResponse>;
@@ -42,6 +43,24 @@ export interface MessageApi {
 export function createMessageApi(version = API_VERSION.V1): MessageApi {
   return {
     async sendMessage(data: SendMessageRequest) {
+      // 优先使用 WebSocket 发送消息以支持实时通知
+      try {
+        const socket = getSocketClient();
+        if (socket.isConnected) {
+          // sendMessage 返回的是 Message 类型（通过 emitWithAck 解析 { data: T }）
+          const message = await socket.sendMessage({
+            conversationId: data.conversationId,
+            content: data.content,
+            type: data.type,
+            replyTo: data.replyTo,
+          });
+          return message as unknown as Message;
+        }
+      } catch (error) {
+        console.warn('[MessageApi] WebSocket send failed, falling back to REST API:', error);
+      }
+
+      // 回退到 REST API
       return http.post<Message>(`${version}/messages`, data);
     },
 

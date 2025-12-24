@@ -105,6 +105,12 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         data: { status: 'ONLINE' },
       });
 
+      // 发送认证成功事件给客户端（重要！客户端需要这个事件来完成连接）
+      client.emit('connection:authenticated', {
+        userId: user.id,
+        username: user.username,
+      });
+
       // 广播用户上线
       this.server.emit('user:online', { userId: user.id });
 
@@ -153,11 +159,14 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   ) {
     const user = client.data.user;
     if (!user) {
-      return { success: false, error: 'Unauthorized' };
+      return { error: { message: 'Unauthorized', code: 'UNAUTHORIZED' } };
     }
 
     try {
       const message = await this.messageService.sendMessage(user.id, data);
+      console.log(
+        `[WS] Message created: ${message.id} in conversation ${data.conversationId}`,
+      );
 
       // 确保发送者加入会话房间（可能是新创建的会话）
       client.join(`conversation:${data.conversationId}`);
@@ -167,30 +176,54 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         where: { conversationId: data.conversationId },
         select: { userId: true },
       });
+      console.log(
+        `[WS] Conversation members:`,
+        members.map((m) => m.userId),
+      );
 
       // 让所有在线成员加入会话房间（针对新会话的情况）
-      // 通过向用户专属房间发送消息来通知他们加入会话房间
       for (const member of members) {
         const memberSockets = this.userSockets.get(member.userId);
         if (memberSockets) {
+          console.log(
+            `[WS] Member ${member.userId} has sockets:`,
+            Array.from(memberSockets),
+          );
           for (const socketId of memberSockets) {
             // 使用 in() 方法获取 socket 并让其加入房间
             const sockets = await this.server.in(socketId).fetchSockets();
             for (const memberSocket of sockets) {
               memberSocket.join(`conversation:${data.conversationId}`);
+              console.log(
+                `[WS] Socket ${memberSocket.id} joined room conversation:${data.conversationId}`,
+              );
             }
           }
         }
       }
 
-      // 广播消息到会话
+      // 检查房间中有多少 socket
+      const roomSockets = await this.server
+        .in(`conversation:${data.conversationId}`)
+        .fetchSockets();
+      console.log(
+        `[WS] Sockets in room conversation:${data.conversationId}:`,
+        roomSockets.map((s) => s.id),
+      );
+
+      // 广播消息到会话的所有成员（包括发送者）
+      // 发送者会在客户端过滤掉重复消息
       this.server
         .to(`conversation:${data.conversationId}`)
         .emit('message:receive', message);
+      console.log(
+        `[WS] Broadcasted message:receive to room conversation:${data.conversationId}`,
+      );
 
-      return { success: true, message };
+      // 返回标准格式 { data: T } 供客户端 emitWithAck 解析
+      return { data: message };
     } catch (error: any) {
-      return { success: false, error: error.message };
+      return { error: { message: error.message, code: 'SEND_ERROR' } };
     }
   }
 

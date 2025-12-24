@@ -33,7 +33,7 @@ export default function MainLayout() {
       <TitleBar showLogo showUserInfo className="shrink-0" />
 
       {/* 主内容区 */}
-      <div className="p-2 flex-1 flex">
+      <div className="p-2 flex-1 flex min-h-0">
         <div className="flex flex-1 gap-0.5 min-h-0">
           {/* 侧边栏 - 导航图标 */}
           <Sidebar />
