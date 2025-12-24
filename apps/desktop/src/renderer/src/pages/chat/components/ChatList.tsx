@@ -9,6 +9,41 @@ import { Avatar, AvatarFallback, AvatarImage, Button, Input } from '@qyra/ui-web
 import { cn } from '@qyra/ui-web';
 import { Plus, Search } from 'lucide-react';
 import { SearchUserDialog } from './SearchUserDialog';
+import type { PrivateConversation, GroupConversation } from '@qyra/shared';
+
+/**
+ * 获取会话显示名称
+ */
+function getChatDisplayName(chat: PrivateConversation | GroupConversation): string {
+  if (chat.type === 'private') {
+    const privateChat = chat as PrivateConversation;
+    return privateChat.participant?.nickname || privateChat.participant?.username || '未知用户';
+  }
+  // 群聊
+  const groupChat = chat as GroupConversation;
+  return groupChat.name || '未命名群聊';
+}
+
+/**
+ * 获取会话头像
+ */
+function getChatAvatar(chat: PrivateConversation | GroupConversation): string | null {
+  if (chat.type === 'private') {
+    const privateChat = chat as PrivateConversation;
+    return privateChat.participant?.avatar || null;
+  }
+  // 群聊
+  const groupChat = chat as GroupConversation;
+  return groupChat.avatar || null;
+}
+
+/**
+ * 获取头像 fallback 文字
+ */
+function getAvatarFallback(chat: PrivateConversation | GroupConversation): string {
+  const name = getChatDisplayName(chat);
+  return name.charAt(0).toUpperCase();
+}
 
 export function ChatList() {
   const navigate = useNavigate();
@@ -73,14 +108,12 @@ export function ChatList() {
                   onClick={() => navigate(`/chat/${chat!.id}`)}
                 >
                   <Avatar className="w-10 h-10 shrink-0">
-                    <AvatarImage src={undefined} />
-                    <AvatarFallback>{chat!.type === 'private' ? '👤' : '👥'}</AvatarFallback>
+                    <AvatarImage src={getChatAvatar(chat!) ?? undefined} />
+                    <AvatarFallback>{getAvatarFallback(chat!)}</AvatarFallback>
                   </Avatar>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <span className="font-medium truncate">
-                        {chat!.type === 'private' ? '私聊' : '群聊'}
-                      </span>
+                      <span className="font-medium truncate">{getChatDisplayName(chat!)}</span>
                       {chat!.unreadCount > 0 && (
                         <span className="ml-2 px-1.5 py-0.5 text-xs bg-destructive text-destructive-foreground rounded-full">
                           {chat!.unreadCount > 99 ? '99+' : chat!.unreadCount}

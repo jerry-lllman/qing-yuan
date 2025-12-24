@@ -42,6 +42,8 @@ export class MessageService {
             username: true,
             nickname: true,
             avatar: true,
+            status: true,
+            email: true,
           },
         },
         replyTo: {
@@ -57,6 +59,7 @@ export class MessageService {
             },
           },
         },
+        attachments: true,
       },
     });
 
@@ -126,6 +129,8 @@ export class MessageService {
             username: true,
             nickname: true,
             avatar: true,
+            status: true,
+            email: true,
           },
         },
         replyTo: {
@@ -147,7 +152,12 @@ export class MessageService {
       take: limit,
     });
 
-    return messages.reverse(); // 返回正序
+    // 返回格式化的响应（包含 hasMore 标志）
+    const sortedMessages = messages.reverse(); // 返回正序
+    return {
+      messages: sortedMessages,
+      hasMore: messages.length >= limit,
+    };
   }
 
   /**
@@ -183,8 +193,11 @@ export class MessageService {
             username: true,
             nickname: true,
             avatar: true,
+            status: true,
+            email: true,
           },
         },
+        attachments: true,
       },
     });
 

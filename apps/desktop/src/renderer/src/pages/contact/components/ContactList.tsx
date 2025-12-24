@@ -1,4 +1,4 @@
-import { useContact } from '@qyra/client-state';
+import { useContact, useChatStore } from '@qyra/client-state';
 import { Button } from '@qyra/ui-web';
 import { createChatApi } from '@qyra/client-core';
 import { contactApi } from '@renderer/api/contact';
@@ -17,6 +17,9 @@ export default function ContactList() {
     api: contactApi,
   });
 
+  // Chat Store - 用于添加会话
+  const addChat = useChatStore((state) => state.addChat);
+
   const navigate = useNavigate();
   const [startingChatUserId, setStartingChatUserId] = useState<string | null>(null);
 
@@ -27,6 +30,8 @@ export default function ContactList() {
         setStartingChatUserId(targetUserId);
         // 调用 API 创建或获取私聊会话
         const conversation = await chatApi.createPrivateChat(targetUserId);
+        // 添加到本地 store（如果已存在会更新）
+        addChat(conversation);
         // 使用会话 ID 进行导航
         navigate(`/chat/${conversation.id}`);
       } catch (error) {
@@ -35,7 +40,7 @@ export default function ContactList() {
         setStartingChatUserId(null);
       }
     },
-    [navigate]
+    [navigate, addChat]
   );
 
   return (

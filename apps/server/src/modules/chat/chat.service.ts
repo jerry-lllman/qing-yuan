@@ -320,6 +320,7 @@ export class ChatService {
 
   /**
    * 格式化会话数据
+   * 转换为前端期望的 PrivateConversation / GroupConversation 格式
    */
   private formatConversation(conversation: any, currentUserId: string) {
     const currentMember = conversation.members.find(
@@ -334,10 +335,10 @@ export class ChatService {
       );
       return {
         id: conversation.id,
-        type: conversation.type,
-        name: otherMember?.user?.nickname || otherMember?.user?.username,
-        avatar: otherMember?.user?.avatar,
-        targetUser: otherMember?.user,
+        type: 'private' as const, // 转为小写以匹配客户端类型
+        name: null, // 私聊会话 name 为 null，用 participant 显示
+        avatar: null, // 私聊会话 avatar 为 null，用 participant.avatar 显示
+        participant: otherMember?.user, // 使用 participant 而非 targetUser
         isMuted: currentMember?.isMuted || false,
         isPinned: currentMember?.isPinned || false,
         lastMessage,
@@ -350,20 +351,12 @@ export class ChatService {
     // 群聊
     return {
       id: conversation.id,
-      type: conversation.type,
+      type: 'group' as const, // 转为小写以匹配客户端类型
       name: conversation.name,
       avatar: conversation.avatar,
       ownerId: conversation.ownerId,
-      owner: conversation.owner,
-      notice: conversation.notice,
+      announcement: conversation.notice || null, // 使用 announcement 而非 notice
       memberCount: conversation.members.length,
-      members: conversation.members.map((m: any) => ({
-        id: m.id,
-        userId: m.userId,
-        role: m.role,
-        nickname: m.nickname,
-        user: m.user,
-      })),
       isMuted: currentMember?.isMuted || false,
       isPinned: currentMember?.isPinned || false,
       lastMessage,

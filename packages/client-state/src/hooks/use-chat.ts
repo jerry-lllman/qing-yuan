@@ -290,9 +290,12 @@ export function useChat(options: UseChatOptions): UseChatReturn {
     [storeSetCurrentChat, onChatChange, markAsReadMutation]
   );
 
+  // 使用 chatsQuery.refetch 的稳定引用
+  const refetchChats = chatsQuery.refetch;
+
   const fetchChats = useCallback(async () => {
-    await chatsQuery.refetch();
-  }, [chatsQuery]);
+    await refetchChats();
+  }, [refetchChats]);
 
   const fetchChat = useCallback(
     async (chatId: string) => {

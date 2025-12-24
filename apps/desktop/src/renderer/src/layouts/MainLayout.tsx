@@ -17,8 +17,12 @@ import { Toaster } from '@qyra/ui-web';
 
 import { Sidebar } from '@/components/layout/Sidebar';
 import { TitleBar } from '@/components/TitleBar';
+import { useSocketSetup } from '@/hooks/use-socket-setup';
 
 export default function MainLayout() {
+  // 初始化 Socket 连接和事件监听
+  useSocketSetup();
+
   return (
     <div className="flex flex-col h-screen bg-gray-50">
       {/* 

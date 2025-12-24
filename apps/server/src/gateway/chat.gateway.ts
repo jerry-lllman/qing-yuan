@@ -159,6 +159,30 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     try {
       const message = await this.messageService.sendMessage(user.id, data);
 
+      // 确保发送者加入会话房间（可能是新创建的会话）
+      client.join(`conversation:${data.conversationId}`);
+
+      // 获取会话所有成员，确保他们都能收到消息
+      const members = await this.prisma.conversationMember.findMany({
+        where: { conversationId: data.conversationId },
+        select: { userId: true },
+      });
+
+      // 让所有在线成员加入会话房间（针对新会话的情况）
+      // 通过向用户专属房间发送消息来通知他们加入会话房间
+      for (const member of members) {
+        const memberSockets = this.userSockets.get(member.userId);
+        if (memberSockets) {
+          for (const socketId of memberSockets) {
+            // 使用 in() 方法获取 socket 并让其加入房间
+            const sockets = await this.server.in(socketId).fetchSockets();
+            for (const memberSocket of sockets) {
+              memberSocket.join(`conversation:${data.conversationId}`);
+            }
+          }
+        }
+      }
+
       // 广播消息到会话
       this.server
         .to(`conversation:${data.conversationId}`)

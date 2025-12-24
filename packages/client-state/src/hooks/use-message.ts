@@ -21,6 +21,7 @@ import {
   type DraftMessage,
   type MessagePagination,
 } from '../stores/message.store';
+import { useChatStore } from '../stores/chat.store';
 import { messageKeys } from '../queries/keys';
 
 // ========================
@@ -289,6 +290,9 @@ export function useMessage(options: UseMessageOptions): UseMessageReturn {
         // 发送成功，移除待发送消息，添加实际消息
         removePendingMessage(conversationId, tempId);
         addMessage(conversationId, message);
+
+        // 更新会话的最后一条消息（发送方本地更新）
+        useChatStore.getState().updateLastMessage(conversationId, message);
 
         // 同时更新 React Query 缓存，防止 refetch 时覆盖
         queryClient.setQueryData(
